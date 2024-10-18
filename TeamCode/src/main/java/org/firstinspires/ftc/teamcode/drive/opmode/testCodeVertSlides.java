@@ -279,7 +279,7 @@ public class testCodeVertSlides extends LinearOpMode {
                     outtakePivotPosition = true;
                 } else {
                     outtakePivotLeft.setPosition(0.975);
-                    outtakePivotRight.setPosition(1);
+                    outtakePivotRight.setPosition(1.05);
                     outtakePivotPosition = false;
                 }
             }
