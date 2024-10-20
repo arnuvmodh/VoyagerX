@@ -120,7 +120,7 @@ public class autonomousCode extends LinearOpMode {
                 .back(6)
                 .lineTo(new Vector2d(27.063, 48.622))
                 .lineToSplineHeading(new Pose2d(4, 75.5, -0.793))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.25, () -> {
                     leftVertical.setPower(1);
                     rightVertical.setPower(1);
                 })
@@ -173,7 +173,7 @@ public class autonomousCode extends LinearOpMode {
                 .waitSeconds(0.75)
                 .back(6)
                 .lineToSplineHeading(new Pose2d(4, 75.5, -0.793))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.25, () -> {
                     leftVertical.setPower(1);
                     rightVertical.setPower(1);
                 })
