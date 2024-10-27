@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous()
-public class autonomousCode extends LinearOpMode {
+public class autoCodeOct26 extends LinearOpMode {
     private Servo servoLeft;
     private Servo servoRight;
     private Servo servoPivot;
@@ -60,8 +60,8 @@ public class autonomousCode extends LinearOpMode {
         outtakePivotRight.setDirection(Servo.Direction.REVERSE);
         outtakeClawLeft.scaleRange(0, 0.55);
         outtakeClawRight.scaleRange(0, 0.55);
-        outtakeClawRight.setPosition(0);
-        outtakeClawLeft.setPosition(0);
+        outtakeClawRight.setPosition(1);
+        outtakeClawLeft.setPosition(1);
         outtakePivotLeft.setPosition(0.975);
         outtakePivotRight.setPosition(1);
 
@@ -95,12 +95,51 @@ public class autonomousCode extends LinearOpMode {
 
         drive = new SampleMecanumDrive(hardwareMap);
         TrajectorySequence traj1 = drive.trajectorySequenceBuilder(new Pose2d())
-                .strafeTo(new Vector2d(13, -34.37))
+                .lineToSplineHeading(new Pose2d(-22.5, 4.6, 0.765))
+                .addTemporalMarker(0.05, () -> {
+                    leftVertical.setPower(1);
+                    rightVertical.setPower(1);
+                })
+                .addTemporalMarker(1.6, () -> {
+                    leftVertical.setPower(0);
+                    rightVertical.setPower(0);
+                })
+                .addTemporalMarker(1.7,() ->{
+                    outtakePivotLeft.setPosition(0.5);
+                    outtakePivotRight.setPosition(0.525);
+                })
+                .addTemporalMarker(3, () -> {
+                    outtakePivotLeft.setPosition(0.5);
+                    outtakePivotRight.setPosition(0.525);
+                })
+                .addTemporalMarker(3.2, () -> {
+                    outtakeClawLeft.setPosition(0);
+                    outtakeClawRight.setPosition(0);
+                    outtakePivotLeft.setPosition(0.975);
+                    outtakePivotRight.setPosition(1);
+                })
+                .addTemporalMarker(3.5, () -> {
+                    leftVertical.setPower(-1);
+                    rightVertical.setPower(-1);
+                })
+                .addTemporalMarker(5, () -> {
+                    leftVertical.setPower(0);
+                    rightVertical.setPower(0);
+                })
+                .waitSeconds(4)
+                .lineToSplineHeading(new Pose2d(-12.85, 18.135, 1.563))
+
+                .waitSeconds(100)
+
+                /*
+                .UNSTABLE_addTemporalMarkerOffset(2.5, () -> {
+                    outtakeClawLeft.setPosition(0);
+                    outtakeClawRight.setPosition(0);
+                }).lineToSplineHeading(new Pose2d(-12.85,18.13, 1.56))
                 .addTemporalMarker(0.1, () -> {
                     servoLeft.setPosition(1);
                     servoRight.setPosition(1);
                 })
-
                 .waitSeconds(0.5)
                 .forward(10)
                 .UNSTABLE_addTemporalMarkerOffset(0.01, () -> {
@@ -116,99 +155,8 @@ public class autonomousCode extends LinearOpMode {
                 }).UNSTABLE_addTemporalMarkerOffset(2, () -> {
                     servoClawLeft.setPosition(0.3);
                     servoClawRight.setPosition(0.3);
-                })
-                .waitSeconds(0.5)
-                .back(6)
-                .lineTo(new Vector2d(27.063, 48.622))
-                .lineToSplineHeading(new Pose2d(4, 75.5, -0.793))
-                .UNSTABLE_addTemporalMarkerOffset(0.25, () -> {
-                    leftVertical.setPower(1);
-                    rightVertical.setPower(1);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(1.95, () -> {
-                    leftVertical.setPower(0);
-                    rightVertical.setPower(0);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(2, () -> {
-                    outtakePivotLeft.setPosition(0.5);
-                    outtakePivotRight.setPosition(0.525);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(2.5, () -> {
-                    outtakeClawLeft.setPosition(0);
-                    outtakeClawRight.setPosition(0);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(2.75, () -> {
-                    outtakePivotLeft.setPosition(0.975);
-                    outtakePivotRight.setPosition(1);
-                })
-                .waitSeconds(4)
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                    leftVertical.setPower(-1);
-                    rightVertical.setPower(-1);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(1.65, () -> {
-                    leftVertical.setPower(0);
-                    rightVertical.setPower(0);
-                })
-                .lineToSplineHeading(new Pose2d(6.081, 63.674, 0))
-                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
-                    servoLeft.setPosition(1);
-                    servoRight.setPosition(1);
-                })
-                .waitSeconds(1)
-                .forward(15)
-                .UNSTABLE_addTemporalMarkerOffset(0.01, () -> {
-                    servoClawLeft.setPosition(0.575);
-                    servoClawRight.setPosition(0.575);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                    servoLeft.setPosition(0);
-                    servoRight.setPosition(0);
-                }).UNSTABLE_addTemporalMarkerOffset(1.5, () -> {
-                    outtakeClawLeft.setPosition(1);
-                    outtakeClawRight.setPosition(1);
-                }).UNSTABLE_addTemporalMarkerOffset(2, () -> {
-                    servoClawLeft.setPosition(0.3);
-                    servoClawRight.setPosition(0.3);
-                })
-                .waitSeconds(0.75)
-                .back(6)
-                .lineToSplineHeading(new Pose2d(4, 75.5, -0.793))
-                .UNSTABLE_addTemporalMarkerOffset(0.25, () -> {
-                    leftVertical.setPower(1);
-                    rightVertical.setPower(1);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(1.95, () -> {
-                    leftVertical.setPower(0);
-                    rightVertical.setPower(0);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(2, () -> {
-                    outtakePivotLeft.setPosition(0.5);
-                    outtakePivotRight.setPosition(0.525);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(2.5, () -> {
-                    outtakeClawLeft.setPosition(0);
-                    outtakeClawRight.setPosition(0);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(2.75, () -> {
-                    outtakePivotLeft.setPosition(0.975);
-                    outtakePivotRight.setPosition(1);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(3, () ->{
-                    leftVertical.setPower(-1);
-                    rightVertical.setPower(-1);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(4.2, () -> {
-                    leftVertical.setPower(0);
-                    rightVertical.setPower(0);
-                })
-                .waitSeconds(2.7)
-                .lineToSplineHeading(new Pose2d(8.348, 63.54, 0))
+                })*/
 
-
-
-                .waitSeconds(10)
-                .lineToSplineHeading(new Pose2d(0, 0, 0))
                 .build();
 
         waitForStart();
