@@ -81,9 +81,9 @@ public class auto34pt extends LinearOpMode {
 
         // Initialize the hardware variables for the linear slides
         leftHorizontal = hardwareMap.get(DcMotor.class, "left_slide");
-        leftHorizontal.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftHorizontal.setDirection(DcMotorSimple.Direction.REVERSE);
         rightHorizontal = hardwareMap.get(DcMotor.class, "right_slide");
-        rightHorizontal.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightHorizontal.setDirection(DcMotorSimple.Direction.FORWARD);
         leftVertical = hardwareMap.get(DcMotor.class, "left_vertical_slide");
         leftVertical.setDirection(DcMotorSimple.Direction.REVERSE);
         rightVertical = hardwareMap.get(DcMotor.class, "right_vertical_slide");
@@ -117,25 +117,25 @@ public class auto34pt extends LinearOpMode {
 
         //IMPLEMENT THESE TRAJECTORY SEQUENCES ASYNCHRONOUSLY TO FOLLOW AUTO PATH
         Trajectory traj1 = drive.trajectoryBuilder(new Pose2d(0, 0, 0))
-                .lineToSplineHeading(new Pose2d(-22.34, 5.069, 0.9))
+                .lineToSplineHeading(new Pose2d(-23, 4, 0.9))
                 .build();
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                .lineToSplineHeading(new Pose2d(-18.157, 6.4293, 1.3414))
+                .lineToSplineHeading(new Pose2d(-13.6212, 7.1899, 1.4318))
                 .build();
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
-                .lineToSplineHeading(new Pose2d(-22.34, 5.069, 0.9))
+                .lineToSplineHeading(new Pose2d(-24, 3, 0.9))
                 .build();
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
-                .lineToSplineHeading(new Pose2d(-20.3645, 4.6906, 1.6023))
+                .lineToSplineHeading(new Pose2d(-17.8625, 7.2125, 1.6415))
                 .build();
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
-                .lineToSplineHeading(new Pose2d(-22.34, 5.069, 0.9))
+                .lineToSplineHeading(new Pose2d(-24, 3, 0.9))
                 .build();
         Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
                 .lineToSplineHeading(new Pose2d(-23.1245, 5.9236, 1.7832))
                 .build();
         Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
-                .lineToSplineHeading(new Pose2d(-22.34, 5.069, 0.9))
+                .lineToSplineHeading(new Pose2d(-24, 3, 0.9))
                 .build();
         waitForStart();
         if (isStopRequested()) return;
@@ -147,110 +147,174 @@ public class auto34pt extends LinearOpMode {
         boolean lowerVertSlides = false;
         boolean extendHorSlides = false;
         boolean retractHorSlides = false;
-        boolean oneTimeSwitch = true;
 
+        boolean[] oneTimeSwitch = new boolean[100];
+        for (int i = 0; i < 100; i++) {
+            oneTimeSwitch[i] = true;
+        }
+
+        int[] verticalPositions = new int[] {-3200, -3400, -3500, -3500};
+        int i = 0;
         timer.reset();
         while (opModeIsActive()) {
+            if(riseVertSlides  && lowerVertSlides){
+                lowerVertSlides= false;
+            }
             switch (curState) {
                 case idle:
                     break;
                 case traj1:
-                    if (timer.seconds() > 1.6) {
-                        outtakePivotLeft.setPosition(0.5);
-                        outtakePivotRight.setPosition(0.525);
-                    }
-                    if (timer.seconds() > 3) {
-                        outtakeClawLeft.setPosition(0);
-                        outtakeClawRight.setPosition(0);
-                    }
-                    if (!drive.isBusy() && timer.seconds() > 4) {
-                        outtakePivotLeft.setPosition(0.975);
-                        outtakePivotRight.setPosition(1);
+                    scoreBasket(timer);
+                    if (!drive.isBusy() && timer.seconds() > 3) {
+                        lowerVertSlides = true;
+                        oneTimeSwitch[0] = false;
+                        intakeFlipOut();
                         drive.followTrajectoryAsync(traj2);
                         curState = State.traj2;
+                        i += 1;
                         timer.reset();
 
                     }
                     break;
                 case traj2:
-                    if (oneTimeSwitch && timer.seconds() > 0.5) {
-                        lowerVertSlides = true;
-                        oneTimeSwitch = false;
+                    if (oneTimeSwitch[1] && timer.seconds() > 0.5) {
+                        extendHorSlides = true;
+                        oneTimeSwitch[1] = false;
                     }
-                    if (!drive.isBusy() && timer.seconds() > 10) {
+                    if(timer.seconds() > 1.6){
+                        intakeGrab();
+                    }
+
+                    if(oneTimeSwitch[2] && timer.seconds() > 2){
+                        retractHorSlides = true;
+                        oneTimeSwitch[2] = false;
+                        intakeFlipIn();
+                    }
+                    if(timer.seconds() > 4){
+                        outtakeGrab();
+                    }
+                    if(timer.seconds() > 4.5){
+                        intakeLetGo();
+                    }
+                    if (!drive.isBusy() && timer.seconds() > 6) {
                         drive.followTrajectoryAsync(traj3);
                         curState = State.traj3;
                         timer.reset();
                     }
                     break;
+                case traj3:
+                    if(oneTimeSwitch[3]){
 
-                //use the following blocks as reference for different functions
-                /*
-                flipOut:
-                    outtakePivotLeft.setPosition(0.5);
-                    outtakePivotRight.setPosition(0.525);
+                        riseVertSlides = true;
+                        oneTimeSwitch[3] = false;
 
-                fall:
-                    lowerVertSlides = true;
+                    }
+                    scoreBasket(timer);
+                    if (!drive.isBusy() && timer.seconds() > 4) {
+                        lowerVertSlides = true;
+                        oneTimeSwitch[4] = false;
+                        intakeFlipOut();
+                        drive.followTrajectoryAsync(traj4);
+                        curState = State.traj4;
+                        timer.reset();
+                        i += 1;
+                    }
+
+                    break;
+                case traj4:
+                    if (oneTimeSwitch[5] && timer.seconds() > 0.5) {
+                        extendHorSlides = true;
+                        oneTimeSwitch[5] = false;
+                    }
+                    if(timer.seconds() > 1.6){
+                        intakeGrab();
+                    }
+
+                    if(oneTimeSwitch[6] && timer.seconds() > 2){
+                        retractHorSlides = true;
+                        oneTimeSwitch[6] = false;
+                        intakeFlipIn();
+                    }
+                    if(timer.seconds() > 4){
+                        outtakeGrab();
+                    }
+                    if(timer.seconds() > 4.5){
+                        intakeLetGo();
+                    }
+                    if (!drive.isBusy() && timer.seconds() > 6) {
+                        drive.followTrajectoryAsync(traj5);
+                        curState = State.traj5;
+                        timer.reset();
+                    }
+                    break;
+                case traj5:
+                    if(oneTimeSwitch[7]){
+                        riseVertSlides = true;
+                        oneTimeSwitch[7] = false;
+                    }
+                    scoreBasket(timer);
+                    if (!drive.isBusy() && timer.seconds() > 3) {
+                        lowerVertSlides = true;
+                        oneTimeSwitch[8] = false;
+                        intakeFlipOut();
+                        drive.followTrajectoryAsync(traj6);
+                        curState = State.traj6;
+                        timer.reset();
+                        i += 1;
+                    }
+
+                    break;
+                case traj6:
+                    if (oneTimeSwitch[9] && timer.seconds() > 0.5) {
+                        extendHorSlides = true;
+                        oneTimeSwitch[9] = false;
+                    }
+                    if(timer.seconds() > 1.6){
+                        intakeGrab();
+                    }
+
+                    if(oneTimeSwitch[10] && timer.seconds() > 2){
+                        retractHorSlides = true;
+                        oneTimeSwitch[10] = false;
+                        intakeFlipIn();
+                    }
+                    if(timer.seconds() > 3.5){
+                        outtakeGrab();
+                    }
+                    if(timer.seconds() > 3.6){
+                        intakeLetGo();
+                    }
+                    if (!drive.isBusy() && timer.seconds() > 5) {
+                        drive.followTrajectoryAsync(traj7);
+                        curState = State.traj7;
+                        timer.reset();
+                    }
+
+                    break;
+                case traj7:
+                    break;
 
 
-                flipIn:
-                    outtakePivotLeft.setPosition(0.975);
-                    outtakePivotRight.setPosition(1);
-
-                outtakeLetGo:
-                    outtakeClawLeft.setPosition(0);
-                    outtakeClawRight.setPosition(0);
-
-                outtakeGrab:
-                    outtakeClawRight.setPosition(1);
-                    outtakeClawLeft.setPosition(1);
-
-                horizontalExtend:
-                    extendHorSlides = true;
-
-                horizontalRetract:
-                    retractHorSlides = true;
-
-                intakeLetGo:
-                    servoClawLeft.setPosition(0.3);
-                    servoClawRight.setPosition(0.3);
-
-                intakeGrab:
-                    servoClawLeft.setPosition(0.525);
-                    servoClawRight.setPosition(0.525);
-
-                intakeFlipOut:
-                    servoLeft.setPosition(1);
-                    servoRight.setPosition(1);
-
-                intakeFlipIn:
-                    servoLeft.setPosition(0);
-                    servoRight.setPosition(0);
-
-
-                 */
             }
 
-            if (leftHorizontal.getCurrentPosition() < 1000 && rightHorizontal.getCurrentPosition() < 1000 && extendHorSlides) {
-                leftHorizontal.setPower(1);
-                rightHorizontal.setPower(1);
-            } else {
-                leftHorizontal.setPower(0);
-                rightHorizontal.setPower(0);
-                extendHorSlides = false;
-            }
 
-            if (leftHorizontal.getCurrentPosition() > 0 && rightHorizontal.getCurrentPosition() > 0 && retractHorSlides) {
+
+
+            if (leftHorizontal.getCurrentPosition() < 1050 && rightHorizontal.getCurrentPosition() < 1050 && extendHorSlides) {
+                leftHorizontal.setPower(0.5);
+                rightHorizontal.setPower(0.5);
+            } else if (leftHorizontal.getCurrentPosition() > 0 && rightHorizontal.getCurrentPosition() > 0 && retractHorSlides) {
                 leftHorizontal.setPower(-1);
                 rightHorizontal.setPower(-1);
             } else {
                 leftHorizontal.setPower(0);
                 rightHorizontal.setPower(0);
+                extendHorSlides = false;
                 retractHorSlides = false;
             }
 
-            if (rightVertical.getCurrentPosition() > -3100 && riseVertSlides) {
+
+            if (rightVertical.getCurrentPosition() > verticalPositions[i] && riseVertSlides) {
                 leftVertical.setPower(1);
                 rightVertical.setPower(1);
             } else if (rightVertical.getCurrentPosition() < 0 && lowerVertSlides) {
@@ -270,6 +334,8 @@ public class auto34pt extends LinearOpMode {
 
             PoseStorage.currentPose = poseEstimate;
 
+            telemetry.addData("riseVertSlides", riseVertSlides);
+            telemetry.addData("lowerVertSlides", lowerVertSlides);
             telemetry.addData("rightVertical", rightVertical.getCurrentPosition());
             telemetry.addData("leftVertical", leftVertical.getCurrentPosition());
             telemetry.addData("x", poseEstimate.getX());
@@ -277,7 +343,67 @@ public class auto34pt extends LinearOpMode {
             telemetry.addData("heading", poseEstimate.getHeading());
             telemetry.update();
         }
+
+
+        }
+    void scoreBasket(ElapsedTime timer){
+        if(timer.seconds() > 1.6){
+            outtakeFlipOut();
+        }
+        if(timer.seconds() > 2.1){
+            outtakeLetGo();
+        }
+        if(timer.seconds()>2.3){
+            outtakeFlipIn();
+        }
+    }
+
+    void outtakeFlipOut() {
+        outtakePivotLeft.setPosition(0.5);
+        outtakePivotRight.setPosition(0.525);
     }
 
 
+    void outtakeFlipIn() {
+        outtakePivotLeft.setPosition(0.975);
+        outtakePivotRight.setPosition(1);
+    }
+
+    void outtakeLetGo() {
+        outtakeClawLeft.setPosition(0);
+        outtakeClawRight.setPosition(0);
+    }
+
+    void outtakeGrab() {
+        outtakeClawRight.setPosition(1);
+        outtakeClawLeft.setPosition(1);
+    }
+
+    void intakeLetGo() {
+        servoClawLeft.setPosition(0.3);
+        servoClawRight.setPosition(0.3);
+    }
+
+    void intakeGrab() {
+        servoClawLeft.setPosition(0.525);
+        servoClawRight.setPosition(0.525);
+    }
+
+    void intakeFlipOut() {
+        servoLeft.setPosition(1);
+        servoRight.setPosition(1);
+    }
+
+    void intakeFlipIn() {
+        servoLeft.setPosition(0);
+        servoRight.setPosition(0);
+    }
+
 }
+
+
+
+
+
+
+
