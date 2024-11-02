@@ -139,7 +139,7 @@ public class auto34pt extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-24, 3.1, 0.9))
                 .build();
         Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
-                .lineToSplineHeading(new Pose2d(-22.2, 13.47, 1.9))
+                .lineToSplineHeading(new Pose2d(-13.6212, 7.5, 1.4318))
                 .build();
 
 
@@ -240,13 +240,13 @@ public class auto34pt extends LinearOpMode {
                         oneTimeSwitch[6] = false;
                         intakeFlipIn();
                     }
-                    if(timer.seconds() > 4.2){
+                    if(timer.seconds() > 3.7){
                         outtakeGrab();
                     }
-                    if(timer.seconds() > 4.5){
+                    if(timer.seconds() > 4.2){
                         intakeLetGo();
                     }
-                    if (!drive.isBusy() && timer.seconds() > 4.8) {
+                    if (!drive.isBusy() && timer.seconds() > 4.6) {
                         drive.followTrajectoryAsync(traj5);
                         curState = State.traj5;
                         timer.reset();
@@ -273,7 +273,7 @@ public class auto34pt extends LinearOpMode {
                         lowerVertSlides = true;
                         extendHorSlides = true;
                         edgingHorSlides = true;
-                        servoPivot.setPosition(0.4);
+                        servoPivot.setPosition(0.45);
                         oneTimeSwitch[9] = false;
                     }
 
@@ -298,10 +298,10 @@ public class auto34pt extends LinearOpMode {
                         servoPivot.setPosition(0.5);
                         intakeFlipIn();
                     }
-                    if(timer.seconds() > 5.5){
+                    if(timer.seconds() > 5.3){
                         outtakeGrab();
                     }
-                    if(timer.seconds() > 5.6){
+                    if(timer.seconds() > 5.8){
                         intakeLetGo();
                     }
                     if (!drive.isBusy() && timer.seconds() > 6.2) {
@@ -319,7 +319,7 @@ public class auto34pt extends LinearOpMode {
                     }
                     scoreBasket(timer);
                     if (!drive.isBusy() && timer.seconds() > 3) {
-                        drive.followTrajectoryAsync(traj7);
+                        drive.followTrajectoryAsync(traj8);
                         curState = State.traj8;
                         timer.reset();
                     }
@@ -332,7 +332,7 @@ public class auto34pt extends LinearOpMode {
                     if (!drive.isBusy() && timer.seconds() > 3) {
                         curState = State.idle;
                     }
-
+                    break;
             }
 
 
@@ -430,7 +430,7 @@ public class auto34pt extends LinearOpMode {
 
     void intakeEdgeClawPosition() {
         servoClawLeft.setPosition(0.4);
-        servoClawRight.setPosition(0.3);
+        servoClawRight.setPosition(0.35);
     }
 
     void intakeFlipOut() {
