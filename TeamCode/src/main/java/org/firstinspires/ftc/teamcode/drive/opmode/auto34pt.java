@@ -23,6 +23,7 @@ public class auto34pt extends LinearOpMode {
         traj5,
         traj6,
         traj7,
+        traj8,
         idle
     }
 
@@ -137,6 +138,9 @@ public class auto34pt extends LinearOpMode {
         Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
                 .lineToSplineHeading(new Pose2d(-24, 3.1, 0.9))
                 .build();
+        Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
+                .lineToSplineHeading(new Pose2d(-22.2, 13.47, 1.9))
+                .build();
 
 
         waitForStart();
@@ -193,13 +197,13 @@ public class auto34pt extends LinearOpMode {
                         oneTimeSwitch[2] = false;
                         intakeFlipIn();
                     }
-                    if(timer.seconds() > 4){
+                    if(timer.seconds() > 3.3){
                         outtakeGrab();
                     }
-                    if(timer.seconds() > 4.3){
+                    if(timer.seconds() > 3.8){
                         intakeLetGo();
                     }
-                    if (!drive.isBusy() && timer.seconds() > 4.7) {
+                    if (!drive.isBusy() && timer.seconds() > 4.2) {
                         drive.followTrajectoryAsync(traj3);
                         curState = State.traj3;
                         timer.reset();
@@ -207,13 +211,11 @@ public class auto34pt extends LinearOpMode {
                     break;
                 case traj3:
                     if(oneTimeSwitch[3]){
-
                         riseVertSlides = true;
                         oneTimeSwitch[3] = false;
-
                     }
                     scoreBasket(timer);
-                    if (!drive.isBusy() && timer.seconds() > 4) {
+                    if (!drive.isBusy() && timer.seconds() > 3.5) {
                         oneTimeSwitch[4] = false;
                         intakeFlipOut();
                         drive.followTrajectoryAsync(traj4);
@@ -317,14 +319,21 @@ public class auto34pt extends LinearOpMode {
                     }
                     scoreBasket(timer);
                     if (!drive.isBusy() && timer.seconds() > 3) {
-                        curState = State.idle;
+                        drive.followTrajectoryAsync(traj7);
+                        curState = State.traj8;
+                        timer.reset();
                     }
                     break;
-
+                case traj8:
+                    if(oneTimeSwitch[15]&&timer.seconds()>0.2) {
+                        lowerVertSlides = true;
+                        oneTimeSwitch[15] = false;
+                    }
+                    if (!drive.isBusy() && timer.seconds() > 3) {
+                        curState = State.idle;
+                    }
 
             }
-
-
 
 
             if (!edgingHorSlides && leftHorizontal.getCurrentPosition() < 1050 && rightHorizontal.getCurrentPosition() < 1050 && extendHorSlides) {
