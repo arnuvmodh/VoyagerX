@@ -71,8 +71,8 @@ public class testCodeVertSlides extends LinearOpMode {
         servoRight = hardwareMap.get(Servo.class, "servoRight");
         servoRight.setDirection(Servo.Direction.REVERSE);
         servoLeft.setDirection(Servo.Direction.FORWARD);
-        servoLeft.scaleRange(0, 0.65);
-        servoRight.scaleRange(0, 0.65);
+        servoLeft.scaleRange(0, 0.625);
+        servoRight.scaleRange(0, 0.625);
         servoLeft.setPosition(0);
         servoRight.setPosition(0);
         double posFieldEdge = 0.75;

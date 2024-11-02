@@ -49,8 +49,8 @@ public class auto34pt extends LinearOpMode {
         servoRight = hardwareMap.get(Servo.class, "servoRight");
         servoRight.setDirection(Servo.Direction.REVERSE);
         servoLeft.setDirection(Servo.Direction.FORWARD);
-        servoLeft.scaleRange(0, 0.65);
-        servoRight.scaleRange(0, 0.65);
+        servoLeft.scaleRange(0, 0.625);
+        servoRight.scaleRange(0, 0.625);
         servoLeft.setPosition(0);
         servoRight.setPosition(0);
 
@@ -120,23 +120,25 @@ public class auto34pt extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-23, 4, 0.9))
                 .build();
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                .lineToSplineHeading(new Pose2d(-13.6212, 7.1899, 1.4318))
+                .lineToSplineHeading(new Pose2d(-13.6212, 7.5, 1.4318))
                 .build();
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
-                .lineToSplineHeading(new Pose2d(-24, 3, 0.9))
+                .lineToSplineHeading(new Pose2d(-24, 3.5, 0.9))
                 .build();
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
-                .lineToSplineHeading(new Pose2d(-17.8625, 7.2125, 1.6415))
+                .lineToSplineHeading(new Pose2d(-17.8625, 7.3, 1.6415))
                 .build();
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
-                .lineToSplineHeading(new Pose2d(-24, 3, 0.9))
+                .lineToSplineHeading(new Pose2d(-24, 3.25, 0.9))
                 .build();
         Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
-                .lineToSplineHeading(new Pose2d(-23.1245, 5.9236, 1.7832))
+                .lineToSplineHeading(new Pose2d(-22.2, 13.47, 1.9))
                 .build();
         Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
-                .lineToSplineHeading(new Pose2d(-24, 3, 0.9))
+                .lineToSplineHeading(new Pose2d(-24, 3.1, 0.9))
                 .build();
+
+
         waitForStart();
         if (isStopRequested()) return;
 
@@ -146,6 +148,7 @@ public class auto34pt extends LinearOpMode {
         boolean riseVertSlides = true;
         boolean lowerVertSlides = false;
         boolean extendHorSlides = false;
+        boolean edgingHorSlides = false;
         boolean retractHorSlides = false;
 
         boolean[] oneTimeSwitch = new boolean[100];
@@ -153,7 +156,7 @@ public class auto34pt extends LinearOpMode {
             oneTimeSwitch[i] = true;
         }
 
-        int[] verticalPositions = new int[] {-3200, -3400, -3500, -3500};
+        int[] verticalPositions = new int[] {-3200, -3400, -3500, -3500, -3700};
         int i = 0;
         timer.reset();
         while (opModeIsActive()) {
@@ -166,7 +169,6 @@ public class auto34pt extends LinearOpMode {
                 case traj1:
                     scoreBasket(timer);
                     if (!drive.isBusy() && timer.seconds() > 3) {
-                        lowerVertSlides = true;
                         oneTimeSwitch[0] = false;
                         intakeFlipOut();
                         drive.followTrajectoryAsync(traj2);
@@ -178,6 +180,7 @@ public class auto34pt extends LinearOpMode {
                     break;
                 case traj2:
                     if (oneTimeSwitch[1] && timer.seconds() > 0.5) {
+                        lowerVertSlides = true;
                         extendHorSlides = true;
                         oneTimeSwitch[1] = false;
                     }
@@ -193,10 +196,10 @@ public class auto34pt extends LinearOpMode {
                     if(timer.seconds() > 4){
                         outtakeGrab();
                     }
-                    if(timer.seconds() > 4.5){
+                    if(timer.seconds() > 4.3){
                         intakeLetGo();
                     }
-                    if (!drive.isBusy() && timer.seconds() > 6) {
+                    if (!drive.isBusy() && timer.seconds() > 4.7) {
                         drive.followTrajectoryAsync(traj3);
                         curState = State.traj3;
                         timer.reset();
@@ -211,7 +214,6 @@ public class auto34pt extends LinearOpMode {
                     }
                     scoreBasket(timer);
                     if (!drive.isBusy() && timer.seconds() > 4) {
-                        lowerVertSlides = true;
                         oneTimeSwitch[4] = false;
                         intakeFlipOut();
                         drive.followTrajectoryAsync(traj4);
@@ -222,26 +224,27 @@ public class auto34pt extends LinearOpMode {
 
                     break;
                 case traj4:
-                    if (oneTimeSwitch[5] && timer.seconds() > 0.5) {
+                    if (oneTimeSwitch[5] && timer.seconds() > 0.8) {
+                        lowerVertSlides = true;
                         extendHorSlides = true;
                         oneTimeSwitch[5] = false;
                     }
-                    if(timer.seconds() > 1.6){
+                    if(timer.seconds() > 2){
                         intakeGrab();
                     }
 
-                    if(oneTimeSwitch[6] && timer.seconds() > 2){
+                    if(oneTimeSwitch[6] && timer.seconds() > 2.4){
                         retractHorSlides = true;
                         oneTimeSwitch[6] = false;
                         intakeFlipIn();
                     }
-                    if(timer.seconds() > 4){
+                    if(timer.seconds() > 4.2){
                         outtakeGrab();
                     }
                     if(timer.seconds() > 4.5){
                         intakeLetGo();
                     }
-                    if (!drive.isBusy() && timer.seconds() > 6) {
+                    if (!drive.isBusy() && timer.seconds() > 4.8) {
                         drive.followTrajectoryAsync(traj5);
                         curState = State.traj5;
                         timer.reset();
@@ -254,7 +257,6 @@ public class auto34pt extends LinearOpMode {
                     }
                     scoreBasket(timer);
                     if (!drive.isBusy() && timer.seconds() > 3) {
-                        lowerVertSlides = true;
                         oneTimeSwitch[8] = false;
                         intakeFlipOut();
                         drive.followTrajectoryAsync(traj6);
@@ -265,26 +267,42 @@ public class auto34pt extends LinearOpMode {
 
                     break;
                 case traj6:
-                    if (oneTimeSwitch[9] && timer.seconds() > 0.5) {
+                    if (oneTimeSwitch[9] && timer.seconds() > 0.8) {
+                        lowerVertSlides = true;
                         extendHorSlides = true;
+                        edgingHorSlides = true;
+                        servoPivot.setPosition(0.4);
                         oneTimeSwitch[9] = false;
                     }
-                    if(timer.seconds() > 1.6){
+
+                    if (timer.seconds() > 2.75 && oneTimeSwitch[10]) {
+                        oneTimeSwitch[10] = false;
+                        servoPivot.setPosition(0);
+                    }
+
+                    if(timer.seconds() > 3 && oneTimeSwitch[11]){
+                        oneTimeSwitch[11] = false;
+                        intakeEdgeClawPosition();
+                    }
+
+                    if (timer.seconds() > 3.5 && oneTimeSwitch[12]) {
+                        oneTimeSwitch[12] = false;
                         intakeGrab();
                     }
 
-                    if(oneTimeSwitch[10] && timer.seconds() > 2){
+                    if(oneTimeSwitch[13] && timer.seconds() > 4){
                         retractHorSlides = true;
-                        oneTimeSwitch[10] = false;
+                        oneTimeSwitch[13] = false;
+                        servoPivot.setPosition(0.5);
                         intakeFlipIn();
                     }
-                    if(timer.seconds() > 3.5){
+                    if(timer.seconds() > 5.5){
                         outtakeGrab();
                     }
-                    if(timer.seconds() > 3.6){
+                    if(timer.seconds() > 5.6){
                         intakeLetGo();
                     }
-                    if (!drive.isBusy() && timer.seconds() > 5) {
+                    if (!drive.isBusy() && timer.seconds() > 6.2) {
                         drive.followTrajectoryAsync(traj7);
                         curState = State.traj7;
                         timer.reset();
@@ -292,6 +310,15 @@ public class auto34pt extends LinearOpMode {
 
                     break;
                 case traj7:
+                    if(oneTimeSwitch[14]){
+                        i += 1;
+                        riseVertSlides = true;
+                        oneTimeSwitch[14] = false;
+                    }
+                    scoreBasket(timer);
+                    if (!drive.isBusy() && timer.seconds() > 3) {
+                        curState = State.idle;
+                    }
                     break;
 
 
@@ -300,9 +327,12 @@ public class auto34pt extends LinearOpMode {
 
 
 
-            if (leftHorizontal.getCurrentPosition() < 1050 && rightHorizontal.getCurrentPosition() < 1050 && extendHorSlides) {
+            if (!edgingHorSlides && leftHorizontal.getCurrentPosition() < 1050 && rightHorizontal.getCurrentPosition() < 1050 && extendHorSlides) {
                 leftHorizontal.setPower(0.5);
                 rightHorizontal.setPower(0.5);
+            } else if (edgingHorSlides && leftHorizontal.getCurrentPosition() < 870 && rightHorizontal.getCurrentPosition() < 870 && extendHorSlides) {
+                leftHorizontal.setPower(0.2);
+                rightHorizontal.setPower(0.2);
             } else if (leftHorizontal.getCurrentPosition() > 0 && rightHorizontal.getCurrentPosition() > 0 && retractHorSlides) {
                 leftHorizontal.setPower(-1);
                 rightHorizontal.setPower(-1);
@@ -387,6 +417,11 @@ public class auto34pt extends LinearOpMode {
     void intakeGrab() {
         servoClawLeft.setPosition(0.525);
         servoClawRight.setPosition(0.525);
+    }
+
+    void intakeEdgeClawPosition() {
+        servoClawLeft.setPosition(0.4);
+        servoClawRight.setPosition(0.3);
     }
 
     void intakeFlipOut() {
