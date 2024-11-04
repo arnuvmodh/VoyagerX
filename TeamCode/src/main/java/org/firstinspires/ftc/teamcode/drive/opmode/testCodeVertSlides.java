@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -30,7 +29,6 @@ public class testCodeVertSlides extends LinearOpMode {
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
-    private IMU fieldcentricimu = null;
     private Servo servoLeft = null;
     private Servo servoRight = null;
     private Servo servoPivot = null;
@@ -54,14 +52,10 @@ public class testCodeVertSlides extends LinearOpMode {
     public void runOpMode() throws InterruptedException{
 
 
-        fieldcentricimu = hardwareMap.get(IMU.class, "imu");
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
-        fieldcentricimu.initialize(parameters);
-
-
         // Initialize the hardware variables for the drivetrain
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        drive.setPoseEstimate(new Pose2d(0, 0, 0));
+        Pose2d autoPose = PoseStorage.currentPose;
+        drive.setPoseEstimate(new Pose2d(autoPose.getX(), autoPose.getY(), autoPose.getHeading() + (Math.PI/2)));
         leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
         leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
@@ -179,14 +173,18 @@ public class testCodeVertSlides extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
-        fieldcentricimu.resetYaw();
         runtime.reset();
         turnRuntime.reset();
 
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-            double botHeading = fieldcentricimu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+            drive.update();
+            double botHeading = drive.getPoseEstimate().getHeading();
+            if (botHeading > Math.PI) {
+                botHeading = botHeading - (2 * Math.PI);
+            }
+
             telemetry.addData("leftHorizontal", leftHorizontal.getCurrentPosition());
             telemetry.addData("rightHorizontal", rightHorizontal.getCurrentPosition());
             telemetry.addData("Left Servo Position", servoLeft.getPosition());
@@ -196,19 +194,20 @@ public class testCodeVertSlides extends LinearOpMode {
             telemetry.addData("isLocked", isLocked);
             telemetry.addData("Speed", speed);
             telemetry.addData("Driving Mode (false = fieldcentric, true=robotcentric)", drivingMode);
-            telemetry.addData("IMU Value", Math.toDegrees(botHeading));
+            telemetry.addData("Heading (degrees)", Math.toDegrees(botHeading));
+            telemetry.addData("Bot Position (poseEstimate)", drive.getPoseEstimate().toString());
             telemetry.update();
 
 
             // Drive train control
-            drive.update();
             double y = -gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x;
             double rx = gamepad1.right_stick_x;
 
 
-            if (gamepad2.a) {
-                fieldcentricimu.resetYaw();
+            if (gamepad2.a && !isLocked) {
+                Pose2d tempPose = drive.getPoseEstimate();
+                drive.setPoseEstimate(new Pose2d(tempPose.getX(), tempPose.getY(), 0));
             }
 
             double rotX = (x * Math.cos(-botHeading)) - (y * Math.sin(-botHeading));
