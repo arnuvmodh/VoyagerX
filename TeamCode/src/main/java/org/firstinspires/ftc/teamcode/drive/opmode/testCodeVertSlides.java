@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 @TeleOp()
 public class testCodeVertSlides extends LinearOpMode {
 
-    // Declare OpMode members for the drivetrain
+    // Declare OpMode members for the drivetrai
     double xyP = 0.35;
     double headingP = 0.5;
     public ElapsedTime runtime = new ElapsedTime();
