@@ -246,14 +246,14 @@ public class testCodeVertSlides extends LinearOpMode {
             float motorHorizontalButton = gamepad1.left_trigger;
             boolean motorHorizontalRetract = gamepad1.left_bumper;
             boolean motorHorizontalFullExtension = gamepad1.dpad_up;
-            boolean motorHorizontalFullRetraction = gamepad1.dpad_down;
+            boolean motorHorizontalFullRetraction = gamepad2.back;
             float motorVerticalButton = gamepad1.right_trigger;
             boolean motorVerticalRetract = gamepad1.right_bumper;
             boolean motorVerticalFullExtension = gamepad1.y;
-            boolean motorVerticalFullRetraction = gamepad1.a;
+            boolean motorVerticalFullRetraction = (gamepad2.left_trigger!=0);
             boolean lockDriveTrain = gamepad1.left_stick_button;
             boolean speedButton = gamepad1.back;
-            boolean servoOut = gamepad1.dpad_left;
+            boolean servoOut = (gamepad2.right_trigger!=0);
             boolean servoIn = gamepad1.dpad_right;
             boolean servoPivotRight = gamepad2.dpad_right;
             boolean servoPivotLeft = gamepad2.dpad_left;
