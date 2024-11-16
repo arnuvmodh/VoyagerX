@@ -139,7 +139,7 @@ public class auto34pt extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-24, 3.1, 0.9))
                 .build();
         Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
-                .lineToSplineHeading(new Pose2d(-13.6212, 7.5, 1.4318))
+                .lineToSplineHeading(new Pose2d(-13.6212, 7.5, (Math.PI/2)))
                 .build();
 
 
