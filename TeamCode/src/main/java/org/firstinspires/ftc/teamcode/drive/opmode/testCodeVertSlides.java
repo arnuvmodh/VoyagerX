@@ -55,7 +55,7 @@ public class testCodeVertSlides extends LinearOpMode {
         // Initialize the hardware variables for the drivetrain
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         Pose2d autoPose = PoseStorage.currentPose;
-        drive.setPoseEstimate(new Pose2d(autoPose.getX(), autoPose.getY(), autoPose.getHeading() + (Math.PI/2)));
+        drive.setPoseEstimate(new Pose2d(autoPose.getX(), autoPose.getY(), autoPose.getHeading() - (Math.PI/2)));
         leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
         leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
@@ -246,14 +246,14 @@ public class testCodeVertSlides extends LinearOpMode {
             float motorHorizontalButton = gamepad1.left_trigger;
             boolean motorHorizontalRetract = gamepad1.left_bumper;
             boolean motorHorizontalFullExtension = gamepad1.dpad_up;
-            boolean motorHorizontalFullRetraction = gamepad2.back;
+            boolean motorHorizontalFullRetraction = gamepad2.touchpad || gamepad1.dpad_down;
             float motorVerticalButton = gamepad1.right_trigger;
             boolean motorVerticalRetract = gamepad1.right_bumper;
             boolean motorVerticalFullExtension = gamepad1.y;
-            boolean motorVerticalFullRetraction = (gamepad2.left_trigger!=0);
+            boolean motorVerticalFullRetraction = (gamepad2.left_trigger > 0.2)||gamepad1.a;
             boolean lockDriveTrain = gamepad1.left_stick_button;
             boolean speedButton = gamepad1.back;
-            boolean servoOut = (gamepad2.right_trigger!=0);
+            boolean servoOut = (gamepad2.right_trigger > 0.2)||(gamepad1.dpad_left);
             boolean servoIn = gamepad1.dpad_right;
             boolean servoPivotRight = gamepad2.dpad_right;
             boolean servoPivotLeft = gamepad2.dpad_left;

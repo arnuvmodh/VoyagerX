@@ -325,6 +325,9 @@ public class auto34pt extends LinearOpMode {
                     }
                     break;
                 case traj8:
+                    if(timer.seconds()>.1) {
+                       intakeGrab();
+                    }
                     if(oneTimeSwitch[15]&&timer.seconds()>0.2) {
                         lowerVertSlides = true;
                         oneTimeSwitch[15] = false;
@@ -334,7 +337,6 @@ public class auto34pt extends LinearOpMode {
                     }
                     break;
             }
-
 
             if (!edgingHorSlides && leftHorizontal.getCurrentPosition() < 1050 && rightHorizontal.getCurrentPosition() < 1050 && extendHorSlides) {
                 leftHorizontal.setPower(0.5);
