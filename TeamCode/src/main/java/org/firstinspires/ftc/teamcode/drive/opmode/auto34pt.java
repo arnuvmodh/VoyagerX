@@ -116,7 +116,7 @@ public class auto34pt extends LinearOpMode {
         State curState = State.idle;
 
 
-        //IMPLEMENT THESE TRAJECTORY SEQUENCES ASYNCHRONOUSLY TO FOLLOW AUTO PATH
+        //IMPLEMENT THESE TRAJECTORY SEQUENCES ASYNCHRONOUSLY TO FOLLOW AUTO PAT
         Trajectory traj1 = drive.trajectoryBuilder(new Pose2d(0, 0, 0))
                 .lineToSplineHeading(new Pose2d(-23, 4, 0.9))
                 .build();

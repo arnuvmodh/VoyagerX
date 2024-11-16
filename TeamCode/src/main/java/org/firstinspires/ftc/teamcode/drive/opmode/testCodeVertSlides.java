@@ -242,7 +242,7 @@ public class testCodeVertSlides extends LinearOpMode {
                 drive.update();
             }
 
-            // Linear slide control
+            //Linear slide control
             float motorHorizontalButton = gamepad1.left_trigger;
             boolean motorHorizontalRetract = gamepad1.left_bumper;
             boolean motorHorizontalFullExtension = gamepad1.dpad_up;
