@@ -162,12 +162,12 @@ public class testCodeVertSlides extends LinearOpMode {
         boolean isLockTime = false;
         boolean pressedOuttakeClawLastIteration = false;
         boolean pressedOuttakePivotLastIteration = false;
+        boolean pressedSpecimenIntakeLastIteration = false;
         boolean outtakeClawPosition = false;
         boolean outtakePivotPosition = false;
         double timeForTransfer = 0;
         boolean waitForClose = false;
         Pose2d setPos = drive.getPoseEstimate();
-
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -252,7 +252,7 @@ public class testCodeVertSlides extends LinearOpMode {
             boolean motorVerticalFullExtension = gamepad1.y;
             boolean motorVerticalFullRetraction = (gamepad2.left_trigger > 0.2)||gamepad1.a;
             boolean lockDriveTrain = gamepad1.left_stick_button;
-            boolean speedButton = gamepad1.back;
+            boolean speedButton = gamepad2.left_stick_button;
             boolean servoOut = (gamepad2.right_trigger > 0.2)||(gamepad1.dpad_left);
             boolean servoIn = gamepad1.dpad_right;
             boolean servoPivotRight = gamepad2.dpad_right;
@@ -264,6 +264,22 @@ public class testCodeVertSlides extends LinearOpMode {
             boolean outtakeClawButton = gamepad2.y;
             boolean outtakePivotButton = gamepad2.x;
             boolean highBucketButton = gamepad2.b;
+            boolean specimenGrabButton = gamepad2.back;
+
+
+            if(specimenGrabButton && !pressedSpecimenIntakeLastIteration){
+                if (!outtakePivotPosition){
+                    outtakePivotLeft.setPosition(0.25);
+                    outtakePivotRight.setPosition(0.26);
+                    outtakePivotPosition = true;
+                } else {
+                    outtakePivotLeft.setPosition(0.975);
+                    outtakePivotRight.setPosition(1.05);
+                    outtakePivotPosition = false;
+                }
+            }
+            pressedSpecimenIntakeLastIteration = specimenGrabButton;
+
 
             if (highBucketButton) {
                 outtakePivotLeft.setPosition(0.625);
@@ -271,7 +287,7 @@ public class testCodeVertSlides extends LinearOpMode {
                 outtakePivotPosition = true;
             }
 
-            if (outtakePivotButton && !pressedOuttakePivotLastIteration){
+            if ((outtakePivotButton) && !pressedOuttakePivotLastIteration){
                 if (!outtakePivotPosition){
                     outtakePivotLeft.setPosition(0.5);
                     outtakePivotRight.setPosition(0.525);
