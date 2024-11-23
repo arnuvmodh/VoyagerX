@@ -275,8 +275,8 @@ public class TeleopCode extends LinearOpMode {
 
             if(specimenGrabButton && !pressedSpecimenIntakeLastIteration){
                 if (!outtakePivotPosition){
-                    outtakePivotLeft.setPosition(0.19);
-                    outtakePivotRight.setPosition(0.20);
+                    outtakePivotLeft.setPosition(0.215);
+                    outtakePivotRight.setPosition(0.225);
                     outtakePivotPosition = true;
                 } else {
                     outtakePivotLeft.setPosition(0.975);
