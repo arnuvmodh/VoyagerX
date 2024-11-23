@@ -123,8 +123,8 @@ public class TeleopCode extends LinearOpMode {
         rightHorizontal = hardwareMap.get(Servo.class, "rightHorizontal");
         leftHorizontal.setDirection(Servo.Direction.FORWARD);
         rightHorizontal.setDirection(Servo.Direction.REVERSE);
-        leftHorizontal.scaleRange(0, 0.2);
-        rightHorizontal.scaleRange(0, 0.2);
+        leftHorizontal.scaleRange(0, 0.5);
+        rightHorizontal.scaleRange(0, 0.5);
         double horizontalSlidePosition = 0;
         leftHorizontal.setPosition(horizontalSlidePosition);
         rightHorizontal.setPosition(horizontalSlidePosition);
