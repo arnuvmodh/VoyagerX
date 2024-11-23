@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 
-@TeleOp()
+@Disabled()
 public class testCodeVertSlides extends LinearOpMode {
 
     // Declare OpMode members for the drivetrain
@@ -269,12 +270,12 @@ public class testCodeVertSlides extends LinearOpMode {
 
             if(specimenGrabButton && !pressedSpecimenIntakeLastIteration){
                 if (!outtakePivotPosition){
-                    outtakePivotLeft.setPosition(0.29);
-                    outtakePivotRight.setPosition(0.30);
+                    outtakePivotLeft.setPosition(0.19);
+                    outtakePivotRight.setPosition(0.20);
                     outtakePivotPosition = true;
                 } else {
                     outtakePivotLeft.setPosition(0.975);
-                    outtakePivotRight.setPosition(1.05);
+                    outtakePivotRight.setPosition(1);
                     outtakePivotPosition = false;
                 }
             }
