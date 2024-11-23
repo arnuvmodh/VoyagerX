@@ -1,10 +1,9 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcodev2.teamcodev2.drive.opmodev2;
 
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.util.Angle;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,12 +11,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcodev2.teamcodev2.drive.SampleMecanumDrive;
 
 
 @TeleOp()
-public class testCodeVertSlides extends LinearOpMode {
+public class TeleopCode extends LinearOpMode {
 
     // Declare OpMode members for the drivetrain
     double xyP = 0.35;
@@ -25,23 +23,27 @@ public class testCodeVertSlides extends LinearOpMode {
     public ElapsedTime runtime = new ElapsedTime();
     public ElapsedTime turnRuntime = new ElapsedTime();
     public ElapsedTime fullMatchRuntime = new ElapsedTime();
+
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
+
+    private Servo servoClaw;
     private Servo servoLeft = null;
     private Servo servoRight = null;
     private Servo servoPivot = null;
-    private Servo servoClawLeft = null;
-    private Servo servoClawRight = null;
     private Servo outtakePivotLeft;
     private Servo outtakePivotRight;
     private Servo outtakeClawLeft;
     private Servo outtakeClawRight;
 
+    //Horizontal Servos
+    private Servo leftHorizontal;
+    private Servo rightHorizontal;
+
+
     // Declare OpMode members for the linear slides
-    private DcMotor leftHorizontal = null;
-    private DcMotor rightHorizontal = null;
     private DcMotor leftVertical = null;
     private DcMotor rightVertical = null;
 
@@ -77,12 +79,10 @@ public class testCodeVertSlides extends LinearOpMode {
         servoPivot.scaleRange(0, 1);
         servoPivot.setPosition(0.5);
 
-        servoClawLeft = hardwareMap.get(Servo.class, "servoClawLeft");
-        servoClawRight = hardwareMap.get(Servo.class, "servoClawRight");
-        servoClawLeft.setDirection(Servo.Direction.FORWARD);
-        servoClawRight.setDirection(Servo.Direction.REVERSE);
-        servoClawLeft.setPosition(0.575);
-        servoClawRight.setPosition(0.575);
+        servoClaw = hardwareMap.get(Servo.class, "servoClaw");
+        servoClaw.setDirection(Servo.Direction.FORWARD);
+        servoClaw.scaleRange(0, 0.4); //replace this later on
+        servoClaw.setPosition(0);
 
         outtakePivotLeft = hardwareMap.get(Servo.class, "outtakePivotLeft");
         outtakePivotRight = hardwareMap.get(Servo.class, "outtakePivotRight");
@@ -112,23 +112,23 @@ public class testCodeVertSlides extends LinearOpMode {
         rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Initialize the hardware variables for the linear slides
-        leftHorizontal = hardwareMap.get(DcMotor.class, "left_slide");
-        leftHorizontal.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightHorizontal = hardwareMap.get(DcMotor.class, "right_slide");
-        rightHorizontal.setDirection(DcMotorSimple.Direction.REVERSE);
         leftVertical = hardwareMap.get(DcMotor.class, "left_vertical_slide");
         leftVertical.setDirection(DcMotorSimple.Direction.REVERSE);
         rightVertical = hardwareMap.get(DcMotor.class, "right_vertical_slide");
         rightVertical.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
-        // Set up encoders for horizontal slides
-        leftHorizontal.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightHorizontal.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftHorizontal.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightHorizontal.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftHorizontal.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightHorizontal.setDirection(DcMotorSimple.Direction.REVERSE);
+        // Set up horizontal slides
+        leftHorizontal = hardwareMap.get(Servo.class, "leftHorizontal");
+        rightHorizontal = hardwareMap.get(Servo.class, "rightHorizontal");
+        leftHorizontal.setDirection(Servo.Direction.FORWARD);
+        rightHorizontal.setDirection(Servo.Direction.REVERSE);
+        leftHorizontal.scaleRange(0, 0.2);
+        rightHorizontal.scaleRange(0, 0.2);
+        double horizontalSlidePosition = 0;
+        leftHorizontal.setPosition(horizontalSlidePosition);
+        rightHorizontal.setPosition(horizontalSlidePosition);
+
 
         leftVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -138,10 +138,6 @@ public class testCodeVertSlides extends LinearOpMode {
         rightVertical.setDirection(DcMotorSimple.Direction.REVERSE);
         leftVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        leftHorizontal.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightHorizontal.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
 
 
         // run until the end of the match (driver presses STOP)
@@ -185,8 +181,7 @@ public class testCodeVertSlides extends LinearOpMode {
                 botHeading = botHeading - (2 * Math.PI);
             }
 
-            telemetry.addData("leftHorizontal", leftHorizontal.getCurrentPosition());
-            telemetry.addData("rightHorizontal", rightHorizontal.getCurrentPosition());
+            telemetry.addData("Horizontal Slide Position", horizontalSlidePosition);
             telemetry.addData("Left Servo Position", servoLeft.getPosition());
             telemetry.addData("Right Servo Position", servoRight.getPosition());
             telemetry.addData("leftVertical", -leftVertical.getCurrentPosition());
@@ -243,7 +238,7 @@ public class testCodeVertSlides extends LinearOpMode {
             }
 
             //Linear slide control
-            float motorHorizontalButton = gamepad1.left_trigger;
+            boolean motorHorizontalButton = (gamepad1.left_trigger > 0.2);
             boolean motorHorizontalRetract = gamepad1.left_bumper;
             boolean motorHorizontalFullExtension = gamepad1.dpad_up;
             boolean motorHorizontalFullRetraction = gamepad2.touchpad || gamepad1.dpad_down;
@@ -266,11 +261,22 @@ public class testCodeVertSlides extends LinearOpMode {
             boolean highBucketButton = gamepad2.b;
             boolean specimenGrabButton = gamepad2.back;
 
+            if (horizontalSlidePosition < 0.95 && motorHorizontalButton) {
+                horizontalSlidePosition += 0.1;
+            } else if (horizontalSlidePosition > 0.05 && motorHorizontalRetract) {
+                horizontalSlidePosition -= 0.1;
+            } else if (motorHorizontalFullExtension) {
+                horizontalSlidePosition = 1;
+            } else if (motorHorizontalFullRetraction) {
+                horizontalSlidePosition = 0;
+            }
+            leftHorizontal.setPosition(horizontalSlidePosition);
+            rightHorizontal.setPosition(horizontalSlidePosition);
 
             if(specimenGrabButton && !pressedSpecimenIntakeLastIteration){
                 if (!outtakePivotPosition){
-                    outtakePivotLeft.setPosition(0.29);
-                    outtakePivotRight.setPosition(0.30);
+                    outtakePivotLeft.setPosition(0.25);
+                    outtakePivotRight.setPosition(0.26);
                     outtakePivotPosition = true;
                 } else {
                     outtakePivotLeft.setPosition(0.975);
@@ -318,20 +324,17 @@ public class testCodeVertSlides extends LinearOpMode {
 
             if (servoPickButton && !pressedPickServoLastIteration){
                 if (pickServoSwitch){
-                    servoClawLeft.setPosition(0.575);
-                    servoClawRight.setPosition(0.575);
+                    servoClaw.setPosition(0); //replace this later
                     pickServoSwitch = false;
                 } else{
-                    servoClawLeft.setPosition(0.3);
-                    servoClawRight.setPosition(0.3);
+                    servoClaw.setPosition(1); // replace this later
                     pickServoSwitch = true;
                 }
             }
 
             if (waitForClose && fullMatchRuntime.seconds() >= timeForTransfer){
                 waitForClose = false;
-                servoClawLeft.setPosition(0.3);
-                servoClawRight.setPosition(0.3);
+                servoClaw.setPosition(1); //replace this later
                 pickServoSwitch = true;
             }
             pressedPickServoLastIteration = servoPickButton;
@@ -342,8 +345,7 @@ public class testCodeVertSlides extends LinearOpMode {
             } else if(servoOut){
                 servoLeft.setPosition(1);
                 servoRight.setPosition(1);
-                servoClawLeft.setPosition(0.3);
-                servoClawRight.setPosition(0.3);
+                servoClaw.setPosition(1); //replace this later
                 pickServoSwitch = true;
             } else if (fieldEdgeButton) {
                 servoLeft.setPosition(posFieldEdge);
@@ -391,48 +393,8 @@ public class testCodeVertSlides extends LinearOpMode {
             }
             pressedSpeedLastIteration = speedButton;
 
-            float leftHorizontalPosition = leftHorizontal.getCurrentPosition();
-            float rightHorizontalPosition = rightHorizontal.getCurrentPosition();
             float leftVerticalPosition = -leftVertical.getCurrentPosition();
             float rightVerticalPosition = -rightVertical.getCurrentPosition();
-            if ((motorHorizontalButton != 0) && (leftHorizontalPosition <= linearSlideExtension) && (rightHorizontalPosition >= -linearSlideExtension)) {
-                leftHorizontal.setPower(speed * motorHorizontalButton);
-                rightHorizontal.setPower(speed * -motorHorizontalButton);
-            } else if ((motorHorizontalRetract) && ((leftHorizontalPosition >= linearSlideRetraction) || leftHorizontalPosition <= -linearSlideRetraction) && (rightHorizontalPosition >= linearSlideRetraction || rightHorizontalPosition <= -linearSlideRetraction)) {
-                leftHorizontal.setPower(-speed);
-                rightHorizontal.setPower(speed);
-            } else if (motorHorizontalFullExtension){
-                isFullHorizontalExtent = true;
-                leftHorizontal.setPower(1.5);
-                rightHorizontal.setPower(-1.5);
-                servoLeft.setPosition(1);
-                servoRight.setPosition(1);
-                servoClawLeft.setPosition(0.3);
-                servoClawRight.setPosition(0.3);
-                pickServoSwitch = true;
-            } else if (motorHorizontalFullRetraction) {
-                isFullHorizontalRetract = true;
-                leftHorizontal.setPower(-1.5);
-                rightHorizontal.setPower(1.5);
-                servoLeft.setPosition(0);
-                servoRight.setPosition(0);
-                pivotServoPosition = 0.5;
-                servoPivot.setPosition(pivotServoPosition);
-                servoClawLeft.setPosition(0.575);
-                servoClawRight.setPosition(0.575);
-                pickServoSwitch = false;
-            } else if (!(isFullHorizontalExtent || isFullHorizontalRetract)) {
-                leftHorizontal.setPower(0);
-                rightHorizontal.setPower(0);
-            } else if (isFullHorizontalExtent && !(leftHorizontal.getCurrentPosition() <= linearSlideExtension && rightHorizontal.getCurrentPosition() >= -linearSlideExtension)){
-                isFullHorizontalExtent = false;
-            } else if (isFullHorizontalRetract && !(((leftHorizontalPosition >= linearSlideRetraction) || leftHorizontalPosition <= -linearSlideRetraction) && (rightHorizontalPosition >= linearSlideRetraction || rightHorizontalPosition <= -linearSlideRetraction))){
-                isFullHorizontalRetract = false;
-                leftHorizontal.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                rightHorizontal.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                leftHorizontal.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                rightHorizontal.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
 
             if ((motorVerticalButton != 0) && (leftVerticalPosition <= 3050) && (rightVerticalPosition >= -3050)) {
                 leftVertical.setPower(speed * motorVerticalButton);
@@ -489,8 +451,3 @@ public class testCodeVertSlides extends LinearOpMode {
         }
     }
 }
-
-
-
-
-
