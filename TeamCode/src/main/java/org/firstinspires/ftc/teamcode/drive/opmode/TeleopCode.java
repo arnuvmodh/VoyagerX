@@ -67,8 +67,8 @@ public class TeleopCode extends LinearOpMode {
         servoRight = hardwareMap.get(Servo.class, "servoRight");
         servoRight.setDirection(Servo.Direction.REVERSE);
         servoLeft.setDirection(Servo.Direction.FORWARD);
-        servoLeft.scaleRange(0, 0.625);
-        servoRight.scaleRange(0, 0.625);
+        servoLeft.scaleRange(0.06, 0.8);
+        servoRight.scaleRange(0.06, 0.8);
         servoLeft.setPosition(0);
         servoRight.setPosition(0);
         double posFieldEdge = 0.75;
@@ -77,10 +77,11 @@ public class TeleopCode extends LinearOpMode {
         servoPivot = hardwareMap.get(Servo.class, "servoPivot");
         servoPivot.setDirection(Servo.Direction.FORWARD);
         servoPivot.scaleRange(0, 1);
-        servoPivot.setPosition(0.5);
+        servoPivot.setPosition(0.46);
 
         servoClaw = hardwareMap.get(Servo.class, "servoClaw");
-        servoClaw.setDirection(Servo.Direction.FORWARD);
+
+        servoClaw.setDirection(Servo.Direction.REVERSE);
         servoClaw.scaleRange(0, 0.4); //replace this later on
         servoClaw.setPosition(0);
 
@@ -90,8 +91,8 @@ public class TeleopCode extends LinearOpMode {
         outtakeClawRight = hardwareMap.get(Servo.class, "outtakeClawRight");
         outtakeClawRight.setDirection(Servo.Direction.REVERSE);
         outtakePivotRight.setDirection(Servo.Direction.REVERSE);
-        outtakeClawLeft.scaleRange(0, 0.55);
-        outtakeClawRight.scaleRange(0, 0.55);
+        outtakeClawLeft.scaleRange(0.1, 0.45);
+        outtakeClawRight.scaleRange(0.1, 0.45);
         outtakeClawRight.setPosition(0);
         outtakeClawLeft.setPosition(0);
         outtakePivotLeft.setPosition(0.975);
@@ -151,7 +152,7 @@ public class TeleopCode extends LinearOpMode {
         boolean pressedLastIteration = false;
         boolean pressedSpeedLastIteration = false;
         boolean pressedPivotServoLastIteration = false;
-        double pivotServoPosition = 0.5;
+        double pivotServoPosition = 0.46;
         boolean pressedPickServoLastIteration = false;
         boolean pickServoSwitch = false;
         double speed = 1.0;
@@ -248,14 +249,15 @@ public class TeleopCode extends LinearOpMode {
             boolean motorVerticalFullRetraction = (gamepad2.left_trigger > 0.2)||gamepad1.a;
             boolean lockDriveTrain = gamepad1.left_stick_button;
             boolean speedButton = gamepad2.left_stick_button;
-            boolean servoOut = (gamepad2.right_trigger > 0.2)||(gamepad1.dpad_left);
+            boolean servoOut = (gamepad2.right_trigger > 0.2);
             boolean servoIn = gamepad1.dpad_right;
             boolean servoPivotRight = gamepad2.dpad_right;
             boolean servoPivotLeft = gamepad2.dpad_left;
             boolean servoPivotReset = gamepad2.dpad_down;
             boolean servoPickButton = gamepad2.dpad_up;
             boolean fieldEdgeButton = gamepad2.left_bumper;
-            boolean underBarButton = gamepad2.right_bumper;
+            //boolean underBarButton = gamepad2.right_bumper;
+            boolean prepareIntakeButton = gamepad2.right_bumper;
             boolean outtakeClawButton = gamepad2.y;
             boolean outtakePivotButton = gamepad2.x;
             boolean highBucketButton = gamepad2.b;
@@ -342,7 +344,11 @@ public class TeleopCode extends LinearOpMode {
             if (servoIn){
                 servoLeft.setPosition(0);
                 servoRight.setPosition(0);
-            } else if(servoOut){
+            }else if(prepareIntakeButton){
+                servoLeft.setPosition(0.7);
+                servoRight.setPosition(0.7);
+            }
+            else if(servoOut){
                 servoLeft.setPosition(1);
                 servoRight.setPosition(1);
                 servoClaw.setPosition(1); //replace this later
@@ -350,10 +356,10 @@ public class TeleopCode extends LinearOpMode {
             } else if (fieldEdgeButton) {
                 servoLeft.setPosition(posFieldEdge);
                 servoRight.setPosition(posFieldEdge);
-            } else if (underBarButton){
+            } /*else if (underBarButton){
                 servoLeft.setPosition(posUnderBar);
                 servoRight.setPosition(posUnderBar);
-            }
+            }*/
 
             if (servoPivotLeft && !pressedPivotServoLastIteration && pivotServoPosition < 1){
                 pivotServoPosition += 0.1;
