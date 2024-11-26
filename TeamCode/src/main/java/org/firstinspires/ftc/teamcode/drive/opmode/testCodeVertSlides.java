@@ -39,6 +39,7 @@ public class testCodeVertSlides extends LinearOpMode {
     private Servo outtakePivotRight;
     private Servo outtakeClawLeft;
     private Servo outtakeClawRight;
+    private Servo servoHang;
 
     // Declare OpMode members for the linear slides
     private Servo leftHorizontal = null;
@@ -46,12 +47,8 @@ public class testCodeVertSlides extends LinearOpMode {
     private DcMotor leftVertical = null;
     private DcMotor rightVertical = null;
 
-    public int linearSlideRetraction = 50;
-    public int linearSlideExtension = 1000;
-
     @Override
     public void runOpMode() throws InterruptedException{
-
 
         // Initialize the hardware variables for the drivetrain
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -66,8 +63,8 @@ public class testCodeVertSlides extends LinearOpMode {
         servoRight = hardwareMap.get(Servo.class, "servoRight");
         servoRight.setDirection(Servo.Direction.REVERSE);
         servoLeft.setDirection(Servo.Direction.FORWARD);
-        servoLeft.scaleRange(0, 0.625);
-        servoRight.scaleRange(0, 0.625);
+        servoLeft.scaleRange(0.205, 0.8);
+        servoRight.scaleRange(0.205, 0.8);
         servoLeft.setPosition(0);
         servoRight.setPosition(0);
         double posFieldEdge = 0.75;
@@ -86,14 +83,18 @@ public class testCodeVertSlides extends LinearOpMode {
         servoClawLeft.setPosition(0.575);
         servoClawRight.setPosition(0.575);
 
+        servoHang = hardwareMap.get(Servo.class, "servoHang");
+        servoHang.setDirection(Servo.Direction.REVERSE);
+        servoHang.setPosition(0);
+
         outtakePivotLeft = hardwareMap.get(Servo.class, "outtakePivotLeft");
         outtakePivotRight = hardwareMap.get(Servo.class, "outtakePivotRight");
         outtakeClawLeft = hardwareMap.get(Servo.class, "outtakeClawLeft");
         outtakeClawRight = hardwareMap.get(Servo.class, "outtakeClawRight");
         outtakeClawRight.setDirection(Servo.Direction.REVERSE);
         outtakePivotRight.setDirection(Servo.Direction.REVERSE);
-        outtakeClawLeft.scaleRange(0, 0.55);
-        outtakeClawRight.scaleRange(0, 0.55);
+        outtakeClawLeft.scaleRange(0, 0.45);
+        outtakeClawRight.scaleRange(0, 0.45);
         outtakeClawRight.setPosition(0);
         outtakeClawLeft.setPosition(0);
         outtakePivotLeft.setPosition(0.975);
@@ -151,6 +152,7 @@ public class testCodeVertSlides extends LinearOpMode {
         boolean pressedSpeedLastIteration = false;
         boolean pressedPivotServoLastIteration = false;
         boolean pressedPickServoLastIteration = false;
+        boolean pressedHangLastIteration = false;
         boolean pickServoSwitch = false;
         double speed = 1.0;
         boolean isLockTime = false;
@@ -161,6 +163,7 @@ public class testCodeVertSlides extends LinearOpMode {
         boolean outtakePivotPosition = false;
         double timeForTransfer = 0;
         boolean waitForClose = false;
+        boolean hangToggle = false;
         Pose2d setPos = drive.getPoseEstimate();
 
         telemetry.addData("Status", "Initialized");
@@ -235,7 +238,7 @@ public class testCodeVertSlides extends LinearOpMode {
                 drive.update();
             }
 
-            //Linear slide control
+            // Controls
             boolean motorHorizontalButton = (gamepad1.left_trigger > 0.2);
             boolean motorHorizontalRetract = gamepad1.left_bumper;
             boolean motorHorizontalFullExtension = gamepad1.dpad_up;
@@ -247,7 +250,7 @@ public class testCodeVertSlides extends LinearOpMode {
             boolean lockDriveTrain = gamepad1.left_stick_button;
             boolean speedButton = gamepad2.left_stick_button;
             boolean servoOut = (gamepad2.right_trigger > 0.2)||(gamepad1.dpad_left);
-            boolean servoIn = gamepad1.dpad_right;
+            boolean servoIn = (gamepad1.dpad_right || gamepad2.touchpad);
             boolean servoPivotRight = gamepad2.dpad_right;
             boolean servoPivotLeft = gamepad2.dpad_left;
             boolean servoPivotReset = gamepad2.dpad_down;
@@ -258,7 +261,16 @@ public class testCodeVertSlides extends LinearOpMode {
             boolean outtakePivotButton = gamepad2.x;
             boolean highBucketButton = gamepad2.b;
             boolean specimenGrabButton = gamepad2.back;
+            boolean hangButton = gamepad2.right_stick_button;
 
+            if(hangButton) hangToggle = !hangToggle;
+            if(hangToggle && !pressedHangLastIteration) {
+                servoHang.setPosition(0.5);
+            }
+            else {
+                servoHang.setPosition(0);
+            }
+            pressedHangLastIteration = hangButton;
 
             if(specimenGrabButton && !pressedSpecimenIntakeLastIteration){
                 if (!outtakePivotPosition){
@@ -332,6 +344,8 @@ public class testCodeVertSlides extends LinearOpMode {
             if (servoIn){
                 servoLeft.setPosition(0);
                 servoRight.setPosition(0);
+                pivotServoPosition = 0.55;
+                servoPivot.setPosition(pivotServoPosition);
             } else if(servoOut){
                 servoLeft.setPosition(1);
                 servoRight.setPosition(1);
@@ -450,21 +464,6 @@ public class testCodeVertSlides extends LinearOpMode {
 
         double heading = Angle.normDelta(targetPos.getHeading() - Angle.normDelta(currPos.getHeading()));
         drive.setWeightedDrivePower(new Pose2d(xy.getX() * 0.2, xy.getY() * xyP, heading * headingP));
-    }
-    public int angleChecker(double start, double end, double cur){
-        if (start < end){
-            if (start <= cur && cur <= end){
-                return 1;
-            } else {
-                return -1;
-            }
-        } else {
-            if (end <= cur && cur <= start){
-                return -1;
-            } else {
-                return 1;
-            }
-        }
     }
 }
 
