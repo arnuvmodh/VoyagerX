@@ -59,8 +59,8 @@ public class testCodeVertSlides extends LinearOpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 
-        servoLeft = hardwareMap.get(Servo.class, "servoLeft");
-        servoRight = hardwareMap.get(Servo.class, "servoRight");
+        servoLeft = hardwareMap.get(Servo.class, "intakePivotLeft");
+        servoRight = hardwareMap.get(Servo.class, "intakePivotRight");
         servoRight.setDirection(Servo.Direction.REVERSE);
         servoLeft.setDirection(Servo.Direction.FORWARD);
         servoLeft.scaleRange(0.205, 0.8);
@@ -76,8 +76,8 @@ public class testCodeVertSlides extends LinearOpMode {
         servoPivot.scaleRange(0, 1);
         servoPivot.setPosition(pivotServoPosition);
 
-        servoClawLeft = hardwareMap.get(Servo.class, "servoClawLeft");
-        servoClawRight = hardwareMap.get(Servo.class, "servoClawRight");
+        servoClawLeft = hardwareMap.get(Servo.class, "intakeClawLeft");
+        servoClawRight = hardwareMap.get(Servo.class, "intakeClawRight");
         servoClawLeft.setDirection(Servo.Direction.FORWARD);
         servoClawRight.setDirection(Servo.Direction.REVERSE);
         servoClawLeft.setPosition(0.575);
@@ -115,14 +115,14 @@ public class testCodeVertSlides extends LinearOpMode {
         rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Initialize the hardware variables for the linear slides
-        leftHorizontal = hardwareMap.get(Servo.class, "leftHorizontal");
+        leftHorizontal = hardwareMap.get(Servo.class, "leftHorizontalSlide");
         leftHorizontal.setDirection(Servo.Direction.FORWARD);
-        rightHorizontal = hardwareMap.get(Servo.class, "rightHorizontal");
+        rightHorizontal = hardwareMap.get(Servo.class, "rightHorizontalSlide");
         rightHorizontal.setDirection(Servo.Direction.REVERSE);
-        leftVertical = hardwareMap.get(DcMotor.class, "left_vertical_slide");
-        leftVertical.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightVertical = hardwareMap.get(DcMotor.class, "right_vertical_slide");
-        rightVertical.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftVertical = hardwareMap.get(DcMotor.class, "leftVerticalSlide");
+        leftVertical.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightVertical = hardwareMap.get(DcMotor.class, "rightVerticalSlide");
+        rightVertical.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
         // Set horizontal slides
@@ -185,8 +185,8 @@ public class testCodeVertSlides extends LinearOpMode {
             telemetry.addData("Horizontal Slide Position", horizontalSlidePosition);
             telemetry.addData("Left Servo Position", servoLeft.getPosition());
             telemetry.addData("Right Servo Position", servoRight.getPosition());
-            telemetry.addData("leftVertical", -leftVertical.getCurrentPosition());
-            telemetry.addData("rightVertical", -rightVertical.getCurrentPosition());
+            telemetry.addData("leftVertical", leftVertical.getCurrentPosition());
+            telemetry.addData("rightVertical", rightVertical.getCurrentPosition());
             telemetry.addData("isLocked", isLocked);
             telemetry.addData("Speed", speed);
             telemetry.addData("Driving Mode (false = fieldcentric, true=robotcentric)", drivingMode);
@@ -263,13 +263,12 @@ public class testCodeVertSlides extends LinearOpMode {
             boolean specimenGrabButton = gamepad2.back;
             boolean hangButton = gamepad2.right_stick_button;
 
-            if(hangButton) hangToggle = !hangToggle;
-            if(hangToggle && !pressedHangLastIteration) {
+            if(hangButton && !pressedHangLastIteration) {
                 servoHang.setPosition(0.5);
             }
-            else {
+            /*else {
                 servoHang.setPosition(0);
-            }
+            }*/
             pressedHangLastIteration = hangButton;
 
             if(specimenGrabButton && !pressedSpecimenIntakeLastIteration){
