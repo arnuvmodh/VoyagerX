@@ -25,10 +25,10 @@ public class Robot {
     public Robot(HardwareMap hardwareMap) {
         intakeClaw = new IntakeClaw(hardwareMap, "intakeClawLeft", "intakeClawRight", 0, 1);
         outtakeClaw = new OuttakeClaw(hardwareMap, "outtakeClawLeft", "outtakeClawRight", 0, 0.44);
-        intakePivot = new IntakePivot(hardwareMap, "intakePivotLeft", "intakePivotRight", 0.21, 0.8);
+        intakePivot = new IntakePivot(hardwareMap, "intakePivotLeft", "intakePivotRight", 0.19, 0.8);
         outtakePivot = new OuttakePivot(hardwareMap, "outtakePivotLeft", "outtakePivotRight", 0, 1, -0.025);
         clawPivot = new Pivot(hardwareMap, "servoPivot", 0, 1);
-        verticalSlide = new MotorSlide(hardwareMap, "leftVerticalSlide", "rightVerticalSlide", 50, 3050);
+        verticalSlide = new MotorSlide(hardwareMap, "leftVerticalSlide", "rightVerticalSlide", 50, 3000);
         horizontalSlide = new ServoSlide(hardwareMap, "leftHorizontalSlide", "rightHorizontalSlide", 0, 0.5);
 
     }

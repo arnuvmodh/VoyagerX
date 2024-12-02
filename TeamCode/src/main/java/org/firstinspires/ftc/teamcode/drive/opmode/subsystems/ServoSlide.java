@@ -16,14 +16,11 @@ public class ServoSlide {
         _right.scaleRange(min, max);
     }
 
-    public void extend(double increment) {
-        double newLeftPosition = _left.getPosition() + increment;
-        double newRightPosition = _right.getPosition() + increment;
-
-        _left.setPosition(Math.min(newLeftPosition, 1));
-        _right.setPosition(Math.min(newRightPosition, 1));
-
+    public void goTo(double position) {
+        _left.setPosition(position);
+        _right.setPosition(position);
     }
+
     public void retract(double increment) {
         double newLeftPosition = _left.getPosition() - increment;
         double newRightPosition = _right.getPosition() - increment;

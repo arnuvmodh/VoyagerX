@@ -16,6 +16,7 @@ import java.util.Arrays;
 @Autonomous()
 public class Specimen extends LinearOpMode {
     private Robot robot;
+    int verticalSlidePosition = 0;
     final double SPECIMEN_GRAB_POSITION = 0.2;
     final double SPECIMEN_SCORE_POSITION = 0.65;
     final double INTAKE_CLAW_OPEN_POSITION = 0.1;
@@ -55,16 +56,16 @@ public class Specimen extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-30, -2, 6.2221))
                 .build();
         traj2 = drive.trajectoryBuilder(traj1.end())
-                .splineTo(new Vector2d(-19.5, 40), 3.1167)
+                .splineTo(new Vector2d(-17.5, 39.6287), 3.1287)
                 .build();
         traj3 = drive.trajectoryBuilder(traj2.end())
-                .strafeTo(new Vector2d(-19.5, 50))
+                .strafeTo(new Vector2d(-18.25, 49.6687))
                 .build();
         traj4 = drive.trajectoryBuilder(traj3.end())
                 .lineToConstantHeading(new Vector2d(-5.5, 24.9))
                 .build();
         traj5 = drive.trajectoryBuilder(traj4.end())
-                .lineToSplineHeading(new Pose2d(-25.25, -4, 0))
+                .lineToSplineHeading(new Pose2d(-25, -4, 0))
                 .build();
         traj6 = drive.trajectoryBuilder(traj5.end())
                 .splineToSplineHeading(new Pose2d(-10, 24.9, 3.1167), Math.PI)
@@ -94,27 +95,33 @@ public class Specimen extends LinearOpMode {
 
         while(opModeIsActive()) {
             stateMachine();
+            robot.verticalSlide.goTo(verticalSlidePosition, 1);
             drive.update();
             Pose2d poseEstimate = drive.getPoseEstimate();
             PoseStorage.currentPose = poseEstimate;
             telemetry.addData("Current State", curState.name());
             telemetry.addData("Current Time", timer.seconds());
+            telemetry.addData("Left Vertical", robot.verticalSlide.getLeftPosition());
+            telemetry.addData("Right Vertical", robot.verticalSlide.getRightPosition());
+            telemetry.addData("Vertical Position", verticalSlidePosition);
+            telemetry.addData("x", poseEstimate.getX());
+            telemetry.addData("y", poseEstimate.getY());
+            telemetry.addData("heading", poseEstimate.getHeading());
             telemetry.update();
         }
     }
 
     private void stateMachine() throws InterruptedException {
-
         switch(curState) {
             case idle:
                 break;
-            case traj1:  //scores first specimne
+            case traj1:  //scores first specimen
                 if(timer.seconds()>0 && timer.seconds()<1.8){
-                    robot.verticalSlide.goTo(1000, 1);
+                    verticalSlidePosition = 800;
                     robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION);
                 }
                 if(timer.seconds()>1.8 && timer.seconds()<2.65){
-                    robot.verticalSlide.goTo(0, 1);
+                    verticalSlidePosition = 0;
                 }
                 if(timer.seconds()>2.65) robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
                 if(!drive.isBusy() && timer.seconds()>2.7) {
@@ -125,16 +132,19 @@ public class Specimen extends LinearOpMode {
                 }
                 break;
             case traj2:  //grabs first sample
+                if(timer.seconds()>0&&timer.seconds()<3.7) {
+                    robot.horizontalSlide.retractFull();
+                }
                 if(timer.seconds() > 1 && timer.seconds()<2.3){
+                    robot.clawPivot.flipTo(0.55);
                     robot.outtakeClaw.open();
-                    robot.intakeClaw.openTo(INTAKE_CLAW_OPEN_POSITION);
+                    robot.intakeClaw.openTo(INTAKE_CLAW_OPEN_POSITION+0.2);
                     robot.intakePivot.flipFront();
                 }
-                if(timer.seconds()>2.3 && timer.seconds()<2.5){
+                if(timer.seconds()>2.4 && timer.seconds()<2.8){
                     robot.intakeClaw.openTo(INTAKE_CLAW_CLOSE_POSITION);
                 }
                 if(timer.seconds()>2.8&&timer.seconds()<3.4){
-                    robot.horizontalSlide.retractFull();
                     robot.intakePivot.flipBack();
                 }
                 if(!drive.isBusy() && timer.seconds()>3.7) {
@@ -145,8 +155,11 @@ public class Specimen extends LinearOpMode {
                 }
                 break;
             case traj3: // outtakes first sample and intakes+outtakes 2nd sample
+                if(timer.seconds()>0&&timer.seconds()<5.4) {
+                    robot.horizontalSlide.retractFull();
+                }
                 if(timer.seconds() > 0.2 && timer.seconds() < 1.5){
-                    robot.intakeClaw.openTo(INTAKE_CLAW_OPEN_POSITION);
+                    robot.intakeClaw.openTo(INTAKE_CLAW_CLOSE_POSITION-0.2);
                 }
                 if(timer.seconds() > 1.4 && timer.seconds() < 1.7){
                     robot.outtakePivot.flipTo(SPECIMEN_GRAB_POSITION);
@@ -155,15 +168,14 @@ public class Specimen extends LinearOpMode {
                     robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
                 }
                 if(timer.seconds()>1.7&&timer.seconds()<2.4) {
-                    robot.intakeClaw.openTo(INTAKE_CLAW_OPEN_POSITION);
+                    robot.clawPivot.flipTo(0.55);
                     robot.outtakePivot.flipFront();
                     robot.intakePivot.flipFront();
                 }
-                if(timer.seconds() > 2.4 && timer.seconds() < 2.6){
+                if(timer.seconds() > 2.3 && timer.seconds() < 2.6){
                     robot.intakeClaw.openTo(INTAKE_CLAW_CLOSE_POSITION);
                 }
                 if(timer.seconds() > 2.6 && timer.seconds() < 3.2){
-                    robot.horizontalSlide.retractFull();
                     robot.intakePivot.flipBack();
                 }
                 if(timer.seconds() > 3.5 && timer.seconds() < 3.7){
@@ -192,11 +204,11 @@ public class Specimen extends LinearOpMode {
                     robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION+0.1);
                 }
                 if(timer.seconds()>1.8&&timer.seconds()<2) {
-                    robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION);
+                    verticalSlidePosition = 1300;
+                    robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION-0.2);
                 }
                 if(!drive.isBusy()&&timer.seconds()>2.1&&timer.seconds()<3.7) {
                     timer.reset();
-                    robot.verticalSlide.goTo(1100, 1);
                     drive.followTrajectory(traj5);
                     curState = State.traj5;
                 }
@@ -204,12 +216,11 @@ public class Specimen extends LinearOpMode {
             case traj5: //hangs second specimen
                 if(timer.seconds()>0 && timer.seconds()<2.5){
                     robot.outtakePivot.flipTo(SPECIMEN_GRAB_POSITION+0.1);
-                    robot.verticalSlide.goTo(1100, 1);
                 }
-                if(timer.seconds()>2.5&&timer.seconds()<3){
-                    robot.verticalSlide.goTo(0, 1);
+                if(timer.seconds()>2.6&&timer.seconds()<3){
+                    verticalSlidePosition = 0;
                 }
-                if(timer.seconds()>3.7&&timer.seconds()<3.8) robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
+                if(timer.seconds()>3.8&&timer.seconds()<3.9) robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
                 if(!drive.isBusy()&&timer.seconds()>3.9) {
                     robot.outtakePivot.flipTo(SPECIMEN_GRAB_POSITION+0.1);
                     timer.reset();
@@ -221,12 +232,12 @@ public class Specimen extends LinearOpMode {
                 if(!robot.outtakeClaw.isAt(OUTTAKE_CLAW_CLOSE_POSITION+0.1)){
                     robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION+0.2);
                 }
-                if(timer.seconds()>2.1&&timer.seconds()<2.3) {
-                    robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION);
+                if(timer.seconds()>2.3&&timer.seconds()<2.7) {
+                    verticalSlidePosition = 1300;
+                    robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION-0.2);
                 }
                 if(!drive.isBusy()&&timer.seconds()>2.8&&timer.seconds()<4) {
                     timer.reset();
-                    robot.verticalSlide.goTo(1900, 1);
                     drive.followTrajectory(traj7);
                     curState = State.traj7;
                 }
@@ -234,12 +245,11 @@ public class Specimen extends LinearOpMode {
             case traj7: //hangs 3rd specimen
                 if(timer.seconds()>0 && timer.seconds()<2.5){
                     robot.outtakePivot.flipTo(SPECIMEN_GRAB_POSITION+0.1);
-                    robot.verticalSlide.goTo(1900, 1);
                 }
-                if(timer.seconds()>2.5&&timer.seconds()<3){
-                    robot.verticalSlide.goTo(0, 1);
+                if(timer.seconds()>2.6&&timer.seconds()<3){
+                    verticalSlidePosition = 0;
                 }
-                if(timer.seconds()>3.7&&timer.seconds()<3.8) robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
+                if(timer.seconds()>3.8&&timer.seconds()<3.9) robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
                 if(!drive.isBusy()&&timer.seconds()>3.9) {
                     timer.reset();
                     drive.followTrajectory(traj8);
@@ -250,12 +260,12 @@ public class Specimen extends LinearOpMode {
                 if(!robot.outtakeClaw.isAt(OUTTAKE_CLAW_CLOSE_POSITION+0.1)){
                     robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION+0.1);
                 }
-                if(timer.seconds()>2.1&&timer.seconds()<2.3) {
+                if(timer.seconds()>2.1&&timer.seconds()<2.8) {
+                    verticalSlidePosition = 1400;
                     robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION);
                 }
                 if(!drive.isBusy()&&timer.seconds()>2.8&&timer.seconds()<4) {
                     timer.reset();
-                    robot.verticalSlide.goTo(1900, 1);
                     drive.followTrajectory(traj9);
                     curState = State.traj9;
                 }
@@ -263,13 +273,13 @@ public class Specimen extends LinearOpMode {
             case traj9:
                 if(timer.seconds()>0 && timer.seconds()<2.4){
                     robot.outtakePivot.flipTo(SPECIMEN_GRAB_POSITION+0.1);
-                    robot.verticalSlide.goTo(1900, 1);
                 }
                 if(timer.seconds()>2.4&&timer.seconds()<3){
-                    robot.verticalSlide.goTo(0, 1);
+                    verticalSlidePosition = 0;
                 }
-                if(timer.seconds()>3.7&&timer.seconds()<3.8) robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
+                if(timer.seconds()>3.8&&timer.seconds()<3.9) robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
                 break;
+
         }
     }
 

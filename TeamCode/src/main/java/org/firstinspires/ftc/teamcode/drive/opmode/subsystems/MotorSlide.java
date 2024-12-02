@@ -44,6 +44,14 @@ public class MotorSlide {
         _right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    public void reset() {
+        _left.setPower(0);
+        _right.setPower(0);
+
+        _left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        _right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
     public void extendFull() {
         if (_left.getCurrentPosition() < _max-50) {
             _left.setPower(1);
@@ -59,7 +67,7 @@ public class MotorSlide {
     }
 
     public void retractFull() {
-        if (-_left.getCurrentPosition() > _min+50) {
+        if (_left.getCurrentPosition() > _min+50) {
             _left.setPower(-1);
         } else {
             _left.setPower(0);
