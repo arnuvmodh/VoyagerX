@@ -65,21 +65,21 @@ public class Specimen extends LinearOpMode {
                 .lineToConstantHeading(new Vector2d(-5.5, 24.9))
                 .build();
         traj5 = drive.trajectoryBuilder(traj4.end())
-                .lineToSplineHeading(new Pose2d(-25, -4, 0))
+                .lineToSplineHeading(new Pose2d(-26, -4, 0))
                 .build();
         traj6 = drive.trajectoryBuilder(traj5.end())
                 .splineToSplineHeading(new Pose2d(-10, 24.9, 3.1167), Math.PI)
                 .splineToSplineHeading(new Pose2d(-5.5, 24.9, 3.1167), Math.PI)
                 .build();
         traj7 = drive.trajectoryBuilder(traj6.end())
-                .lineToSplineHeading(new Pose2d(-25, -7, 0))
+                .lineToSplineHeading(new Pose2d(-26.25, -7, 0))
                 .build();
         traj8 = drive.trajectoryBuilder(traj5.end())
                 .splineToSplineHeading(new Pose2d(-10, 24.9, 3.1167), Math.PI)
                 .splineToSplineHeading(new Pose2d(-5.5, 24.9, 3.1167), Math.PI)
                 .build();
         traj9 = drive.trajectoryBuilder(traj6.end())
-                .lineToSplineHeading(new Pose2d(-26.25, 2.5, 0))
+                .lineToSplineHeading(new Pose2d(-27.25, 3, 0))
                 .build();
 
 
@@ -204,7 +204,7 @@ public class Specimen extends LinearOpMode {
                     robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION+0.1);
                 }
                 if(timer.seconds()>1.8&&timer.seconds()<2) {
-                    verticalSlidePosition = 1300;
+                    verticalSlidePosition = 1400;
                     robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION-0.2);
                 }
                 if(!drive.isBusy()&&timer.seconds()>2.1&&timer.seconds()<3.7) {
@@ -233,7 +233,7 @@ public class Specimen extends LinearOpMode {
                     robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION+0.2);
                 }
                 if(timer.seconds()>2.3&&timer.seconds()<2.7) {
-                    verticalSlidePosition = 1300;
+                    verticalSlidePosition = 1400;
                     robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION-0.2);
                 }
                 if(!drive.isBusy()&&timer.seconds()>2.8&&timer.seconds()<4) {
@@ -261,7 +261,7 @@ public class Specimen extends LinearOpMode {
                     robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION+0.1);
                 }
                 if(timer.seconds()>2.1&&timer.seconds()<2.8) {
-                    verticalSlidePosition = 1400;
+                    verticalSlidePosition = 1500;
                     robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION);
                 }
                 if(!drive.isBusy()&&timer.seconds()>2.8&&timer.seconds()<4) {
