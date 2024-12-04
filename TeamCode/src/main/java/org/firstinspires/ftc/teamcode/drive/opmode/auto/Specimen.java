@@ -55,28 +55,30 @@ public class Specimen extends LinearOpMode {
         traj1 = drive.trajectoryBuilder(new Pose2d(0, 0, 0))
                 .lineToSplineHeading(new Pose2d(-30, -2, 6.2221))
                 .build();
+        //first pickup
         traj2 = drive.trajectoryBuilder(traj1.end())
-                .splineTo(new Vector2d(-17.5, 39.6287), 3.1287)
+                .splineTo(new Vector2d(-19.5, 39.6287), 3.1287)
                 .build();
+        //second pickup
         traj3 = drive.trajectoryBuilder(traj2.end())
-                .strafeTo(new Vector2d(-18.25, 49.6687))
+                .strafeTo(new Vector2d(-20.25, 49.6687))
                 .build();
         traj4 = drive.trajectoryBuilder(traj3.end())
-                .lineToConstantHeading(new Vector2d(-5.5, 24.9))
+                .lineToConstantHeading(new Vector2d(-6, 24.9))
                 .build();
         traj5 = drive.trajectoryBuilder(traj4.end())
                 .lineToSplineHeading(new Pose2d(-26, -4, 0))
                 .build();
         traj6 = drive.trajectoryBuilder(traj5.end())
                 .splineToSplineHeading(new Pose2d(-10, 24.9, 3.1167), Math.PI)
-                .splineToSplineHeading(new Pose2d(-5.5, 24.9, 3.1167), Math.PI)
+                .splineToSplineHeading(new Pose2d(-6, 24.9, 3.1167), Math.PI)
                 .build();
         traj7 = drive.trajectoryBuilder(traj6.end())
                 .lineToSplineHeading(new Pose2d(-26.25, -7, 0))
                 .build();
         traj8 = drive.trajectoryBuilder(traj5.end())
                 .splineToSplineHeading(new Pose2d(-10, 24.9, 3.1167), Math.PI)
-                .splineToSplineHeading(new Pose2d(-5.5, 24.9, 3.1167), Math.PI)
+                .splineToSplineHeading(new Pose2d(-6, 24.9, 3.1167), Math.PI)
                 .build();
         traj9 = drive.trajectoryBuilder(traj6.end())
                 .lineToSplineHeading(new Pose2d(-27.25, 3, 0))
@@ -200,10 +202,10 @@ public class Specimen extends LinearOpMode {
                 break;
 
             case traj4:  //grabs second specimen off of wall
-                if(timer.seconds()>0&&timer.seconds()<1.8) {
+                if(timer.seconds()>0&&timer.seconds()<2) {
                     robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION+0.1);
                 }
-                if(timer.seconds()>1.8&&timer.seconds()<2) {
+                if(timer.seconds()>2&&timer.seconds()<2.2) {
                     verticalSlidePosition = 1400;
                     robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION-0.2);
                 }
@@ -229,14 +231,14 @@ public class Specimen extends LinearOpMode {
                 }
                 break;
             case traj6: //grabs 3rd specimen off of wall
-                if(!robot.outtakeClaw.isAt(OUTTAKE_CLAW_CLOSE_POSITION+0.1)){
-                    robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION+0.2);
+                if(timer.seconds()>0&&timer.seconds()<2.5){
+                    robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION+0.1);
                 }
-                if(timer.seconds()>2.3&&timer.seconds()<2.7) {
+                if(timer.seconds()>2.5&&timer.seconds()<2.8) {
                     verticalSlidePosition = 1400;
                     robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION-0.2);
                 }
-                if(!drive.isBusy()&&timer.seconds()>2.8&&timer.seconds()<4) {
+                if(!drive.isBusy()&&timer.seconds()>3&&timer.seconds()<4) {
                     timer.reset();
                     drive.followTrajectory(traj7);
                     curState = State.traj7;
@@ -257,14 +259,14 @@ public class Specimen extends LinearOpMode {
                 }
                 break;
             case traj8:
-                if(!robot.outtakeClaw.isAt(OUTTAKE_CLAW_CLOSE_POSITION+0.1)){
+                if(timer.seconds()>0&&timer.seconds()<2.3){
                     robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION+0.1);
                 }
-                if(timer.seconds()>2.1&&timer.seconds()<2.8) {
+                if(timer.seconds()>2.3&&timer.seconds()<2.8) {
                     verticalSlidePosition = 1500;
                     robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION);
                 }
-                if(!drive.isBusy()&&timer.seconds()>2.8&&timer.seconds()<4) {
+                if(!drive.isBusy()&&timer.seconds()>3&&timer.seconds()<4) {
                     timer.reset();
                     drive.followTrajectory(traj9);
                     curState = State.traj9;
