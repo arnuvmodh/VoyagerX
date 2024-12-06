@@ -200,6 +200,7 @@ public class SampleTime extends LinearOpMode {
                     }
 
                     if(timer.seconds() > 3 && timer.seconds()<3.7) {
+                        horizontalSlidePosition = 0.95;
 //                        intakeEdgeClawPosition();
                     }
 
@@ -254,12 +255,12 @@ public class SampleTime extends LinearOpMode {
             }
 
             robot.horizontalSlide.goTo(horizontalSlidePosition);
-
-            if (raiseVertSlides) {
-                robot.verticalSlide.extendFull();
-            } else {
-                robot.verticalSlide.retractFull();
-            }
+//
+//            if (raiseVertSlides) {
+//                robot.verticalSlide.extendFull();
+//            } else {
+//                robot.verticalSlide.retractFull();
+//            }
 
 
             drive.update();
