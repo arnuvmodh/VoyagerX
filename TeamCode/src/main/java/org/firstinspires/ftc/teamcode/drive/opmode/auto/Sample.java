@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.opmode.PoseStorage;
@@ -14,12 +15,9 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 @Autonomous()
 public class Sample extends LinearOpMode {
     private Robot robot;
-    final double SPECIMEN_GRAB_POSITION = 0.2;
-    final double SPECIMEN_SCORE_POSITION = 0.65;
+    private Servo servoHang;
     final double INTAKE_CLAW_OPEN_POSITION = 0.1;
-    final double OUTTAKE_CLAW_OPEN_POSITION = 0.3;
     final double OUTTAKE_CLAW_CLOSE_POSITION = 1;
-    final double INTAKE_CLAW_CLOSE_POSITION = 0.55;
     private SampleMecanumDrive drive;
     public Trajectory preloadOuttake, firstIntake, firstOuttake, secondIntake, secondOuttake, thirdIntake, thirdOuttake, park;
     enum State {
@@ -70,16 +68,19 @@ public class Sample extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         robot = new Robot(hardwareMap);
-        buildTrajectories();
         robot.intakePivot.flipBack();
         robot.outtakePivot.flipFront();
         robot.horizontalSlide.retractFull();
         robot.intakeClaw.openTo(INTAKE_CLAW_OPEN_POSITION);
         robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION);
         robot.clawPivot.flipTo(0.55);
+        servoHang = hardwareMap.get(Servo.class, "servoHang");
+        servoHang.setDirection(Servo.Direction.REVERSE);
+        servoHang.setPosition(0);
 
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(new Pose2d(0,0, 0));
+        buildTrajectories();
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -100,9 +101,19 @@ public class Sample extends LinearOpMode {
             telemetry.addData("Current Time", timer.seconds());
             telemetry.addData("Left Vertical", robot.verticalSlide.getLeftPosition());
             telemetry.addData("Right Vertical", robot.verticalSlide.getRightPosition());
-            telemetry.addData("x", poseEstimate.getX());
-            telemetry.addData("y", poseEstimate.getY());
-            telemetry.addData("heading", poseEstimate.getHeading());
+            telemetry.addData("At Target", robot.isAt(highBucketPosition, 1.5));
+            telemetry.addData("Distance to Target", Math.hypot(
+                    firstSamplePosition.getX() - poseEstimate.getX(),
+                    firstSamplePosition.getY() - poseEstimate.getY()
+            ));
+            telemetry.addData("Current Pose X", poseEstimate.getX());
+            telemetry.addData("Current Pose Y", poseEstimate.getY());
+            telemetry.addData("Target Pose X", highBucketPosition.getX());
+            telemetry.addData("Target Pose Y", highBucketPosition.getY());
+            telemetry.addData("Current Pose Heading Deg", Math.toDegrees(poseEstimate.getHeading()));
+            telemetry.addData("Current Pose Heading Rad", poseEstimate.getHeading());
+            telemetry.addData("Target Pose Heading Deg", Math.toDegrees(highBucketPosition.getHeading()));
+            telemetry.addData("Target Pose Heading Rad", highBucketPosition.getHeading());
             telemetry.update();
         }
     }
@@ -112,46 +123,54 @@ public class Sample extends LinearOpMode {
             case idle:
                 break;
             case preloadOuttake:
-
+                if(robot.isAt(highBucketPosition, 1.5)) {
+                    drive.followTrajectoryAsync(firstIntake);
+                    curState = State.firstIntake;
+                }
                 break;
             case firstIntake:
-
+                if(robot.isAt(vectorToPose(firstSamplePosition,0.75), 1.5)) {
+                    drive.followTrajectoryAsync(firstOuttake);
+                    curState = State.firstOuttake;
+                }
                 break;
             case firstOuttake:
-
+                if(robot.isAt(highBucketPosition, 1.5)) {
+                    drive.followTrajectoryAsync(secondIntake);
+                    curState = State.secondIntake;
+                }
                 break;
-
             case secondIntake:
-
+                if(robot.isAt(vectorToPose(firstSamplePosition, 1.2), 1.5)) {
+                    drive.followTrajectoryAsync(secondOuttake);
+                    curState = State.secondOuttake;
+                }
                 break;
             case secondOuttake:
-
+                if(robot.isAt(highBucketPosition, 1.5)) {
+                    drive.followTrajectoryAsync(thirdIntake);
+                    curState = State.thirdIntake;
+                }
                 break;
             case thirdIntake:
-
+                if(robot.isAt(vectorToPose(thirdSamplePosition, 1.45), 1.5)) {
+                    drive.followTrajectoryAsync(thirdOuttake);
+                    curState = State.thirdOuttake;
+                }
                 break;
             case thirdOuttake:
-
+                if(robot.isAt(highBucketPosition, 1.5)) {
+                    drive.followTrajectoryAsync(park);
+                    curState = State.park;
+                }
                 break;
             case park:
-
                 break;
 
         }
     }
-
-//    private double positionDifference(Pose2d currentPosition, Pose2d targetPosition) {
-//        double distance = Math.hypot(
-//                targetPosition.getX() - currentPosition.getX(),
-//                targetPosition.getY() - currentPosition.getY()
-//        );
-//        return distance;
-//    }
-//    private boolean isAt(Pose2d currentPosition, Pose2d targetPosition) {
-//        boolean positionDifference = isAt(currentPosition, targetPosition, tolerance);
-//        double headingDifference = Math.abs(targetPosition.getHeading() - currentPosition.getHeading());
-//        headingDifference = (headingDifference + Math.PI) % (2 * Math.PI) - Math.PI;
-//        return positionDifference && Math.abs(headingDifference) <= headingTolerance;
-//    }
+    private Pose2d vectorToPose(Vector2d vector, double heading) {
+        return new Pose2d(vector.getX(), vector.getY(), heading);
+    }
 
 }

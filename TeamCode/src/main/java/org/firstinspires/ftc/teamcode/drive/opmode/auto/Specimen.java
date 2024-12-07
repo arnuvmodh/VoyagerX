@@ -211,6 +211,7 @@ public class Specimen extends LinearOpMode {
                 }
                 if(!drive.isBusy()&&timer.seconds()>2.1&&timer.seconds()<3.7) {
                     timer.reset();
+                    robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
                     drive.followTrajectory(traj5);
                     curState = State.traj5;
                 }
@@ -226,6 +227,7 @@ public class Specimen extends LinearOpMode {
                 if(!drive.isBusy()&&timer.seconds()>3.9) {
                     robot.outtakePivot.flipTo(SPECIMEN_GRAB_POSITION+0.1);
                     timer.reset();
+                    robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
                     drive.followTrajectory(traj6);
                     curState = State.traj6;
                 }
@@ -254,6 +256,7 @@ public class Specimen extends LinearOpMode {
                 if(timer.seconds()>3.8&&timer.seconds()<3.9) robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
                 if(!drive.isBusy()&&timer.seconds()>3.9) {
                     timer.reset();
+                    robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
                     drive.followTrajectory(traj8);
                     curState = State.traj8;
                 }

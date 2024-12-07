@@ -51,25 +51,25 @@ public class SampleTime extends LinearOpMode {
 
         //IMPLEMENT THESE TRAJECTORY SEQUENCES ASYNCHRONOUSLY TO FOLLOW AUTO PATH
         Trajectory traj1 = drive.trajectoryBuilder(new Pose2d(0, 0, 0))
-                .lineToSplineHeading(new Pose2d(-20, 3, 0.9))
+                .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
                 .build();
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
                 .lineToSplineHeading(new Pose2d(-14, 10, 1.4318))
                 .build();
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
-                .lineToSplineHeading(new Pose2d(-20, 3, 0.9))
+                .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
                 .build();
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
                 .lineToSplineHeading(new Pose2d(-18, 10, 1.6415))
                 .build();
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
-                .lineToSplineHeading(new Pose2d(-20, 3, 0.9))
+                .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
                 .build();
         Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
                 .lineToSplineHeading(new Pose2d(-22.2, 13.47, 1.9))
                 .build();
         Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
-                .lineToSplineHeading(new Pose2d(-20, 3, 0.9))
+                .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
                 .build();
         Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
                 .lineToSplineHeading(new Pose2d(-13.6212, 7.5, (Math.PI / 2)+0.2))
@@ -194,13 +194,13 @@ public class SampleTime extends LinearOpMode {
                 case traj6:
                     if (oneTimeSwitch[9] && timer.seconds() > 0.8 && timer.seconds()<3.7) {
                         raiseVertSlides = false;
-                        horizontalSlidePosition = 0.95;
+                        horizontalSlidePosition = 0.625;
                         robot.clawPivot.flipTo(0.55);
                         oneTimeSwitch[9] = false;
                     }
 
                     if(timer.seconds() > 3 && timer.seconds()<3.7) {
-                        horizontalSlidePosition = 0.95;
+                        horizontalSlidePosition = 0.625;
 //                        intakeEdgeClawPosition();
                     }
 
@@ -255,12 +255,12 @@ public class SampleTime extends LinearOpMode {
             }
 
             robot.horizontalSlide.goTo(horizontalSlidePosition);
-//
-//            if (raiseVertSlides) {
-//                robot.verticalSlide.extendFull();
-//            } else {
-//                robot.verticalSlide.retractFull();
-//            }
+
+            if (raiseVertSlides) {
+                robot.verticalSlide.extendFull();
+            } else {
+                robot.verticalSlide.retractFull();
+            }
 
 
             drive.update();
