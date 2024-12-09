@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.auto;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -11,10 +12,11 @@ import org.firstinspires.ftc.teamcode.drive.opmode.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.opmode.Robot;
 
 @Autonomous()
-public class SampleTime extends LinearOpMode {
+public class SpecimenSample extends LinearOpMode {
     final double INTAKE_CLAW_OPEN_POSITION = 0.1;
     final double OUTTAKE_CLAW_OPEN_POSITION = 0.3;
     final double OUTTAKE_CLAW_CLOSE_POSITION = 1;
+    final double SPECIMEN_SCORE_POSITION = 0.65;
     enum State {
         traj1,
         traj2,
@@ -54,7 +56,8 @@ public class SampleTime extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
                 .build();
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                .lineToSplineHeading(new Pose2d(-14, 10, 1.4318))
+                .splineTo(new Vector2d(-19.25, 30), Math.PI)
+                .splineToSplineHeading(new Pose2d(-19.25, 39.6, 3.1287), Math.PI)
                 .build();
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
                 .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
@@ -96,10 +99,24 @@ public class SampleTime extends LinearOpMode {
                 case idle:
                     break;
                 case traj1:
+                    if(timer.seconds()>0 && timer.seconds()<1.8){
+                        robot.verticalSlide.goTo(800, 1);
+                        robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION);
+                    }
+                    if(timer.seconds()>1.8 && timer.seconds()<2.65){
+                        robot.verticalSlide.goTo(800, 1);
+                    }
+                    if(timer.seconds()>2.65) robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
+                    if(!drive.isBusy() && timer.seconds()>2.7) {
+                        robot.outtakePivot.flipFront();
+                        timer.reset();
+                        drive.followTrajectoryAsync(traj2);
+                        curState = State.traj2;
+                        timer.reset();
+                    }
                     scoreBasket(timer);
                     if (!drive.isBusy() && timer.seconds() > 3) {
                         oneTimeSwitch[0] = false;
-                        intakeFlipOut();
                         drive.followTrajectoryAsync(traj2);
                         curState = State.traj2;
                         timer.reset();
@@ -108,8 +125,9 @@ public class SampleTime extends LinearOpMode {
                     break;
                 case traj2:
                     if (oneTimeSwitch[1] && timer.seconds() > 0.5) {
+                        intakeFlipOut();
                         raiseVertSlides = false;
-                        horizontalSlidePosition = 0.6;
+                        horizontalSlidePosition = 0.7;
                         oneTimeSwitch[1] = false;
                     }
                     if (timer.seconds() > 1.6) {
@@ -119,8 +137,6 @@ public class SampleTime extends LinearOpMode {
                     if (oneTimeSwitch[2] && timer.seconds() > 2.2) {
                         horizontalSlidePosition = 0;
                         oneTimeSwitch[2] = false;
-                    }
-                    if(timer.seconds()>2.2&&timer.seconds()<3.3) {
                         intakeFlipIn();
                     }
                     if (timer.seconds() > 3.3) {
@@ -163,8 +179,6 @@ public class SampleTime extends LinearOpMode {
                     if (oneTimeSwitch[6] && timer.seconds() > 2.4) {
                         horizontalSlidePosition = 0;
                         oneTimeSwitch[6] = false;
-                    }
-                    if(timer.seconds()>2.4&&timer.seconds()<3.7) {
                         intakeFlipIn();
                     }
                     if (timer.seconds() > 3.7) {
@@ -217,8 +231,6 @@ public class SampleTime extends LinearOpMode {
                         oneTimeSwitch[13] = false;
                         horizontalSlidePosition = 0;
                         robot.clawPivot.flipTo(0.55);
-                    }
-                    if(timer.seconds()>4&&timer.seconds()<5.3) {
                         intakeFlipIn();
                     }
                     if (timer.seconds() > 5.3) {

@@ -17,11 +17,11 @@ import java.util.Arrays;
 public class Specimen extends LinearOpMode {
     private Robot robot;
     int verticalSlidePosition = 0;
-    final double SPECIMEN_GRAB_POSITION = 0.2;
+    final double SPECIMEN_GRAB_POSITION = 0.2775;
     final double SPECIMEN_SCORE_POSITION = 0.65;
     final double INTAKE_CLAW_OPEN_POSITION = 0.1;
     final double OUTTAKE_CLAW_OPEN_POSITION = 0.3;
-    final double OUTTAKE_CLAW_CLOSE_POSITION = 1;
+    final double OUTTAKE_CLAW_CLOSE_POSITION = 0.9;
     final double INTAKE_CLAW_CLOSE_POSITION = 0.55;
     private SampleMecanumDrive drive;
     public Trajectory traj1, traj2, traj3, traj4, traj5, traj6, traj7, traj8, traj9;
@@ -57,17 +57,17 @@ public class Specimen extends LinearOpMode {
                 .build();
         //first pickup
         traj2 = drive.trajectoryBuilder(traj1.end())
-                .splineTo(new Vector2d(-19.5, 39.6287), 3.1287)
+                .splineTo(new Vector2d(-19.25, 39.6287), Math.PI)
                 .build();
         //second pickup
         traj3 = drive.trajectoryBuilder(traj2.end())
-                .strafeTo(new Vector2d(-20.25, 49.6687))
+                .strafeTo(new Vector2d(-20.175, 49.6687))
                 .build();
         traj4 = drive.trajectoryBuilder(traj3.end())
-                .lineToConstantHeading(new Vector2d(-6, 24.9))
+                .lineToConstantHeading(new Vector2d(-4, 24.9))
                 .build();
         traj5 = drive.trajectoryBuilder(traj4.end())
-                .lineToSplineHeading(new Pose2d(-26, -4, 0))
+                .lineToSplineHeading(new Pose2d(-26.25, -4, 0))
                 .build();
         traj6 = drive.trajectoryBuilder(traj5.end())
                 .splineToSplineHeading(new Pose2d(-10, 24.9, 3.1167), Math.PI)
@@ -81,7 +81,7 @@ public class Specimen extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(-6, 24.9, 3.1167), Math.PI)
                 .build();
         traj9 = drive.trajectoryBuilder(traj6.end())
-                .lineToSplineHeading(new Pose2d(-27.25, 3, 0))
+                .lineToSplineHeading(new Pose2d(-26.25, 3, 0))
                 .build();
 
 
@@ -137,7 +137,7 @@ public class Specimen extends LinearOpMode {
                 if(timer.seconds()>0&&timer.seconds()<3.7) {
                     robot.horizontalSlide.retractFull();
                 }
-                if(timer.seconds() > 1 && timer.seconds()<2.3){
+                if(timer.seconds() > 1.2 && timer.seconds()<2.3){
                     robot.clawPivot.flipTo(0.55);
                     robot.outtakeClaw.open();
                     robot.intakeClaw.openTo(INTAKE_CLAW_OPEN_POSITION+0.2);
@@ -193,25 +193,24 @@ public class Specimen extends LinearOpMode {
                     robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
                 }
                 if(!drive.isBusy() && timer.seconds() > 4.4 && timer.seconds() < 5.4){
-                    timer.reset();
                     robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
-                    robot.outtakePivot.flipTo(SPECIMEN_GRAB_POSITION + 0.1);
+                    robot.outtakePivot.flipTo(SPECIMEN_GRAB_POSITION);
                     drive.followTrajectory(traj4);
                     curState = State.traj4;
+                    timer.reset();
                 }
                 break;
 
             case traj4:  //grabs second specimen off of wall
-                if(timer.seconds()>0&&timer.seconds()<2) {
-                    robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION+0.1);
+                if (timer.seconds() > 0 && timer.seconds() < 0.3) {
+                    robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION + 0.1);
                 }
-                if(timer.seconds()>2&&timer.seconds()<2.2) {
-                    verticalSlidePosition = 1400;
-                    robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION-0.2);
+                if (timer.seconds() > 0.3 && timer.seconds() < 0.5) {
+                    verticalSlidePosition = 1250;
+                    robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION - 0.2);
                 }
-                if(!drive.isBusy()&&timer.seconds()>2.1&&timer.seconds()<3.7) {
+                if (!drive.isBusy() && timer.seconds() > 0.4 && timer.seconds() < 2.0) {
                     timer.reset();
-                    robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
                     drive.followTrajectory(traj5);
                     curState = State.traj5;
                 }
@@ -225,22 +224,22 @@ public class Specimen extends LinearOpMode {
                 }
                 if(timer.seconds()>3.8&&timer.seconds()<3.9) robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
                 if(!drive.isBusy()&&timer.seconds()>3.9) {
-                    robot.outtakePivot.flipTo(SPECIMEN_GRAB_POSITION+0.1);
-                    timer.reset();
+                    robot.outtakePivot.flipTo(SPECIMEN_GRAB_POSITION);
                     robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
                     drive.followTrajectory(traj6);
                     curState = State.traj6;
+                    timer.reset();
                 }
                 break;
             case traj6: //grabs 3rd specimen off of wall
-                if(timer.seconds()>0&&timer.seconds()<2.5){
-                    robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION+0.1);
+                if (timer.seconds() > 0 && timer.seconds() < 0.3) {
+                    robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION + 0.1);
                 }
-                if(timer.seconds()>2.5&&timer.seconds()<2.8) {
-                    verticalSlidePosition = 1400;
-                    robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION-0.2);
+                if (timer.seconds() > 0.3 && timer.seconds() < 0.6) {
+                    verticalSlidePosition = 1250;
+                    robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION - 0.2);
                 }
-                if(!drive.isBusy()&&timer.seconds()>3&&timer.seconds()<4) {
+                if (!drive.isBusy() && timer.seconds() > 0.8 && timer.seconds() < 1.8) {
                     timer.reset();
                     drive.followTrajectory(traj7);
                     curState = State.traj7;
@@ -255,21 +254,22 @@ public class Specimen extends LinearOpMode {
                 }
                 if(timer.seconds()>3.8&&timer.seconds()<3.9) robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
                 if(!drive.isBusy()&&timer.seconds()>3.9) {
-                    timer.reset();
+                    robot.outtakePivot.flipTo(SPECIMEN_GRAB_POSITION);
                     robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
                     drive.followTrajectory(traj8);
                     curState = State.traj8;
+                    timer.reset();
                 }
                 break;
-            case traj8:
-                if(timer.seconds()>0&&timer.seconds()<2.3){
-                    robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION+0.1);
+            case traj8: // grabs 4rd specimen
+                if (timer.seconds() > 0 && timer.seconds() < 0.3) {
+                    robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION + 0.1);
                 }
-                if(timer.seconds()>2.3&&timer.seconds()<2.8) {
-                    verticalSlidePosition = 1500;
-                    robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION);
+                if (timer.seconds() > 0.3 && timer.seconds() < 0.8) {
+                    verticalSlidePosition = 1250;
+                    robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION - 0.2);
                 }
-                if(!drive.isBusy()&&timer.seconds()>3&&timer.seconds()<4) {
+                if (!drive.isBusy() && timer.seconds() > 0.8 && timer.seconds() < 2) {
                     timer.reset();
                     drive.followTrajectory(traj9);
                     curState = State.traj9;
@@ -279,10 +279,10 @@ public class Specimen extends LinearOpMode {
                 if(timer.seconds()>0 && timer.seconds()<2.4){
                     robot.outtakePivot.flipTo(SPECIMEN_GRAB_POSITION+0.1);
                 }
-                if(timer.seconds()>2.4&&timer.seconds()<3){
+                if(timer.seconds()>2&&timer.seconds()<3){
                     verticalSlidePosition = 0;
                 }
-                if(timer.seconds()>3.8&&timer.seconds()<3.9) robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
+                if(timer.seconds()>4&&timer.seconds()<4.1) robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
                 break;
 
         }

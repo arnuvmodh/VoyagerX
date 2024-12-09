@@ -17,10 +17,11 @@ public class Sample extends LinearOpMode {
     private Robot robot;
     private Servo servoHang;
     final double INTAKE_CLAW_OPEN_POSITION = 0.1;
+    final double OUTTAKE_CLAW_OPEN_POSITION = 0.3;
     final double OUTTAKE_CLAW_CLOSE_POSITION = 1;
     private SampleMecanumDrive drive;
     public Trajectory preloadOuttake, firstIntake, firstOuttake, secondIntake, secondOuttake, thirdIntake, thirdOuttake, park;
-    enum State {
+    public enum State {
         idle,
         preloadOuttake,
         firstIntake,
@@ -31,6 +32,16 @@ public class Sample extends LinearOpMode {
         thirdOuttake,
         park
     }
+    public enum OuttakeState {
+        idle,
+        extending,
+        flippingOut,
+        opening,
+        flippingIn,
+        closing,
+        retracting
+    }
+    OuttakeState outtakeState = OuttakeState.idle;
     private final Pose2d highBucketPosition = new Pose2d(-18.25, 5.2, 0.75);
     private final Vector2d firstSamplePosition = new Vector2d(-19.25, 5.5);
     private final Vector2d secondSamplePosition = new Vector2d(-20.75, 9.55);
@@ -123,43 +134,43 @@ public class Sample extends LinearOpMode {
             case idle:
                 break;
             case preloadOuttake:
-                if(robot.isAt(highBucketPosition, 1.5)) {
+                if(!drive.isBusy()) {
                     drive.followTrajectoryAsync(firstIntake);
                     curState = State.firstIntake;
                 }
                 break;
             case firstIntake:
-                if(robot.isAt(vectorToPose(firstSamplePosition,0.75), 1.5)) {
+                if(!drive.isBusy()) {
                     drive.followTrajectoryAsync(firstOuttake);
                     curState = State.firstOuttake;
                 }
                 break;
             case firstOuttake:
-                if(robot.isAt(highBucketPosition, 1.5)) {
+                if(!drive.isBusy()) {
                     drive.followTrajectoryAsync(secondIntake);
                     curState = State.secondIntake;
                 }
                 break;
             case secondIntake:
-                if(robot.isAt(vectorToPose(firstSamplePosition, 1.2), 1.5)) {
+                if(!drive.isBusy()) {
                     drive.followTrajectoryAsync(secondOuttake);
                     curState = State.secondOuttake;
                 }
                 break;
             case secondOuttake:
-                if(robot.isAt(highBucketPosition, 1.5)) {
+                if(!drive.isBusy()) {
                     drive.followTrajectoryAsync(thirdIntake);
                     curState = State.thirdIntake;
                 }
                 break;
             case thirdIntake:
-                if(robot.isAt(vectorToPose(thirdSamplePosition, 1.45), 1.5)) {
+                if(!drive.isBusy()) {
                     drive.followTrajectoryAsync(thirdOuttake);
                     curState = State.thirdOuttake;
                 }
                 break;
             case thirdOuttake:
-                if(robot.isAt(highBucketPosition, 1.5)) {
+                if(!drive.isBusy()) {
                     drive.followTrajectoryAsync(park);
                     curState = State.park;
                 }
@@ -169,8 +180,106 @@ public class Sample extends LinearOpMode {
 
         }
     }
-    private Pose2d vectorToPose(Vector2d vector, double heading) {
-        return new Pose2d(vector.getX(), vector.getY(), heading);
+    private void outtake() {
+        switch(outtakeState) {
+            case idle:
+                break;
+            case extending:
+                if(robot.verticalSlide.isFullyExtended()) {
+                    outtakeState = OuttakeState.idle;
+                }
+                else {
+                    robot.verticalSlide.extendFull();
+                }
+                break;
+            case flippingOut:
+                if(robot.outtakePivot.isOut()) {
+                    outtakeState = OuttakeState.idle;
+                }
+                else {
+                    robot.outtakePivot.flipBack();
+                }
+                break;
+            case opening:
+                if(robot.outtakeClaw.isAt(OUTTAKE_CLAW_OPEN_POSITION)) {
+                    outtakeState = OuttakeState.idle;
+                }
+                else {
+                    robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
+                }
+                break;
+            case flippingIn:
+                if(robot.intakePivot.isIn()) {
+                    outtakeState = OuttakeState.idle;
+                }
+                else {
+                    robot.intakePivot.flipFront();
+                }
+                break;
+            case closing:
+                if(robot.outtakeClaw.isAt(OUTTAKE_CLAW_CLOSE_POSITION)) {
+                    outtakeState = OuttakeState.idle;
+                }
+                else {
+                    robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION);
+                }
+                break;
+            case retracting:
+                if(robot.verticalSlide.isFullyRetracted()) {
+                    outtakeState = OuttakeState.idle;
+                }
+                else {
+                    robot.verticalSlide.extendFull();
+                }
+                break;
+        }
+    }
+
+    private void scoreBasket() {
+        switch(outtakeState) {
+            case idle:
+                break;
+            case extending:
+                if(robot.verticalSlide.isFullyExtended()) {
+                    outtakeState = OuttakeState.flippingOut;
+                }
+                else {
+                    robot.verticalSlide.extendFull();
+                }
+                break;
+            case flippingOut:
+                if(robot.outtakePivot.isOut()) {
+                    outtakeState = OuttakeState.opening;
+                }
+                else {
+                    robot.outtakePivot.flipBack();
+                }
+                break;
+            case opening:
+                if(robot.outtakeClaw.isAt(OUTTAKE_CLAW_OPEN_POSITION)) {
+                    outtakeState = OuttakeState.flippingIn;
+                }
+                else {
+                    robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
+                }
+                break;
+            case flippingIn:
+                if(robot.intakePivot.isIn()) {
+                    outtakeState = OuttakeState.idle;
+                }
+                else {
+                    robot.intakePivot.flipFront();
+                }
+                break;
+            case retracting:
+                if(robot.verticalSlide.isFullyRetracted()) {
+                    outtakeState = OuttakeState.idle;
+                }
+                else {
+                    robot.verticalSlide.extendFull();
+                }
+                break;
+        }
     }
 
 }

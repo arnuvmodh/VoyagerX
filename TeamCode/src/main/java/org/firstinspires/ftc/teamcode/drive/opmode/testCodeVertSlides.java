@@ -126,8 +126,8 @@ public class testCodeVertSlides extends LinearOpMode {
 
 
         // Set horizontal slides
-        leftHorizontal.scaleRange(0, 0.5);
-        rightHorizontal.scaleRange(0, 0.5);
+        leftHorizontal.scaleRange(0, 0.45);
+        rightHorizontal.scaleRange(0, 0.45);
         double horizontalSlidePosition = 0;
         leftHorizontal.setPosition(horizontalSlidePosition);
         rightHorizontal.setPosition(horizontalSlidePosition);
@@ -465,8 +465,3 @@ public class testCodeVertSlides extends LinearOpMode {
         drive.setWeightedDrivePower(new Pose2d(xy.getX() * 0.2, xy.getY() * xyP, heading * headingP));
     }
 }
-
-
-
-
-
