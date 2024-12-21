@@ -39,7 +39,7 @@ public class FiveSample extends LinearOpMode {
         double horizontalSlidePosition = 0;
         robot.intakeClaw.openTo(INTAKE_CLAW_OPEN_POSITION);
         robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION);
-        robot.clawPivot.flipTo(0.55);
+        robot.clawPivot.flipTo(0.5);
 
 
         ElapsedTime timer = new ElapsedTime();
@@ -200,7 +200,7 @@ public class FiveSample extends LinearOpMode {
                     if (oneTimeSwitch[9] && timer.seconds() > 0.8 && timer.seconds()<3.7) {
                         raiseVertSlides = false;
                         horizontalSlidePosition = 0.625;
-                        robot.clawPivot.flipTo(0.55);
+                        robot.clawPivot.flipTo(0.5);
                         oneTimeSwitch[9] = false;
                     }
 
@@ -217,7 +217,7 @@ public class FiveSample extends LinearOpMode {
                     if (oneTimeSwitch[13] && timer.seconds() > 2) {
                         oneTimeSwitch[13] = false;
                         horizontalSlidePosition = 0;
-                        robot.clawPivot.flipTo(0.55);
+                        robot.clawPivot.flipTo(0.5);
                     }
                     if(timer.seconds()>2&&timer.seconds()<3.3) {
                         intakeFlipIn();

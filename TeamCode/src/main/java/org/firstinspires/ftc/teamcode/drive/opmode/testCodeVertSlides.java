@@ -70,7 +70,7 @@
             double posFieldEdge = 0.75;
             double posUnderBar = 0.85;
 
-            double pivotServoPosition = 0.55;
+            double pivotServoPosition = 0.5;
             servoPivot = hardwareMap.get(Servo.class, "servoPivot");
             servoPivot.setDirection(Servo.Direction.FORWARD);
             servoPivot.scaleRange(0, 1);
@@ -163,6 +163,9 @@
             boolean waitForClose = false;
             boolean hangToggle = false;
             Pose2d setPos = drive.getPoseEstimate();
+            boolean canDoSpecimen = true;
+            boolean specimenToggle = false;
+            boolean goingDown = true;
 
             telemetry.addData("Status", "Initialized");
             telemetry.update();
@@ -225,7 +228,8 @@
                 }
 
                 // Controls
-                boolean motorHorizontalButton = (gamepad1.left_trigger > 0.2);
+//                boolean motorHorizontalButton = (gamepad1.left_trigger > 0.2);
+                boolean specimenSlidePosition = (gamepad1.left_trigger > 0.2);
                 boolean motorHorizontalRetract = gamepad1.left_bumper;
                 boolean motorHorizontalFullExtension = gamepad1.dpad_up;
                 boolean motorHorizontalFullRetraction = gamepad2.touchpad || gamepad1.dpad_down;
@@ -328,7 +332,7 @@
                 if (servoIn){
                     servoLeft.setPosition(0);
                     servoRight.setPosition(0);
-                    pivotServoPosition = 0.55;
+                    pivotServoPosition = 0.5;
                     servoPivot.setPosition(pivotServoPosition);
                 } else if(servoOut){
                     servoLeft.setPosition(1);
@@ -351,7 +355,7 @@
                     pivotServoPosition -= 0.1;
                     servoPivot.setPosition(pivotServoPosition);
                 } else if (servoPivotReset){
-                    pivotServoPosition = 0.55;
+                    pivotServoPosition = 0.5;
                     servoPivot.setPosition(pivotServoPosition);
                 }
 
@@ -370,9 +374,11 @@
                 pressedSpeedLastIteration = speedButton;
 
                 // Horizontal slides
-                if (horizontalSlidePosition < 0.95 && motorHorizontalButton) {
-                    horizontalSlidePosition += 0.1;
-                } else if (horizontalSlidePosition > 0.05 && motorHorizontalRetract) {
+//                if (horizontalSlidePosition < 0.95 && motorHorizontalButton) {
+//                    horizontalSlidePosition += 0.1;
+//                } else if (horizontalSlidePosition > 0.05 && motorHorizontalRetract) {
+//                    horizontalSlidePosition -= 0.1;
+                if (horizontalSlidePosition > 0.05 && motorHorizontalRetract) {
                     horizontalSlidePosition -= 0.1;
                 } else if (motorHorizontalFullExtension) {
                     horizontalSlidePosition = 1;
@@ -388,24 +394,31 @@
                 if ((motorVerticalButton != 0) && (leftVerticalPosition <= 3050) && (rightVerticalPosition >= -3050)) {
                     leftVertical.setPower(speed * motorVerticalButton);
                     rightVertical.setPower(speed * -motorVerticalButton);
+                    canDoSpecimen = false;
                 } else if ((motorVerticalRetract) && ((leftVerticalPosition >= 50) || leftVerticalPosition <= -50) && (rightVerticalPosition >= 50 || rightVerticalPosition <= -50)) {
                     leftVertical.setPower(-speed);
                     rightVertical.setPower(speed);
+                    canDoSpecimen = false;
                 } else if (motorVerticalFullExtension){
                     isFullVerticalExtent = true;
                     leftVertical.setPower(1.5);
                     rightVertical.setPower(-1.5);
+                    canDoSpecimen = false;
                 } else if (motorVerticalFullRetraction) {
                     isFullVerticalRetract = true;
                     leftVertical.setPower(-1.5);
                     rightVertical.setPower(1.5);
+                    canDoSpecimen = false;
                 } else if (!(isFullVerticalExtent || isFullVerticalRetract)) {
                     leftVertical.setPower(0);
                     rightVertical.setPower(0);
+                    canDoSpecimen = true;
                 } else if (isFullVerticalExtent && !(leftVerticalPosition <= 3050 && rightVerticalPosition >= -3050)){
                     isFullVerticalExtent = false;
+                    canDoSpecimen = true;
                 } else if (isFullVerticalRetract && !(((leftVerticalPosition >= 50) || leftVerticalPosition <= -50) && (rightVerticalPosition >= 50 || rightVerticalPosition <= -50))) {
                     isFullVerticalRetract = false;
+                    canDoSpecimen = true;
                     leftVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     rightVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     leftVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -413,10 +426,37 @@
                     leftVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     rightVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 }
+                if (canDoSpecimen && specimenSlidePosition) {
+                    specimenToggle = true;
+                    if (leftVerticalPosition > 1930 || rightVerticalPosition < -1930) {
+                        leftVertical.setPower(-1);
+                        rightVertical.setPower(1);
+                        goingDown = true;
+                    } else {
+                        leftVertical.setPower(1);
+                        rightVertical.setPower(-1);
+                        goingDown = false;
+                    }
+                }
+                if (specimenToggle) {
+                    if (goingDown && (leftVerticalPosition < 1930 && rightVerticalPosition > -1930)) {
+                        leftVertical.setPower(0);
+                        rightVertical.setPower(0);
+                        specimenToggle = false;
+                    } else if (!goingDown && (leftVerticalPosition > 1930 && rightVerticalPosition < -1930)) {
+                        leftVertical.setPower(0);
+                        rightVertical.setPower(0);
+                        specimenToggle = false;
+                    }
+                }
 
-                if (horizontalSlidePosition < 0.95 && motorHorizontalButton) {
-                    horizontalSlidePosition += 0.1;
-                } else if (horizontalSlidePosition > 0.05 && motorHorizontalRetract) {
+                // specimenSlidePosition 1930
+
+//                if (horizontalSlidePosition < 0.95 && motorHorizontalButton) {
+//                    horizontalSlidePosition += 0.1;
+//                } else if (horizontalSlidePosition > 0.05 && motorHorizontalRetract) {
+//                    horizontalSlidePosition -= 0.1;
+                if (horizontalSlidePosition > 0.05 && motorHorizontalRetract) {
                     horizontalSlidePosition -= 0.1;
                 } else if (motorHorizontalFullExtension) {
                     horizontalSlidePosition = 1;

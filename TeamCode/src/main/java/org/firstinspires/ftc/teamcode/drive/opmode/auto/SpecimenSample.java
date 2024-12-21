@@ -40,7 +40,7 @@ public class SpecimenSample extends LinearOpMode {
         double horizontalSlidePosition = 0;
         robot.intakeClaw.openTo(INTAKE_CLAW_OPEN_POSITION);
         robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION);
-        robot.clawPivot.flipTo(0.55);
+        robot.clawPivot.flipTo(0.5);
 
 
         ElapsedTime timer = new ElapsedTime();
@@ -213,7 +213,7 @@ public class SpecimenSample extends LinearOpMode {
                     if (oneTimeSwitch[9] && timer.seconds() > 0.8 && timer.seconds()<3.7) {
                         raiseVertSlides = false;
                         horizontalSlidePosition = 0.625;
-                        robot.clawPivot.flipTo(0.55);
+                        robot.clawPivot.flipTo(0.5);
                         oneTimeSwitch[9] = false;
                     }
 
@@ -230,7 +230,7 @@ public class SpecimenSample extends LinearOpMode {
                     if (oneTimeSwitch[13] && timer.seconds() > 4) {
                         oneTimeSwitch[13] = false;
                         horizontalSlidePosition = 0;
-                        robot.clawPivot.flipTo(0.55);
+                        robot.clawPivot.flipTo(0.5);
                         intakeFlipIn();
                     }
                     if (timer.seconds() > 5.3) {

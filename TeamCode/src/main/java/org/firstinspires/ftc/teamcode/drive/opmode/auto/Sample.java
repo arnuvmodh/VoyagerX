@@ -38,7 +38,7 @@ public class Sample extends LinearOpMode {
         double horizontalSlidePosition = 0;
         robot.intakeClaw.openTo(INTAKE_CLAW_OPEN_POSITION);
         robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION);
-        robot.clawPivot.flipTo(0.55);
+        robot.clawPivot.flipTo(0.5);
 
 
         ElapsedTime timer = new ElapsedTime();
@@ -109,7 +109,7 @@ public class Sample extends LinearOpMode {
                 case traj2:
                     if (oneTimeSwitch[1] && timer.seconds() > 0.5) {
                         raiseVertSlides = false;
-                        horizontalSlidePosition = 0.6;
+                        horizontalSlidePosition = 0.55;
                         oneTimeSwitch[1] = false;
                     }
                     if (timer.seconds() > 1.6) {
@@ -199,7 +199,7 @@ public class Sample extends LinearOpMode {
                     if (oneTimeSwitch[9] && timer.seconds() > 0.8 && timer.seconds()<3.7) {
                         raiseVertSlides = false;
                         horizontalSlidePosition = 0.625;
-                        robot.clawPivot.flipTo(0.55);
+                        robot.clawPivot.flipTo(0.5);
                         oneTimeSwitch[9] = false;
                     }
 
@@ -216,7 +216,7 @@ public class Sample extends LinearOpMode {
                     if (oneTimeSwitch[13] && timer.seconds() > 4) {
                         oneTimeSwitch[13] = false;
                         horizontalSlidePosition = 0;
-                        robot.clawPivot.flipTo(0.55);
+                        robot.clawPivot.flipTo(0.5);
                     }
                     if(timer.seconds()>4&&timer.seconds()<5.3) {
                         intakeFlipIn();

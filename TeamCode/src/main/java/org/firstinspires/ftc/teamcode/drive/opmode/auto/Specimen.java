@@ -22,7 +22,7 @@ public class Specimen extends LinearOpMode {
     final double INTAKE_CLAW_OPEN_POSITION = 0.1;
     final double OUTTAKE_CLAW_OPEN_POSITION = 0.3;
     final double OUTTAKE_CLAW_CLOSE_POSITION = 0.9;
-    final double INTAKE_CLAW_CLOSE_POSITION = 0.55;
+    final double INTAKE_CLAW_CLOSE_POSITION = 0.5;
     private SampleMecanumDrive drive;
     public Trajectory traj1, traj2, traj3, traj4, traj5, traj6, traj7, traj8, traj9;
     enum State {
@@ -48,7 +48,7 @@ public class Specimen extends LinearOpMode {
         robot.horizontalSlide.retractFull();
         robot.intakeClaw.openTo(INTAKE_CLAW_OPEN_POSITION);
         robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION);
-        robot.clawPivot.flipTo(0.55);
+        robot.clawPivot.flipTo(0.5);
 
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(new Pose2d(0,0, 0));
@@ -138,7 +138,7 @@ public class Specimen extends LinearOpMode {
                     robot.horizontalSlide.retractFull();
                 }
                 if(timer.seconds() > 1.2 && timer.seconds()<2.3){
-                    robot.clawPivot.flipTo(0.55);
+                    robot.clawPivot.flipTo(0.5);
                     robot.outtakeClaw.open();
                     robot.intakeClaw.openTo(INTAKE_CLAW_OPEN_POSITION+0.2);
                     robot.intakePivot.flipFront();
@@ -170,7 +170,7 @@ public class Specimen extends LinearOpMode {
                     robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
                 }
                 if(timer.seconds()>1.7&&timer.seconds()<2.4) {
-                    robot.clawPivot.flipTo(0.55);
+                    robot.clawPivot.flipTo(0.5);
                     robot.outtakePivot.flipFront();
                     robot.intakePivot.flipFront();
                 }
