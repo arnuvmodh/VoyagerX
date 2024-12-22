@@ -112,7 +112,7 @@ public class FiveSample extends LinearOpMode {
                 case traj2:
                     if (oneTimeSwitch[1] && timer.seconds() > 0.5) {
                         raiseVertSlides = false;
-                        horizontalSlidePosition = 0.6;
+                        horizontalSlidePosition = 0.575;
                         oneTimeSwitch[1] = false;
                     }
                     if (timer.seconds() > 1) {
@@ -156,9 +156,10 @@ public class FiveSample extends LinearOpMode {
                 case traj4:
                     if (oneTimeSwitch[5] && timer.seconds() > 0.8) {
                         raiseVertSlides = false;
-                        horizontalSlidePosition = 0.8;
+                        horizontalSlidePosition = 0.725;
                         oneTimeSwitch[5] = false;
                     }
+
                     if (timer.seconds() > 1.25 && timer.seconds() < 2.15) {
                         intakeGrab();
                     }
