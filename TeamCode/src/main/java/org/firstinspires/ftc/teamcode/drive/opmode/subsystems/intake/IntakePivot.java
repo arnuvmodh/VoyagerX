@@ -21,4 +21,12 @@ public class IntakePivot extends Pivot {
     public void underBar() {
         flipTo(UNDER_BAR_POSITION);
     }
+
+    public void flipIn() {
+
+    }
+
+    public void flipOut() {
+
+    }
 }

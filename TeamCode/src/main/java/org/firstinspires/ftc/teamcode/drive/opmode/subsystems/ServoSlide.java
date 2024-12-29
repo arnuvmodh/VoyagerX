@@ -36,7 +36,7 @@ public class ServoSlide {
 
     public void retractFull(){
         _left.setPosition(0);
-        _left.setPosition(0);
+        _right.setPosition(0);
     }
 
     public boolean isFullExtended() {

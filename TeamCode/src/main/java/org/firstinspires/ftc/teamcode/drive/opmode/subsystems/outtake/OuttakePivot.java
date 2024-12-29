@@ -5,8 +5,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.Pivot;
 
 public class OuttakePivot extends Pivot {
-    private static final double SPECIMEN_GRAB_POSITION = 0.2;
-    private static final double SPECIMEN_SCORE_POSITION = 0.65;
+    public static final double SPECIMEN_GRAB_POSITION = 0.2;
+    public static final double SPECIMEN_SCORE_POSITION = 0.65;
+    public static final double SAMPLE_SCORE_POSITION = 0.45;
     public OuttakePivot(HardwareMap hardwareMap, String left, double min, double max) {
         super(hardwareMap, left, min, max);
     }
@@ -24,5 +25,8 @@ public class OuttakePivot extends Pivot {
     }
     public void flipSpecimenScore() {
         flipTo(SPECIMEN_SCORE_POSITION);
+    }
+    public void flipSampleScore() {
+        flipTo(SAMPLE_SCORE_POSITION);
     }
 }

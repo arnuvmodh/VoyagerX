@@ -7,11 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.drive.opmode.PoseStorage;
+import org.firstinspires.ftc.teamcode.drive.opmode.tuning.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.opmode.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-
-import java.util.Arrays;
 
 @Autonomous()
 public class Specimen extends LinearOpMode {

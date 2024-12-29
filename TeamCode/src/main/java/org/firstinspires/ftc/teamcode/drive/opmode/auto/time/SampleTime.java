@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.opmode.auto;
+package org.firstinspires.ftc.teamcode.drive.opmode.auto.time;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -7,11 +7,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.opmode.PoseStorage;
+import org.firstinspires.ftc.teamcode.drive.opmode.tuning.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.opmode.Robot;
 
 @Autonomous()
-public class Sample extends LinearOpMode {
+public class SampleTime extends LinearOpMode {
     final double INTAKE_CLAW_OPEN_POSITION = 0.1;
     final double OUTTAKE_CLAW_OPEN_POSITION = 0.3;
     final double OUTTAKE_CLAW_CLOSE_POSITION = 1;
@@ -112,7 +112,7 @@ public class Sample extends LinearOpMode {
                         horizontalSlidePosition = 0.55;
                         oneTimeSwitch[1] = false;
                     }
-                    if (timer.seconds() > 1.6) {
+                    if (timer.seconds() > 1.6 && timer.seconds()<3) {
                         intakeGrab();
                     }
 
@@ -123,10 +123,10 @@ public class Sample extends LinearOpMode {
                     if(timer.seconds()>2.2&&timer.seconds()<3.3) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 3.3) {
+                    if (timer.seconds() > 3.3 && timer.seconds() < 4) {
                         outtakeGrab();
                     }
-                    if (timer.seconds() > 3.8) {
+                    if (timer.seconds() > 3.8 && timer.seconds()<4.1) {
                         intakeLetGo();
                     }
                     if (!drive.isBusy() && timer.seconds() > 4.2) {
@@ -167,7 +167,7 @@ public class Sample extends LinearOpMode {
                     if(timer.seconds()>2.4&&timer.seconds()<3.7) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 3.7) {
+                    if (timer.seconds() > 3.7 && timer.seconds()<4.6) {
                         outtakeGrab();
                     }
                     if (timer.seconds() > 4.2 && timer.seconds()<4.6) {
@@ -221,10 +221,10 @@ public class Sample extends LinearOpMode {
                     if(timer.seconds()>4&&timer.seconds()<5.3) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 5.3) {
+                    if (timer.seconds() > 5.3 && timer.seconds() < 5.8) {
                         outtakeGrab();
                     }
-                    if (timer.seconds() > 5.8) {
+                    if (timer.seconds() > 5.8 && timer.seconds() < 6) {
                         intakeLetGo();
                     }
                     if (!drive.isBusy() && timer.seconds() > 6.2) {

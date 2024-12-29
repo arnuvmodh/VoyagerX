@@ -14,10 +14,10 @@ import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.outtake.OuttakePiv
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 public class Robot {
-    public final Claw intakeClaw;
-    public final Claw outtakeClaw;
-    public final Pivot intakePivot;
-    public final Pivot outtakePivot;
+    public final IntakeClaw intakeClaw;
+    public final OuttakeClaw outtakeClaw;
+    public final IntakePivot intakePivot;
+    public final OuttakePivot outtakePivot;
     public final Pivot clawPivot;
 
     public final MotorSlide verticalSlide;
@@ -33,7 +33,7 @@ public class Robot {
         outtakePivot = new OuttakePivot(hardwareMap, "outtakePivotLeft", "outtakePivotRight", 0, 1, -0.025);
         clawPivot = new Pivot(hardwareMap, "servoPivot", 0, 1);
         verticalSlide = new MotorSlide(hardwareMap, "leftVerticalSlide", "rightVerticalSlide", 50, 3000);
-        horizontalSlide = new ServoSlide(hardwareMap, "leftHorizontalSlide", "rightHorizontalSlide", 0, 0.5);
+        horizontalSlide = new ServoSlide(hardwareMap, "leftHorizontalSlide", "rightHorizontalSlide", 0, 0.45);
     }
 
     public double positionDifference(Pose2d currentPosition, Pose2d targetPosition) {
