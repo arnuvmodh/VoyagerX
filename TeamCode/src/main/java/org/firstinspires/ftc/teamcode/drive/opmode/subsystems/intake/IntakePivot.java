@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.Pivot;
 
 public class IntakePivot extends Pivot {
-    private static final double UNDER_BAR_POSITION = 0.85;
+    public static final double UNDER_BAR_POSITION = 0.85;
     public IntakePivot(HardwareMap hardwareMap, String left, double min, double max) {
         super(hardwareMap, left, min, max);
     }

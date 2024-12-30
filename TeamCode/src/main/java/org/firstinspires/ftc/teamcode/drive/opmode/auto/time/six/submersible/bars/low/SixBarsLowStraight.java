@@ -1,17 +1,18 @@
-package org.firstinspires.ftc.teamcode.drive.opmode.auto.time;
+package org.firstinspires.ftc.teamcode.drive.opmode.auto.time.six.submersible.bars.low;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.tuning.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.opmode.Robot;
 
-@Autonomous()
-public class FiveSampleTime extends LinearOpMode {
+@Autonomous(name = "Bars 6 Low 0°", group = "Bars 6")
+public class SixBarsLowStraight extends LinearOpMode {
     final double INTAKE_CLAW_OPEN_POSITION = 0.2;
     final double OUTTAKE_CLAW_OPEN_POSITION = 0.3;
     final double OUTTAKE_CLAW_CLOSE_POSITION = 1;
@@ -25,6 +26,8 @@ public class FiveSampleTime extends LinearOpMode {
         traj7,
         traj8,
         traj9,
+        traj10,
+        traj11,
         idle
     }
 
@@ -73,9 +76,15 @@ public class FiveSampleTime extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
                 .build();
         Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
-                .lineToSplineHeading(new Pose2d(-13.2755, 3.4075, 0.013))
+                .lineToSplineHeading(new Pose2d(-13.2755, 4, 0.013))
                 .build();
         Trajectory traj9 = drive.trajectoryBuilder(traj8.end())
+                .lineToSplineHeading(new Pose2d(-18.25, 5.5, 0.75))
+                .build();
+        Trajectory traj10 = drive.trajectoryBuilder(traj9.end())
+                .lineToSplineHeading(new Pose2d(24.6164, 25.3708, 1))
+                .build();
+        Trajectory traj11 = drive.trajectoryBuilder(traj10.end())
                 .lineToSplineHeading(new Pose2d(-18.25, 5.5, 0.75))
                 .build();
 
@@ -115,23 +124,23 @@ public class FiveSampleTime extends LinearOpMode {
                         horizontalSlidePosition = 0.6;
                         oneTimeSwitch[1] = false;
                     }
-                    if (timer.seconds() > 1) {
+                    if (timer.seconds() > 0.8) {
                         intakeGrab();
                     }
-                    if (oneTimeSwitch[2] && timer.seconds() > 1.6) {
+                    if (oneTimeSwitch[2] && timer.seconds() > 1.4) {
                         horizontalSlidePosition = 0;
                         oneTimeSwitch[2] = false;
                     }
-                    if(timer.seconds()>1.7&&timer.seconds()<2.6) {
+                    if(timer.seconds()>1.5&&timer.seconds()<2.4) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 2.4) {
+                    if (timer.seconds() > 2.2) {
                         outtakeGrab();
                     }
-                    if (timer.seconds() > 2.5) {
+                    if (timer.seconds() > 2.3) {
                         intakeLetGo();
                     }
-                    if (!drive.isBusy() && timer.seconds() > 3) {
+                    if (!drive.isBusy() && timer.seconds() > 2.8) {
                         drive.followTrajectoryAsync(traj3);
                         curState = State.traj3;
                         timer.reset();
@@ -153,31 +162,32 @@ public class FiveSampleTime extends LinearOpMode {
                     }
 
                     break;
+
                 case traj4:
                     if (oneTimeSwitch[5] && timer.seconds() > 0.8) {
                         raiseVertSlides = false;
-                        horizontalSlidePosition = 0.675;
+                        horizontalSlidePosition = 0.685;
                         oneTimeSwitch[5] = false;
                     }
 
-                    if (timer.seconds() > 1.25 && timer.seconds() < 2.15) {
+                    if (timer.seconds() > 1.1 && timer.seconds() < 2) {
                         intakeGrab();
                     }
 
-                    if (oneTimeSwitch[6] && timer.seconds() > 2.15) {
+                    if (oneTimeSwitch[6] && timer.seconds() > 2) {
                         horizontalSlidePosition = 0;
                         oneTimeSwitch[6] = false;
                     }
-                    if(timer.seconds()>2.05&&timer.seconds()<2.75) {
+                    if(timer.seconds()>1.9&&timer.seconds()<2.6) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 2.75) {
+                    if (timer.seconds() > 2.6) {
                         outtakeGrab();
                     }
-                    if (timer.seconds() > 3.15) {
+                    if (timer.seconds() > 3) {
                         intakeLetGo();
                     }
-                    if (!drive.isBusy() && timer.seconds() > 3.4) {
+                    if (!drive.isBusy() && timer.seconds() > 3.25) {
                         drive.followTrajectoryAsync(traj5);
                         curState = State.traj5;
                         timer.reset();
@@ -192,6 +202,7 @@ public class FiveSampleTime extends LinearOpMode {
                     if (!drive.isBusy() && timer.seconds() > 2) {
                         intakeFlipOut();
                         intakeEdgeClawPosition();
+                        horizontalSlidePosition = 0.2;
                         drive.followTrajectoryAsync(traj6);
                         curState = State.traj6;
                         timer.reset();
@@ -209,7 +220,7 @@ public class FiveSampleTime extends LinearOpMode {
                         intakeEdgeClawPosition();
                     }
 
-                    if(timer.seconds() > 0.8 && timer.seconds()<2) {
+                    if(timer.seconds() > 0.8 && timer.seconds()<1.5) {
                         horizontalSlidePosition = 0.625;
                     }
 
@@ -218,21 +229,21 @@ public class FiveSampleTime extends LinearOpMode {
                         intakeGrab();
                     }
 
-                    if (oneTimeSwitch[13] && timer.seconds() > 2) {
+                    if (oneTimeSwitch[13] && timer.seconds() > 1.8) {
                         oneTimeSwitch[13] = false;
                         horizontalSlidePosition = 0;
                         robot.clawPivot.flipTo(0.5);
                     }
-                    if(timer.seconds()>2&&timer.seconds()<3.3) {
+                    if(timer.seconds()>1.8&&timer.seconds()<3.3) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 2.7) {
+                    if (timer.seconds() > 2.5) {
                         outtakeGrab();
                     }
-                    if (timer.seconds() > 2.8) {
+                    if (timer.seconds() > 2.6) {
                         intakeLetGo();
                     }
-                    if (!drive.isBusy() && timer.seconds() > 3.1) {
+                    if (!drive.isBusy() && timer.seconds() > 2.9) {
                         drive.followTrajectoryAsync(traj7);
                         curState = State.traj7;
                         timer.reset();
@@ -256,26 +267,26 @@ public class FiveSampleTime extends LinearOpMode {
                 case traj8:
                     if (oneTimeSwitch[15] && timer.seconds() > 0.2) {
                         raiseVertSlides = false;
-                        horizontalSlidePosition = 0.805;
+                        horizontalSlidePosition = 1;
                         oneTimeSwitch[15] = false;
                     }
-                    if (timer.seconds() > 1) {
+                    if (timer.seconds() > 0.8) {
                         intakeGrab();
                     }
-                    if (oneTimeSwitch[16] && timer.seconds() > 1.6) {
+                    if (oneTimeSwitch[16] && timer.seconds() > 1.3) {
                         horizontalSlidePosition = 0;
                         oneTimeSwitch[16] = false;
                     }
-                    if(timer.seconds()>1.7&&timer.seconds()<2.6) {
+                    if(timer.seconds()>1.4&&timer.seconds()<2.3) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 2.4) {
+                    if (timer.seconds() > 2.1) {
                         outtakeGrab();
                     }
-                    if (timer.seconds() > 2.6) {
+                    if (timer.seconds() > 2.3) {
                         intakeLetGo();
                     }
-                    if (!drive.isBusy() && timer.seconds() > 2.8) {
+                    if (!drive.isBusy() && timer.seconds() > 2.5) {
                         drive.followTrajectoryAsync(traj9);
                         curState = State.traj9;
                         timer.reset();
@@ -288,11 +299,60 @@ public class FiveSampleTime extends LinearOpMode {
                     }
                     scoreBasket(timer);
                     if (!drive.isBusy() && timer.seconds() > 2) {
+                        robot.intakeClaw.grab();
+                        robot.intakePivot.underBar();
+                        raiseVertSlides = false;
+                        drive.followTrajectoryAsync(traj10);
+                        curState = State.traj10;
+                        timer.reset();
+                    }
+                    break;
+                case traj10:
+                    if (oneTimeSwitch[18] && timer.seconds() > 1.2) {
+                        horizontalSlidePosition = 0.675;
+                        oneTimeSwitch[18] = false;
+                    }
+                    if(timer.seconds() > 1.3 && timer.seconds() < 1.5) {
+                        robot.intakeClaw.release();
+                    }
+                    if (timer.seconds() > 1.4 && timer.seconds() < 1.7) {
+                        intakeFlipOut();
+                    }
+                    if (timer.seconds() > 1.7 && timer.seconds() < 2.2) {
+                        intakeGrab();
+                    }
+                    if (timer.seconds() > 2.2 && timer.seconds() < 2.8) {
+                        horizontalSlidePosition = 0;
+                        robot.intakePivot.underBar();
+                    }
+                    if (!drive.isBusy() && timer.seconds() > 2.8) {
+                        drive.followTrajectoryAsync(traj11);
+                        curState = State.traj11;
+                        timer.reset();
+                    }
+                    break;
+                case traj11:
+                    if (timer.seconds() > 0.1 && timer.seconds() < 0.8) {
+                        intakeFlipIn();
+                    }
+                    if (timer.seconds() > 0.8) {
+                        outtakeGrab();
+                    }
+                    if (timer.seconds() > 1) {
+                        intakeLetGo();
+                    }
+                    if (oneTimeSwitch[19] && timer.seconds() > 1.2) {
+                        raiseVertSlides = true;
+                        oneTimeSwitch[19] = false;
+                    }
+                    scoreFinalBasket(timer);
+                    if (!drive.isBusy() && timer.seconds() > 3.4) {
                         raiseVertSlides = false;
                         curState = State.idle;
                         timer.reset();
                     }
                     break;
+
             }
 
             robot.horizontalSlide.goTo(horizontalSlidePosition);
@@ -328,10 +388,22 @@ public class FiveSampleTime extends LinearOpMode {
         if (timer.seconds() > 1.5) {
             outtakeFlipOut();
         }
-        if (timer.seconds() > 1.8) {
+        if (timer.seconds() > 1.9) {
             outtakeLetGo();
         }
         if (timer.seconds() > 2) {
+            outtakeFlipIn();
+        }
+    }
+
+    void scoreFinalBasket(ElapsedTime timer) {
+        if (timer.seconds() > 2.7) {
+            outtakeFlipOut();
+        }
+        if (timer.seconds() > 3.1) {
+            outtakeLetGo();
+        }
+        if (timer.seconds() > 3.2) {
             outtakeFlipIn();
         }
     }

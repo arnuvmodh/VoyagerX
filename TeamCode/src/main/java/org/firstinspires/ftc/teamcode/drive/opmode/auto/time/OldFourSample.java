@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.tuning.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.opmode.Robot;
 
 @Autonomous()
-public class SampleTime extends LinearOpMode {
+public class OldFourSample extends LinearOpMode {
     final double INTAKE_CLAW_OPEN_POSITION = 0.1;
     final double OUTTAKE_CLAW_OPEN_POSITION = 0.3;
     final double OUTTAKE_CLAW_CLOSE_POSITION = 1;
