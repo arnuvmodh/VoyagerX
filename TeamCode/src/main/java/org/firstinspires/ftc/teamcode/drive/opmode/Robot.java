@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.drive.opmode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.intake.IntakeClaw;
 import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.MotorSlide;
 import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.Pivot;
@@ -19,6 +19,7 @@ public class Robot {
     public final IntakePivot intakePivot;
     public final OuttakePivot outtakePivot;
     public final Pivot clawPivot;
+    public final Servo hangPivot;
 
     public final MotorSlide verticalSlide;
     public final ServoSlide horizontalSlide;
@@ -32,7 +33,10 @@ public class Robot {
         intakePivot = new IntakePivot(hardwareMap, "intakePivotLeft", "intakePivotRight", 0.205, 0.8);
         outtakePivot = new OuttakePivot(hardwareMap, "outtakePivotLeft", "outtakePivotRight", 0, 1, -0.025);
         clawPivot = new Pivot(hardwareMap, "servoPivot", 0, 1);
-        verticalSlide = new MotorSlide(hardwareMap, "leftVerticalSlide", "rightVerticalSlide", 50, 3000);
+        hangPivot = hardwareMap.get(Servo.class, "servoHang");
+        hangPivot.setDirection(Servo.Direction.REVERSE);
+
+        verticalSlide = new MotorSlide(hardwareMap, "leftVerticalSlide", "rightVerticalSlide", 50, 3050);
         horizontalSlide = new ServoSlide(hardwareMap, "leftHorizontalSlide", "rightHorizontalSlide", 0, 0.45);
     }
 

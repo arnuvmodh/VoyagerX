@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.drive.opmode.teleop;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -13,10 +12,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.Robot;
 import org.firstinspires.ftc.teamcode.drive.opmode.tuning.PoseStorage;
 
 @TeleOp
-public class TwoDriver extends LinearOpMode{
-
-    // Drive Control Variables
-    private double speedReduction = 1;
+public class OneDriverGNAA extends LinearOpMode{
 
     // Intake Control Variables
     private double intakeSlidePosition = 0;
@@ -43,7 +39,7 @@ public class TwoDriver extends LinearOpMode{
         waitForStart();
         if (isStopRequested()) return;
         while (opModeIsActive()) {
-            driveControls();
+            drivetrainControls();
             intakeControls();
             outtakeControls();
 
@@ -55,6 +51,26 @@ public class TwoDriver extends LinearOpMode{
             drive.update();
             updateTelemetry();
         }
+    }
+
+    private boolean aDown = false, bDown = false, xDown = false, yDown = false;
+    private boolean leftBDown = false, rightBDown = false;
+    private boolean upDDown = false, downDDown = false, leftDDown = false, rightDDown = false;
+
+
+    private void updateButtons() {
+        aDown = gamepad1.a;
+        bDown = gamepad1.b;
+        xDown = gamepad1.x;
+        yDown = gamepad1.y;
+
+        leftBDown = gamepad1.left_bumper;
+        rightBDown = gamepad1.right_bumper;
+
+        upDDown = gamepad1.dpad_up;
+        downDDown = gamepad1.dpad_down;
+        leftDDown = gamepad1.dpad_left;
+        rightDDown = gamepad1.dpad_right;
     }
 
     private void initialize() {
@@ -73,150 +89,130 @@ public class TwoDriver extends LinearOpMode{
         robot.outtakeClaw.release();
         robot.intakeClaw.grab();
         robot.clawPivot.flipTo(0.5);
+        robot.hangPivot.setPosition(0);
     }
 
-    private void driveControls() {
-        if(gamepad2.a) {
+    private void drivetrainControls() {
+        if(gamepad1.left_stick_button) {
             drive.setPoseEstimate(new Pose2d());
         }
+        if(gamepad1.right_stick_button) {
+            outtakeSlidePosition = 0;
+            intakeSlidePosition = 0;
+            intakeArmPivotPosition = 0;
+            intakeClawPivotPosition = 0.5;
+            outtakeArmPivotPosition = 1;
+            outtakeClawPosition = 0.3;
+        }
     }
 
-    private boolean intakeClawPivotPressed = false, intakeClawTogglePressed = false;
     private void intakeControls() {
-        boolean intakeSlideOut = gamepad1.dpad_up;
-        boolean intakeSlideIn = gamepad1.dpad_down;
-        boolean intakeArmPivotOut = (gamepad2.right_trigger > 0.2)||(gamepad1.dpad_left);
-        boolean intakeArmPivotIn = (gamepad1.dpad_right || gamepad2.touchpad);
-        boolean intakeArmPivotFieldEdge = gamepad2.left_bumper;
-        boolean intakeArmPivotUnderBar = gamepad2.right_bumper;
-        boolean intakeClawPivotLeft = gamepad2.dpad_left;
-        boolean intakeClawPivotRight = gamepad2.dpad_right;
-        boolean intakeCLawPivotReset = gamepad2.dpad_down;
-        boolean intakeClawToggle = gamepad2.dpad_up;
-
-        if(intakeSlideOut) {
-            intakeSlidePosition = 1;
-        }
-        if(intakeSlideIn) {
-            intakeSlidePosition = 0;
-        }
-
-        if(intakeArmPivotOut) {
+        if(gamepad1.left_trigger>0.2) {
             intakeArmPivotPosition = 1;
+            intakeClawPosition = 0.3;
         }
-        if(intakeArmPivotIn) {
-            intakeSlidePosition = 0;
-            intakeClawPivotPosition = 0.5;
-            intakeArmPivotPosition = 0;
-        }
-        if(intakeArmPivotFieldEdge) {
-            intakeArmPivotPosition = 0.75;
-        }
-        if(intakeArmPivotUnderBar) {
-            intakeArmPivotPosition = 0.85;
-        }
-
-        if(intakeClawPivotLeft && !intakeClawPivotPressed) {
-            intakeClawPivotPosition = Math.min(intakeClawPivotPosition+0.1, 1);
-        }
-        if(intakeClawPivotRight && !intakeClawPivotPressed) {
-            intakeClawPivotPosition = Math.max(intakeClawPivotPosition-0.1, 0);
-        }
-        if(intakeCLawPivotReset) {
-            intakeClawPivotPosition = 0.5;
-        }
-        intakeClawPivotPressed = intakeClawPivotLeft || intakeClawPivotRight;
-
-        if(intakeClawToggle && !intakeClawTogglePressed) {
-            if(intakeClawPosition != 0.575) {
+        if(gamepad1.left_bumper && !leftBDown) {
+            if(intakeClawPosition == 0.3) {
                 intakeClawPosition = 0.575;
             }
             else {
                 intakeClawPosition = 0.3;
             }
         }
-        intakeClawTogglePressed = intakeClawToggle;
+        leftBDown = gamepad1.left_bumper;
 
+        if(gamepad1.dpad_up) {
+            intakeSlidePosition = 1;
+            intakeArmPivotPosition = 0.85;
+            intakeClawPosition = 0.3;
+        }
+        if(gamepad1.dpad_left && !leftDDown) {
+            intakeClawPivotPosition=Math.min(intakeClawPivotPosition+0.1, 1);
+        }
+        leftDDown = gamepad1.dpad_left;
+
+        if(gamepad1.dpad_right && !rightDDown) {
+            intakeClawPivotPosition=Math.max(intakeClawPivotPosition-0.1, 0);
+        }
+        rightDDown = gamepad1.dpad_right;
+
+        if(gamepad1.dpad_down) {
+            intakeClawPivotPosition=0.5;
+        }
     }
 
-    private boolean transferPressed = false, outtakePivotTogglePressed = false, specimenGrabButtonPressed = false;
+    private boolean touchpadDown = false;
     private void outtakeControls() {
-        float outtakeSlideExtend = gamepad1.right_trigger;
-        boolean outtakeSlideRetract = gamepad1.right_bumper;
-        boolean outtakeSlideFullExtension = gamepad1.y;
-        boolean outtakeSlideFullRetraction = (gamepad2.left_trigger > 0.2)||gamepad1.a;
-        boolean outtakeSlideSpecimen = (gamepad1.left_trigger > 0.2);
+        if(gamepad1.touchpad && !touchpadDown) {
+            if(robot.hangPivot.getPosition() != 0.5) {
+                robot.hangPivot.setPosition(0.5);
+            }
+            else {
+                robot.hangPivot.setPosition(0);
+            }
+        }
+        touchpadDown = gamepad1.touchpad;
 
-        boolean transfer = gamepad2.y;
-        boolean outtakePivotToggle = gamepad2.x;
-        boolean highBucketButton = gamepad2.b;
-        boolean specimenGrabButton = gamepad2.back;
+        if(gamepad1.x && !xDown) {
+            if(outtakeArmPivotPosition != 0.6) {
+                outtakeArmPivotPosition = 0.6;
+            }
+            else {
+                outtakeArmPivotPosition = 1;
+            }
+        }
+        xDown = gamepad1.x;
 
-
-        //fix later
-        if(outtakeSlideExtend > 0.2) {
-            robot.verticalSlide.extend(1);
-            outtakeSlidePosition = -1;
-        }
-        if(outtakeSlideRetract) {
-            outtakeSlidePosition -= 100;
-        }
-        if(outtakeSlideFullExtension) {
-            outtakeSlidePosition = 3050;
-        }
-        if(outtakeSlideFullRetraction) {
-            outtakeSlidePosition = 0;
-        }
-        if(outtakeSlideSpecimen) {
-            outtakeSlidePosition = 1950;
-        }
-
-        if(transfer && !transferPressed) {
-            if(outtakeClawPosition < 0.85) {
+        if(gamepad1.y && !yDown) {
+            if(outtakeClawPosition == 0.85) {
+                outtakeClawPosition = 0.6;
+            }
+            else {
                 outtakeClawPosition = 0.85;
                 transferCompletionTime = runtime.seconds() + 0.3;
             }
-            else {
-                outtakeClawPosition = 0;
-            }
         }
-        transferPressed = transfer;
+        yDown = gamepad1.y;
 
-        if(outtakePivotToggle && !outtakePivotTogglePressed) {
-            if(outtakeArmPivotPosition != 1) {
-                outtakeArmPivotPosition = 1;
-            } else {
-                outtakeArmPivotPosition = 0.5;
-            }
-        }
-        outtakePivotTogglePressed = outtakePivotToggle;
-
-        if(highBucketButton) {
-            outtakeArmPivotPosition = 0.65;
-        }
-        if(specimenGrabButton && !specimenGrabButtonPressed){
-            if(outtakeArmPivotPosition!=1){
-                outtakeArmPivotPosition = 1;
-            } else {
+        if(gamepad1.a && !aDown) {
+            if(outtakeArmPivotPosition != 0.2){
                 outtakeArmPivotPosition = 0.2;
             }
+            else {
+               outtakeArmPivotPosition = 1;
+            }
         }
-        specimenGrabButtonPressed = specimenGrabButton;
+        aDown = gamepad1.a;
+
+        if(gamepad1.b) {
+            robot.verticalSlide.extend(1);
+            outtakeSlidePosition = -1;
+        }
+        else if (!gamepad1.b && bDown){
+            robot.verticalSlide.reset();
+        }
+        bDown = gamepad1.b;
+        if(gamepad1.right_trigger > 0.2) {
+            outtakeSlidePosition = 1975;
+        }
+        if(gamepad1.right_bumper) {
+            outtakeSlidePosition = 3050;
+        }
     }
 
     private void handleDrivetrain() {
         Pose2d poseEstimate = drive.getPoseEstimate();
 
         Vector2d input = new Vector2d(
-                -gamepad1.left_stick_y*speedReduction,
-                -gamepad1.left_stick_x*speedReduction
+                -gamepad1.left_stick_y,
+                -gamepad1.left_stick_x
         ).rotated(-poseEstimate.getHeading());
 
         drive.setWeightedDrivePower(
                 new Pose2d(
                         input.getX(),
                         input.getY(),
-                        -gamepad1.right_stick_x*speedReduction
+                        -gamepad1.right_stick_x
                 )
         );
     }
@@ -248,6 +244,8 @@ public class TwoDriver extends LinearOpMode{
         telemetry.addData("x", poseEstimate.getX());
         telemetry.addData("y", poseEstimate.getY());
         telemetry.addData("heading", poseEstimate.getHeading());
+        telemetry.addData("Dpad Left", leftDDown);
+        telemetry.addData("Dpad Right", rightDDown);
         telemetry.update();
     }
 }

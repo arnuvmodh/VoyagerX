@@ -52,6 +52,34 @@ public class MotorSlide {
         _right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    public void extend(float power) {
+        if (_left.getCurrentPosition() < _max-50) {
+            _left.setPower(power);
+        } else {
+            _left.setPower(0);
+        }
+
+        if (_right.getCurrentPosition() < _max-50) {
+            _right.setPower(power);
+        } else {
+            _right.setPower(0);
+        }
+    }
+
+    public void retract(float power) {
+        if (_left.getCurrentPosition() > _min+50) {
+            _left.setPower(-power);
+        } else {
+            _left.setPower(0);
+        }
+
+        if (_right.getCurrentPosition() > _min+50) {
+            _right.setPower(-power);
+        } else {
+            _right.setPower(0);
+        }
+    }
+
     public void extendFull() {
         if (_left.getCurrentPosition() < _max-50) {
             _left.setPower(1);
