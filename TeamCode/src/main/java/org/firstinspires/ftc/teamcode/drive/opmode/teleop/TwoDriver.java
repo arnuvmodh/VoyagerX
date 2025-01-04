@@ -73,6 +73,7 @@ public class TwoDriver extends LinearOpMode{
         robot.outtakeClaw.release();
         robot.intakeClaw.grab();
         robot.clawPivot.flipTo(0.5);
+        robot.hangPivot.setPosition(0);
     }
 
     private void driveControls() {
@@ -140,6 +141,8 @@ public class TwoDriver extends LinearOpMode{
     }
 
     private boolean transferPressed = false, outtakePivotTogglePressed = false, specimenGrabButtonPressed = false;
+    private boolean outtakeSlideExtendDown = false, outtakeSlideRetractDown = false;
+    private boolean hangButtonDown = false;
     private void outtakeControls() {
         float outtakeSlideExtend = gamepad1.right_trigger;
         boolean outtakeSlideRetract = gamepad1.right_bumper;
@@ -152,15 +155,36 @@ public class TwoDriver extends LinearOpMode{
         boolean highBucketButton = gamepad2.b;
         boolean specimenGrabButton = gamepad2.back;
 
+        boolean hangButton = gamepad2.right_stick_button;
 
-        //fix later
-        if(outtakeSlideExtend > 0.2) {
+        if(hangButton && !hangButtonDown) {
+            if(robot.hangPivot.getPosition() != 0.5) {
+                robot.hangPivot.setPosition(0.5);
+            }
+            else {
+                robot.hangPivot.setPosition(0);
+            }
+        }
+        hangButtonDown = hangButton;
+
+        if(outtakeSlideExtend > 0.01) {
             robot.verticalSlide.extend(1);
             outtakeSlidePosition = -1;
         }
-        if(outtakeSlideRetract) {
-            outtakeSlidePosition -= 100;
+        else if(outtakeSlideExtendDown) {
+            robot.verticalSlide.reset();
         }
+        outtakeSlideExtendDown = outtakeSlideExtend > 0.01;
+
+        if(outtakeSlideRetract) {
+            robot.verticalSlide.extend(1);
+            outtakeSlidePosition = -1;
+        }
+        else if(outtakeSlideRetractDown) {
+            robot.verticalSlide.reset();
+        }
+        outtakeSlideRetractDown = outtakeSlideRetract;
+
         if(outtakeSlideFullExtension) {
             outtakeSlidePosition = 3050;
         }

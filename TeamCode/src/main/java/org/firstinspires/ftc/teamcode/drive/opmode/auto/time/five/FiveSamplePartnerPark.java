@@ -7,11 +7,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.opmode.auto.time.FourSamplePark;
 import org.firstinspires.ftc.teamcode.drive.opmode.tuning.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.opmode.Robot;
 
 @Autonomous()
-public class FiveSamplePartner extends LinearOpMode {
+public class FiveSamplePartnerPark extends LinearOpMode {
     final double INTAKE_CLAW_OPEN_POSITION = 0.2;
     final double OUTTAKE_CLAW_OPEN_POSITION = 0.3;
     final double OUTTAKE_CLAW_CLOSE_POSITION = 1;
@@ -25,6 +26,8 @@ public class FiveSamplePartner extends LinearOpMode {
         traj7,
         traj8,
         traj9,
+        traj10,
+        traj11,
         idle
     }
 
@@ -78,7 +81,12 @@ public class FiveSamplePartner extends LinearOpMode {
         Trajectory traj9 = drive.trajectoryBuilder(traj8.end())
                 .lineToSplineHeading(new Pose2d(-18.25, 5.5, 0.75))
                 .build();
-
+        Trajectory traj10 = drive.trajectoryBuilder(traj9.end())
+                .lineToSplineHeading(new Pose2d(-10.5, 62.3, 0.0224))
+                .build();
+        Trajectory traj11 = drive.trajectoryBuilder(traj10.end())
+                .lineToSplineHeading(new Pose2d(11.5, 62.3794, 6.2498))
+                .build();
 
         waitForStart();
         if (isStopRequested()) return;
@@ -289,6 +297,22 @@ public class FiveSamplePartner extends LinearOpMode {
                     scoreBasket(timer);
                     if (!drive.isBusy() && timer.seconds() > 2) {
                         raiseVertSlides = false;
+                        drive.followTrajectoryAsync(traj10);
+                        curState = State.traj10;
+                        timer.reset();
+                    }
+                    break;
+                case traj10:
+                    if(!drive.isBusy()) {
+                        robot.intakePivot.flipTo(0.45);
+                        robot.clawPivot.flipTo(0.225);
+                        drive.followTrajectoryAsync(traj11);
+                        curState = State.traj11;
+                        timer.reset();
+                    }
+                    break;
+                case traj11:
+                    if (!drive.isBusy() && timer.seconds() > 1) {
                         curState = State.idle;
                         timer.reset();
                     }

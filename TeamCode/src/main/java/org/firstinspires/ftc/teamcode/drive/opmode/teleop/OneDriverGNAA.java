@@ -165,7 +165,7 @@ public class OneDriverGNAA extends LinearOpMode{
 
         if(gamepad1.y && !yDown) {
             if(outtakeClawPosition == 0.85) {
-                outtakeClawPosition = 0.6;
+                outtakeClawPosition = 0.3;
             }
             else {
                 outtakeClawPosition = 0.85;
