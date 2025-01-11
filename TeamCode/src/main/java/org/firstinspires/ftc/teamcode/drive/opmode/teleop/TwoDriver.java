@@ -17,6 +17,7 @@ public class TwoDriver extends LinearOpMode{
 
     // Drive Control Variables
     private double speedReduction = 1;
+    private int fieldCentricResets = 0;
 
     // Intake Control Variables
     private double intakeSlidePosition = 0;
@@ -78,6 +79,7 @@ public class TwoDriver extends LinearOpMode{
 
     private void driveControls() {
         if(gamepad2.a) {
+            fieldCentricResets++;
             drive.setPoseEstimate(new Pose2d());
         }
     }
@@ -144,7 +146,7 @@ public class TwoDriver extends LinearOpMode{
     private boolean outtakeSlideExtendDown = false, outtakeSlideRetractDown = false;
     private boolean hangButtonDown = false;
     private void outtakeControls() {
-        float outtakeSlideExtend = gamepad1.right_trigger;
+        boolean outtakeSlideExtend = gamepad1.right_trigger > 0.01;
         boolean outtakeSlideRetract = gamepad1.right_bumper;
         boolean outtakeSlideFullExtension = gamepad1.y;
         boolean outtakeSlideFullRetraction = (gamepad2.left_trigger > 0.2)||gamepad1.a;
@@ -167,14 +169,14 @@ public class TwoDriver extends LinearOpMode{
         }
         hangButtonDown = hangButton;
 
-        if(outtakeSlideExtend > 0.01) {
+        if(outtakeSlideExtend) {
             robot.verticalSlide.extend(1);
             outtakeSlidePosition = -1;
         }
         else if(outtakeSlideExtendDown) {
             robot.verticalSlide.reset();
         }
-        outtakeSlideExtendDown = outtakeSlideExtend > 0.01;
+        outtakeSlideExtendDown = outtakeSlideExtend;
 
         if(outtakeSlideRetract) {
             robot.verticalSlide.extend(1);
@@ -272,6 +274,7 @@ public class TwoDriver extends LinearOpMode{
         telemetry.addData("x", poseEstimate.getX());
         telemetry.addData("y", poseEstimate.getY());
         telemetry.addData("heading", poseEstimate.getHeading());
+        telemetry.addData("Field Centric Resets", fieldCentricResets);
         telemetry.update();
     }
 }

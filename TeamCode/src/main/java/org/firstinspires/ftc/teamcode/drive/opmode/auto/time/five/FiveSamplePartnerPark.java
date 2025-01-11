@@ -58,13 +58,13 @@ public class FiveSamplePartnerPark extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
                 .build();
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                .lineToSplineHeading(new Pose2d(-14, 10, 1.4318))
+                .lineToSplineHeading(new Pose2d(-14, 10.25, 1.4318))
                 .build();
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
                 .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
                 .build();
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
-                .lineToSplineHeading(new Pose2d(-20.8, 10.27, 1.5443))
+                .lineToSplineHeading(new Pose2d(-20.8, 10.25, 1.5443))
                 .build();
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
                 .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
@@ -85,7 +85,7 @@ public class FiveSamplePartnerPark extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-10.5, 62.3, 0.0224))
                 .build();
         Trajectory traj11 = drive.trajectoryBuilder(traj10.end())
-                .lineToSplineHeading(new Pose2d(11.5, 62.3794, 6.2498))
+                .lineToSplineHeading(new Pose2d(13, 62.3794, 6.2498))
                 .build();
 
         waitForStart();
@@ -133,10 +133,10 @@ public class FiveSamplePartnerPark extends LinearOpMode {
                     if(timer.seconds()>1.7&&timer.seconds()<2.6) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 2.4) {
+                    if (timer.seconds() > 2.6) {
                         outtakeGrab();
                     }
-                    if (timer.seconds() > 2.5) {
+                    if (timer.seconds() > 2.7) {
                         intakeLetGo();
                     }
                     if (!drive.isBusy() && timer.seconds() > 3) {
@@ -176,13 +176,13 @@ public class FiveSamplePartnerPark extends LinearOpMode {
                         horizontalSlidePosition = 0;
                         oneTimeSwitch[6] = false;
                     }
-                    if(timer.seconds()>2.05&&timer.seconds()<2.75) {
+                    if(timer.seconds()>2.05&&timer.seconds()<2.9) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 2.75) {
+                    if (timer.seconds() > 2.9) {
                         outtakeGrab();
                     }
-                    if (timer.seconds() > 3.15) {
+                    if (timer.seconds() > 3) {
                         intakeLetGo();
                     }
                     if (!drive.isBusy() && timer.seconds() > 3.4) {
@@ -234,13 +234,13 @@ public class FiveSamplePartnerPark extends LinearOpMode {
                     if(timer.seconds()>2&&timer.seconds()<3.3) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 2.7) {
+                    if (timer.seconds() > 2.9) {
                         outtakeGrab();
                     }
-                    if (timer.seconds() > 2.8) {
+                    if (timer.seconds() > 3) {
                         intakeLetGo();
                     }
-                    if (!drive.isBusy() && timer.seconds() > 3.1) {
+                    if (!drive.isBusy() && timer.seconds() > 3.2) {
                         drive.followTrajectoryAsync(traj7);
                         curState = State.traj7;
                         timer.reset();
@@ -277,13 +277,13 @@ public class FiveSamplePartnerPark extends LinearOpMode {
                     if(timer.seconds()>1.7&&timer.seconds()<2.6) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 2.4) {
+                    if (timer.seconds() > 2.6) {
                         outtakeGrab();
                     }
-                    if (timer.seconds() > 2.6) {
+                    if (timer.seconds() > 2.7) {
                         intakeLetGo();
                     }
-                    if (!drive.isBusy() && timer.seconds() > 2.8) {
+                    if (!drive.isBusy() && timer.seconds() > 2.9) {
                         drive.followTrajectoryAsync(traj9);
                         curState = State.traj9;
                         timer.reset();
@@ -304,8 +304,8 @@ public class FiveSamplePartnerPark extends LinearOpMode {
                     break;
                 case traj10:
                     if(!drive.isBusy()) {
-                        robot.intakePivot.flipTo(0.45);
-                        robot.clawPivot.flipTo(0.225);
+                        robot.intakePivot.flipTo(0.4);
+                        robot.clawPivot.flipTo(0.275);
                         drive.followTrajectoryAsync(traj11);
                         curState = State.traj11;
                         timer.reset();

@@ -61,7 +61,7 @@ public abstract class FiveSample extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
                 .build();
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                .lineToSplineHeading(new Pose2d(-14, 10, 1.4318))
+                .lineToSplineHeading(new Pose2d(-14, 10.25, 1.4318))
                 .build();
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
                 .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
@@ -137,10 +137,10 @@ public abstract class FiveSample extends LinearOpMode {
                     if(timer.seconds()>1.5&&timer.seconds()<2.4) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 2.2) {
+                    if (timer.seconds() > 2.4) {
                         outtakeGrab();
                     }
-                    if (timer.seconds() > 2.3) {
+                    if (timer.seconds() > 2.5) {
                         intakeLetGo();
                     }
                     if (!drive.isBusy() && timer.seconds() > 2.8) {
@@ -181,10 +181,10 @@ public abstract class FiveSample extends LinearOpMode {
                         horizontalSlidePosition = 0;
                         oneTimeSwitch[6] = false;
                     }
-                    if(timer.seconds()>1.9&&timer.seconds()<2.6) {
+                    if(timer.seconds()>1.9&&timer.seconds()<2.9) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 2.6) {
+                    if (timer.seconds() > 2.9) {
                         outtakeGrab();
                     }
                     if (timer.seconds() > 3) {
@@ -240,13 +240,13 @@ public abstract class FiveSample extends LinearOpMode {
                     if(timer.seconds()>1.8&&timer.seconds()<3.3) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 2.5) {
+                    if (timer.seconds() > 2.7) {
                         outtakeGrab();
                     }
-                    if (timer.seconds() > 2.6) {
+                    if (timer.seconds() > 2.8) {
                         intakeLetGo();
                     }
-                    if (!drive.isBusy() && timer.seconds() > 2.9) {
+                    if (!drive.isBusy() && timer.seconds() > 3) {
                         drive.followTrajectoryAsync(traj7);
                         curState = State.traj7;
                         timer.reset();
@@ -304,21 +304,21 @@ public abstract class FiveSample extends LinearOpMode {
                         timer.reset();
                     }
                 case traj11:
-                    if (timer.seconds() > 0.1 && timer.seconds() < 0.8) {
+                    if (timer.seconds() > 0.1 && timer.seconds() < 1) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 0.8) {
+                    if (timer.seconds() > 1) {
                         outtakeGrab();
                     }
-                    if (timer.seconds() > 1) {
+                    if (timer.seconds() > 1.2) {
                         intakeLetGo();
                     }
-                    if (oneTimeSwitch[19] && timer.seconds() > 1.2) {
+                    if (oneTimeSwitch[19] && timer.seconds() > 1.4) {
                         raiseVertSlides = true;
                         oneTimeSwitch[19] = false;
                     }
                     scoreFinalBasket(timer);
-                    if (!drive.isBusy() && timer.seconds() > 3) {
+                    if (!drive.isBusy() && timer.seconds() > 3.2) {
                         raiseVertSlides = false;
                         curState = State.idle;
                         timer.reset();
@@ -368,13 +368,13 @@ public abstract class FiveSample extends LinearOpMode {
     }
 
     void scoreFinalBasket(ElapsedTime timer) {
-        if (timer.seconds() > 2.3) {
+        if (timer.seconds() > 2.5) {
             outtakeFlipOut();
         }
-        if (timer.seconds() > 2.7) {
+        if (timer.seconds() > 2.9) {
             outtakeLetGo();
         }
-        if (timer.seconds() > 2.8) {
+        if (timer.seconds() > 3) {
             outtakeFlipIn();
         }
     }

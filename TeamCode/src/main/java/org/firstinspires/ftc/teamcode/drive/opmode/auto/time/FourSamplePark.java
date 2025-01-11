@@ -55,13 +55,13 @@ public class FourSamplePark extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
                 .build();
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                .lineToSplineHeading(new Pose2d(-14, 10, 1.4318))
+                .lineToSplineHeading(new Pose2d(-14, 10.25, 1.4318))
                 .build();
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
                 .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
                 .build();
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
-                .lineToSplineHeading(new Pose2d(-20.8, 10.27, 1.5443))
+                .lineToSplineHeading(new Pose2d(-20.8, 10.25, 1.5443))
                 .build();
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
                 .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
@@ -76,7 +76,7 @@ public class FourSamplePark extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-10.5, 62.3, 0.0224))
                 .build();
         Trajectory traj9 = drive.trajectoryBuilder(traj8.end())
-                .lineToSplineHeading(new Pose2d(11.5, 62.3794, 6.2498))
+                .lineToSplineHeading(new Pose2d(13, 62.3794, 6.2498))
                 .build();
 
         waitForStart();
@@ -255,8 +255,8 @@ public class FourSamplePark extends LinearOpMode {
                     break;
                 case traj8:
                     if(!drive.isBusy()) {
-                        robot.intakePivot.flipTo(0.45);
-                        robot.clawPivot.flipTo(0.225);
+                        robot.intakePivot.flipTo(0.4);
+                        robot.clawPivot.flipTo(0.275);
                         drive.followTrajectoryAsync(traj9);
                         curState = State.traj9;
                         timer.reset();

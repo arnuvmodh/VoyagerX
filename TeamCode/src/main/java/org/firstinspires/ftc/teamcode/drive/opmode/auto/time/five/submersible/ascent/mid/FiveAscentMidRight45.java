@@ -5,8 +5,8 @@ import org.firstinspires.ftc.teamcode.drive.opmode.auto.time.five.FiveSample;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name = "Ascent 5 Mid 0°", group = "Bars 5")
-public class FiveBarsMid0 extends FiveSample {
+@Autonomous(name = "Ascent 5 Mid R 45°", group = "Bars 5")
+public class FiveAscentMidRight45 extends FiveSample {
     @Override
     protected Pose2d getSampleFiveTrajectory() {
         return new Pose2d(13, 62.3794, 6.2498);
@@ -19,6 +19,6 @@ public class FiveBarsMid0 extends FiveSample {
 
     @Override
     protected double getIntakeClawPivotPosition() {
-        return 0.5;
+        return 0.35;
     }
 }

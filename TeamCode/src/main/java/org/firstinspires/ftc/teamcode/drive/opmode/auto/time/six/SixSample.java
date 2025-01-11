@@ -60,13 +60,13 @@ public abstract class SixSample extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
                 .build();
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                .lineToSplineHeading(new Pose2d(-14, 10, 1.4318))
+                .lineToSplineHeading(new Pose2d(-14, 10.25, 1.4318))
                 .build();
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
                 .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
                 .build();
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
-                .lineToSplineHeading(new Pose2d(-20.8, 10.27, 1.5443))
+                .lineToSplineHeading(new Pose2d(-20.8, 10.25, 1.5443))
                 .build();
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
                 .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
@@ -136,10 +136,10 @@ public abstract class SixSample extends LinearOpMode {
                     if(timer.seconds()>1.5&&timer.seconds()<2.4) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 2.2) {
+                    if (timer.seconds() > 2.5) {
                         outtakeGrab();
                     }
-                    if (timer.seconds() > 2.3) {
+                    if (timer.seconds() > 2.6) {
                         intakeLetGo();
                     }
                     if (!drive.isBusy() && timer.seconds() > 2.8) {
@@ -162,7 +162,6 @@ public abstract class SixSample extends LinearOpMode {
                         curState = State.traj4;
                         timer.reset();
                     }
-
                     break;
 
                 case traj4:
@@ -183,7 +182,7 @@ public abstract class SixSample extends LinearOpMode {
                     if(timer.seconds()>1.9&&timer.seconds()<2.6) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 2.6) {
+                    if (timer.seconds() > 2.9) {
                         outtakeGrab();
                     }
                     if (timer.seconds() > 3) {
@@ -236,16 +235,16 @@ public abstract class SixSample extends LinearOpMode {
                         horizontalSlidePosition = 0;
                         robot.clawPivot.flipTo(0.5);
                     }
-                    if(timer.seconds()>1.8&&timer.seconds()<3.3) {
+                    if(timer.seconds()>1.8&&timer.seconds()<3) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 2.5) {
+                    if (timer.seconds() > 2.6) {
                         outtakeGrab();
                     }
-                    if (timer.seconds() > 2.6) {
+                    if (timer.seconds() > 2.7) {
                         intakeLetGo();
                     }
-                    if (!drive.isBusy() && timer.seconds() > 2.9) {
+                    if (!drive.isBusy() && timer.seconds() > 3) {
                         drive.followTrajectoryAsync(traj7);
                         curState = State.traj7;
                         timer.reset();
@@ -282,13 +281,13 @@ public abstract class SixSample extends LinearOpMode {
                     if(timer.seconds()>1.4&&timer.seconds()<2.3) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 2.1) {
+                    if (timer.seconds() > 2.4) {
                         outtakeGrab();
                     }
-                    if (timer.seconds() > 2.3) {
+                    if (timer.seconds() > 2.5) {
                         intakeLetGo();
                     }
-                    if (!drive.isBusy() && timer.seconds() > 2.5) {
+                    if (!drive.isBusy() && timer.seconds() > 2.7) {
                         drive.followTrajectoryAsync(traj9);
                         curState = State.traj9;
                         timer.reset();
@@ -336,21 +335,21 @@ public abstract class SixSample extends LinearOpMode {
                     }
                     break;
                 case traj11:
-                    if (timer.seconds() > 0.1 && timer.seconds() < 0.8) {
+                    if (timer.seconds() > 0.1 && timer.seconds() < 1) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 0.8) {
+                    if (timer.seconds() > 1) {
                         outtakeGrab();
                     }
-                    if (timer.seconds() > 1) {
+                    if (timer.seconds() > 1.2) {
                         intakeLetGo();
                     }
-                    if (oneTimeSwitch[19] && timer.seconds() > 1.2) {
+                    if (oneTimeSwitch[19] && timer.seconds() > 1.4) {
                         raiseVertSlides = true;
                         oneTimeSwitch[19] = false;
                     }
                     scoreFinalBasket(timer);
-                    if (!drive.isBusy() && timer.seconds() > 3.4) {
+                    if (!drive.isBusy() && timer.seconds() > 3.6) {
                         raiseVertSlides = false;
                         curState = State.idle;
                         timer.reset();
@@ -401,13 +400,13 @@ public abstract class SixSample extends LinearOpMode {
     }
 
     void scoreFinalBasket(ElapsedTime timer) {
-        if (timer.seconds() > 2.7) {
+        if (timer.seconds() > 2.9) {
             outtakeFlipOut();
         }
-        if (timer.seconds() > 3.1) {
+        if (timer.seconds() > 3.3) {
             outtakeLetGo();
         }
-        if (timer.seconds() > 3.2) {
+        if (timer.seconds() > 3.4) {
             outtakeFlipIn();
         }
     }
