@@ -60,7 +60,7 @@ public abstract class SixSample extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
                 .build();
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                .lineToSplineHeading(new Pose2d(-14, 10.25, 1.4318))
+                .lineToSplineHeading(new Pose2d(-14, 10.5, 1.4318))
                 .build();
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
                 .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))

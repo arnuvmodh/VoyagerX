@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.Robot;
 import org.firstinspires.ftc.teamcode.drive.opmode.tuning.PoseStorage;
 
 @TeleOp
-public class OneDriverGNAA extends LinearOpMode{
+public class OneDriverArnuv extends LinearOpMode{
 
     // Intake Control Variables
     private double intakeSlidePosition = 0;

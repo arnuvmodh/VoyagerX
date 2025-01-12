@@ -55,7 +55,7 @@ public class FourSamplePark extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
                 .build();
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                .lineToSplineHeading(new Pose2d(-14, 10.25, 1.4318))
+                .lineToSplineHeading(new Pose2d(-14, 10.5, 1.4318))
                 .build();
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
                 .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
@@ -111,7 +111,7 @@ public class FourSamplePark extends LinearOpMode {
                 case traj2:
                     if (oneTimeSwitch[1] && timer.seconds() > 0.5) {
                         raiseVertSlides = false;
-                        horizontalSlidePosition = 0.6;
+                        horizontalSlidePosition = 0.625;
                         oneTimeSwitch[1] = false;
                     }
                     if (timer.seconds() > 1) {

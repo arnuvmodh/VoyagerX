@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.drive.opmode.auto.time.five;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.auto.Submersible;
 import org.firstinspires.ftc.teamcode.drive.opmode.tuning.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.opmode.Robot;
 
-@Autonomous
+@Disabled
 public class FiveSampleSolo extends LinearOpMode {
     Submersible submersible = new Submersible();
 
