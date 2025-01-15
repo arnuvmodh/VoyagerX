@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.drive.opmode.auto.time.five;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -11,20 +12,23 @@ import org.firstinspires.ftc.teamcode.drive.opmode.auto.Submersible;
 import org.firstinspires.ftc.teamcode.drive.opmode.tuning.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.opmode.Robot;
 
-@Disabled
+@Autonomous
 public class FiveSampleSolo extends LinearOpMode {
-    Submersible submersible = new Submersible();
+
+    double xPosition = 0;
+    double intakeSlidePosition = 0.6;
+    double intakeClawPivotPosition = 0.5;
 
     Pose2d getSampleFiveTrajectory() {
-        return submersible.xToPose();
+        return new Pose2d(13, 62.3794+xPosition, 6.2498);
     }
 
     double getIntakeSlidePosition() {
-        return submersible.yToSlide();
+        return intakeSlidePosition;
     }
 
     double getIntakeClawPivotPosition() {
-        return submersible.rotToPivot();
+        return intakeClawPivotPosition;
     }
 
     final double INTAKE_CLAW_OPEN_POSITION = 0.2;
@@ -40,43 +44,62 @@ public class FiveSampleSolo extends LinearOpMode {
         traj7,
         traj8,
         traj9,
+        traj10,
+        traj11,
         idle
     }
 
     Robot robot;
     private SampleMecanumDrive drive;
 
+
+    double increment = 1;
     @Override
     public void runOpMode() throws InterruptedException {
         boolean exit = false;
         boolean upDown = false, downDown = false, leftDown = false, rightDown = false;
-        boolean aDown = false, bDown = false;
+        boolean aDown = false, bDown = false, xDown = false, yDown = false;
         while(!exit && !isStopRequested()) {
-            if(gamepad1.dpad_up && !upDown) submersible.addY(-1);
+            if(gamepad1.dpad_up && !upDown) intakeSlidePosition+=(increment/10);
             upDown = gamepad1.dpad_up;
-            if(gamepad1.dpad_down && !downDown) submersible.addY(1);
+            if(gamepad1.dpad_down && !downDown) intakeSlidePosition-=(increment/10);
             downDown = gamepad1.dpad_down;
-            if(gamepad1.dpad_left && !leftDown) submersible.addX(-1);
+            if(gamepad1.dpad_left && !leftDown) xPosition-=increment;
             leftDown = gamepad1.dpad_left;
-            if(gamepad1.dpad_right && !rightDown) submersible.addX(1);
+            if(gamepad1.dpad_right && !rightDown) xPosition+=increment;
             rightDown = gamepad1.dpad_right;
 
             if(gamepad1.a && !aDown) {
-                submersible.addRotation(-45);
-                if(submersible.getSampleRotation()<=0) submersible.setSampleRotation(360 + submersible.getSampleRotation());
+                intakeClawPivotPosition-=(increment/10);
             }
             aDown = gamepad1.a;
             if(gamepad1.b && !bDown) {
-                submersible.addRotation(45);
-                if(submersible.getSampleRotation()>=360) submersible.setSampleRotation(submersible.getSampleRotation()-360);
+                intakeClawPivotPosition+=(increment/10);
             }
             bDown = gamepad1.b;
-            submersible.update();
 
-            telemetry.addLine(submersible.getDisplay());
+            if(gamepad1.x && !xDown) {
+                increment-=0.5;
+            }
+            xDown = gamepad1.x;
+            if(gamepad1.y && !yDown) {
+                increment+=0.5;
+            }
+            yDown = gamepad1.y;
+
+            telemetry.addData("Increment", increment);
+            telemetry.addData("X Position", xPosition);
+            telemetry.addData("Y Position", intakeSlidePosition);
+            telemetry.addData("Rotation", intakeClawPivotPosition);
             telemetry.update();
             exit = gamepad1.share;
         }
+
+        telemetry.addLine("Finalized");
+        telemetry.addData("X Position", xPosition);
+        telemetry.addData("Y Position", intakeSlidePosition);
+        telemetry.addData("Rotation", intakeClawPivotPosition);
+        telemetry.update();
 
         robot = new Robot(hardwareMap);
         robot.intakePivot.flipBack();
@@ -107,7 +130,7 @@ public class FiveSampleSolo extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
                 .build();
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
-                .lineToSplineHeading(new Pose2d(-21.25, 10.27, Math.toRadians(90)))
+                .lineToSplineHeading(new Pose2d(-20.8, 10.27, 1.5443))
                 .build();
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
                 .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
@@ -119,10 +142,16 @@ public class FiveSampleSolo extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
                 .build();
         Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
-                .splineToLinearHeading(getSampleFiveTrajectory(), -0.25)
+                .lineToSplineHeading(new Pose2d(-10.5, 62.3, 0.0224))
                 .build();
-        Trajectory traj9 = drive.trajectoryBuilder(traj8.end(), true)
-                .splineToLinearHeading(new Pose2d(-18.25, +5.2, 0.75), Math.toRadians(-90))
+        Trajectory traj9 = drive.trajectoryBuilder(traj8.end())
+                .lineToSplineHeading(getSampleFiveTrajectory())
+                .build();
+        Trajectory traj10 = drive.trajectoryBuilder(traj9.end())
+                .lineToSplineHeading(new Pose2d(-10.5, 62.3, 0.0224))
+                .build();
+        Trajectory traj11 = drive.trajectoryBuilder(traj10.end())
+                .lineToSplineHeading(new Pose2d(-18.25, 5.5, 0.75))
                 .build();
 
         waitForStart();
@@ -214,7 +243,7 @@ public class FiveSampleSolo extends LinearOpMode {
                         horizontalSlidePosition = 0;
                         oneTimeSwitch[6] = false;
                     }
-                    if(timer.seconds()>1.9&&timer.seconds()<2.9) {
+                    if(timer.seconds()>1.9&&timer.seconds()<2.6) {
                         intakeFlipIn();
                     }
                     if (timer.seconds() > 2.9) {
@@ -279,7 +308,7 @@ public class FiveSampleSolo extends LinearOpMode {
                     if (timer.seconds() > 2.8) {
                         intakeLetGo();
                     }
-                    if (!drive.isBusy() && timer.seconds() > 3) {
+                    if (!drive.isBusy() && timer.seconds() > 3.1) {
                         drive.followTrajectoryAsync(traj7);
                         curState = State.traj7;
                         timer.reset();
@@ -300,50 +329,57 @@ public class FiveSampleSolo extends LinearOpMode {
                     }
                     break;
                 case traj8:
-                    if(timer.seconds() > 1.5 && timer.seconds() < 2) {
+                    if(!drive.isBusy()) {
                         robot.intakePivot.underBar();
-                        horizontalSlidePosition = getIntakeSlidePosition()-0.2;
-                    }
-                    if(timer.seconds() > 1.5 && timer.seconds() < 2) {
-                        robot.clawPivot.flipTo(getIntakeClawPivotPosition());
-                        robot.intakeClaw.release();
-                    }
-                    if (timer.seconds() > 2 && timer.seconds() < 3) {
-                        intakeFlipOut();
-                    }
-                    if(timer.seconds()>2.5&&timer.seconds()<3) {
                         horizontalSlidePosition = getIntakeSlidePosition();
-                    }
-                    if (timer.seconds() > 3 && timer.seconds() < 3.5) {
-                        intakeGrab();
-                    }
-                    if (timer.seconds() > 3.5 && timer.seconds() < 4.5) {
-                        horizontalSlidePosition = 0;
-                        robot.intakePivot.underBar();
-                    }
-                    if (!drive.isBusy() && timer.seconds() > 4.5) {
-                        robot.clawPivot.flipTo(0.5);
                         drive.followTrajectoryAsync(traj9);
                         curState = State.traj9;
                         timer.reset();
                     }
                     break;
                 case traj9:
-                    if (timer.seconds() > 0.1 && timer.seconds() < 1) {
+                    if(timer.seconds() > 0 && timer.seconds() < 0.5) {
+                        robot.clawPivot.flipTo(getIntakeClawPivotPosition());
+                    }
+                    if (timer.seconds() > 1 && timer.seconds() < 1.5) {
+                        intakeFlipOut();
+                    }
+                    if (timer.seconds() > 1.5 && timer.seconds() < 1.8) {
+                        intakeGrab();
+                    }
+                    if (timer.seconds() > 2 && timer.seconds() < 3) {
+                        horizontalSlidePosition = 0;
+                        robot.intakePivot.underBar();
+                    }
+                    if (!drive.isBusy() && timer.seconds() > 3) {
+                        robot.clawPivot.flipTo(0.5);
+                        drive.followTrajectoryAsync(traj10);
+                        curState = State.traj10;
+                        timer.reset();
+                    }
+                    break;
+                case traj10:
+                    if(!drive.isBusy()) {
+                        drive.followTrajectoryAsync(traj11);
+                        curState = State.traj11;
+                        timer.reset();
+                    }
+                case traj11:
+                    if (timer.seconds() > 0.1 && timer.seconds() < 0.8) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 1) {
+                    if (timer.seconds() > 0.9) {
                         outtakeGrab();
                     }
-                    if (timer.seconds() > 1.2) {
+                    if (timer.seconds() > 1) {
                         intakeLetGo();
                     }
-                    if (oneTimeSwitch[19] && timer.seconds() > 1.4) {
+                    if (oneTimeSwitch[19] && timer.seconds() > 1.2) {
                         raiseVertSlides = true;
                         oneTimeSwitch[19] = false;
                     }
                     scoreFinalBasket(timer);
-                    if (!drive.isBusy() && timer.seconds() > 4.2) {
+                    if (!drive.isBusy() && timer.seconds() > 3) {
                         raiseVertSlides = false;
                         curState = State.idle;
                         timer.reset();
@@ -381,7 +417,7 @@ public class FiveSampleSolo extends LinearOpMode {
     }
 
     void scoreBasket(ElapsedTime timer) {
-        if (timer.seconds() > 1.5) {
+        if (timer.seconds() > 1.6) {
             outtakeFlipOut();
         }
         if (timer.seconds() > 1.9) {
@@ -393,13 +429,13 @@ public class FiveSampleSolo extends LinearOpMode {
     }
 
     void scoreFinalBasket(ElapsedTime timer) {
-        if (timer.seconds() > 3.5) {
+        if (timer.seconds() > 2.3) {
             outtakeFlipOut();
         }
-        if (timer.seconds() > 3.9) {
+        if (timer.seconds() > 2.7) {
             outtakeLetGo();
         }
-        if (timer.seconds() > 4) {
+        if (timer.seconds() > 2.8) {
             outtakeFlipIn();
         }
     }
