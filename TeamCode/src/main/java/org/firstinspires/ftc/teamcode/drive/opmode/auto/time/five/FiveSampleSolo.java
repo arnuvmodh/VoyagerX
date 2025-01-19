@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.drive.opmode.auto.time.five;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -175,7 +174,7 @@ public class FiveSampleSolo extends LinearOpMode {
                     break;
                 case traj1:
                     scoreBasket(timer);
-                    if (!drive.isBusy() && timer.seconds() > 2) {
+                    if (!drive.isBusy() && timer.seconds() > 2.2) {
                         oneTimeSwitch[0] = false;
                         intakeFlipOut();
                         drive.followTrajectoryAsync(traj2);
@@ -217,7 +216,7 @@ public class FiveSampleSolo extends LinearOpMode {
                         oneTimeSwitch[3] = false;
                     }
                     scoreBasket(timer);
-                    if (!drive.isBusy() && timer.seconds() > 2) {
+                    if (!drive.isBusy() && timer.seconds() > 2.2) {
                         oneTimeSwitch[4] = false;
                         intakeFlipOut();
                         horizontalSlidePosition = 0.5;
@@ -264,7 +263,7 @@ public class FiveSampleSolo extends LinearOpMode {
                         oneTimeSwitch[7] = false;
                     }
                     scoreBasket(timer);
-                    if (!drive.isBusy() && timer.seconds() > 2) {
+                    if (!drive.isBusy() && timer.seconds() > 2.2) {
                         intakeFlipOut();
                         intakeEdgeClawPosition();
                         horizontalSlidePosition = 0.2;
@@ -321,7 +320,7 @@ public class FiveSampleSolo extends LinearOpMode {
                         oneTimeSwitch[14] = false;
                     }
                     scoreBasket(timer);
-                    if (!drive.isBusy() && timer.seconds() > 2) {
+                    if (!drive.isBusy() && timer.seconds() > 2.2) {
                         raiseVertSlides = false;
                         drive.followTrajectoryAsync(traj8);
                         curState = State.traj8;
@@ -417,13 +416,13 @@ public class FiveSampleSolo extends LinearOpMode {
     }
 
     void scoreBasket(ElapsedTime timer) {
-        if (timer.seconds() > 1.6) {
+        if (timer.seconds() > 1.5) {
             outtakeFlipOut();
         }
-        if (timer.seconds() > 1.9) {
+        if (timer.seconds() > 2) {
             outtakeLetGo();
         }
-        if (timer.seconds() > 2) {
+        if (timer.seconds() > 2.2) {
             outtakeFlipIn();
         }
     }
@@ -432,10 +431,10 @@ public class FiveSampleSolo extends LinearOpMode {
         if (timer.seconds() > 2.3) {
             outtakeFlipOut();
         }
-        if (timer.seconds() > 2.7) {
+        if (timer.seconds() > 2.8) {
             outtakeLetGo();
         }
-        if (timer.seconds() > 2.8) {
+        if (timer.seconds() > 3) {
             outtakeFlipIn();
         }
     }

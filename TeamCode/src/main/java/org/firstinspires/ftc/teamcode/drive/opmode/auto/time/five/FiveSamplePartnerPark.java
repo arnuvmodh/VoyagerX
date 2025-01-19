@@ -109,7 +109,7 @@ public class FiveSamplePartnerPark extends LinearOpMode {
                     break;
                 case traj1:
                     scoreBasket(timer);
-                    if (!drive.isBusy() && timer.seconds() > 2) {
+                    if (!drive.isBusy() && timer.seconds() > 2.2) {
                         oneTimeSwitch[0] = false;
                         intakeFlipOut();
                         drive.followTrajectoryAsync(traj2);
@@ -151,7 +151,7 @@ public class FiveSamplePartnerPark extends LinearOpMode {
                         oneTimeSwitch[3] = false;
                     }
                     scoreBasket(timer);
-                    if (!drive.isBusy() && timer.seconds() > 2) {
+                    if (!drive.isBusy() && timer.seconds() > 2.2) {
                         oneTimeSwitch[4] = false;
                         intakeFlipOut();
                         horizontalSlidePosition = 0.5;
@@ -197,7 +197,7 @@ public class FiveSamplePartnerPark extends LinearOpMode {
                         oneTimeSwitch[7] = false;
                     }
                     scoreBasket(timer);
-                    if (!drive.isBusy() && timer.seconds() > 2) {
+                    if (!drive.isBusy() && timer.seconds() > 2.2) {
                         intakeFlipOut();
                         intakeEdgeClawPosition();
                         drive.followTrajectoryAsync(traj6);
@@ -253,7 +253,7 @@ public class FiveSamplePartnerPark extends LinearOpMode {
                         oneTimeSwitch[14] = false;
                     }
                     scoreBasket(timer);
-                    if (!drive.isBusy() && timer.seconds() > 2) {
+                    if (!drive.isBusy() && timer.seconds() > 2.2) {
                         horizontalSlidePosition = 0.5;
                         intakeFlipOut();
                         drive.followTrajectoryAsync(traj8);
@@ -295,7 +295,7 @@ public class FiveSamplePartnerPark extends LinearOpMode {
                         oneTimeSwitch[17] = false;
                     }
                     scoreBasket(timer);
-                    if (!drive.isBusy() && timer.seconds() > 2) {
+                    if (!drive.isBusy() && timer.seconds() > 2.2) {
                         raiseVertSlides = false;
                         drive.followTrajectoryAsync(traj10);
                         curState = State.traj10;
@@ -352,10 +352,10 @@ public class FiveSamplePartnerPark extends LinearOpMode {
         if (timer.seconds() > 1.5) {
             outtakeFlipOut();
         }
-        if (timer.seconds() > 1.8) {
+        if (timer.seconds() > 2) {
             outtakeLetGo();
         }
-        if (timer.seconds() > 2) {
+        if (timer.seconds() > 2.2) {
             outtakeFlipIn();
         }
     }
