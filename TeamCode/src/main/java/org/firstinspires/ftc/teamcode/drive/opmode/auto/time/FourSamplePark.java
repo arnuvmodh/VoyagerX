@@ -52,31 +52,31 @@ public class FourSamplePark extends LinearOpMode {
 
         //IMPLEMENT THESE TRAJECTORY SEQUENCES ASYNCHRONOUSLY TO FOLLOW AUTO PATH
         Trajectory traj1 = drive.trajectoryBuilder(new Pose2d(0, 0, 0))
-                .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
+                .lineToSplineHeading(new Pose2d(-18.25, 6.2, 0.75))
                 .build();
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                .lineToSplineHeading(new Pose2d(-14, 10.5, 1.4318))
+                .lineToSplineHeading(new Pose2d(-14, 11.5, 1.4318))
                 .build();
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
-                .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
+                .lineToSplineHeading(new Pose2d(-18.25, 6.2, 0.75))
                 .build();
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
-                .lineToSplineHeading(new Pose2d(-20.8, 10.25, 1.5443))
+                .lineToSplineHeading(new Pose2d(-20.8, 11.25, 1.5443))
                 .build();
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
-                .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
+                .lineToSplineHeading(new Pose2d(-18.25, 6.2, 0.75))
                 .build();
         Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
-                .lineToSplineHeading(new Pose2d(-22.2, 13.47, 1.9))
+                .lineToSplineHeading(new Pose2d(-22.2, 14.47, 1.9))
                 .build();
         Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
-                .lineToSplineHeading(new Pose2d(-18.25, 5.2, 0.75))
+                .lineToSplineHeading(new Pose2d(-18.25, 6.2, 0.75))
                 .build();
         Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
-                .lineToSplineHeading(new Pose2d(-10.5, 62.3, 0.0224))
+                .lineToSplineHeading(new Pose2d(-10.5, 63.3, 0.0224))
                 .build();
         Trajectory traj9 = drive.trajectoryBuilder(traj8.end())
-                .lineToSplineHeading(new Pose2d(13, 62.3794, 6.2498))
+                .lineToSplineHeading(new Pose2d(13.25, 63.3794, 6.2498))
                 .build();
 
         waitForStart();
