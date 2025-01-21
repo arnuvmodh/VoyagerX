@@ -11,25 +11,28 @@ public class MeepMeepTesting {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(500);
 
-        double startingX = -37;
-        double startingY = -60;
+        double startingX = 0;
+        double startingY = 0;
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(90, 90, 3.1121749877929688, 43.22031264858833, 15.28)
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(startingX, startingY, 0))
-                        .lineToSplineHeading(new Pose2d(startingX-18.25, startingY+5.2, 0.75))
-                        .lineToSplineHeading(new Pose2d(startingX-14, startingY+10, 1.4318))
-                        .lineToSplineHeading(new Pose2d(startingX-18.25, startingY+5.2, 0.75))
-                        .lineToSplineHeading(new Pose2d(startingX-21.25, startingY+10.27, Math.toRadians(90)))
-                        .lineToSplineHeading(new Pose2d(startingX-18.25, startingY+5.2, 0.75))
-                        .lineToSplineHeading(new Pose2d(startingX-22.2, startingY+13.47, 1.9))
-                        .lineToSplineHeading(new Pose2d(startingX-18.25, startingY+5.2, 0.75))
-                        .splineToLinearHeading(new Pose2d(startingX+13, startingY+61, 0), -0.25)
-                        .setReversed(true)
-                        .splineToLinearHeading(new Pose2d(startingX-18.25, startingY+5.2, 0.75), Math.toRadians(-90))
+                        .lineToSplineHeading(new Pose2d(startingX - 30, startingY - 2, 6.2221))
+                        .splineTo(new Vector2d(startingX - 20, startingY + 26), Math.PI)
+                        .strafeTo(new Vector2d(startingX - 55, startingY + 26))
+                        .strafeTo(new Vector2d(startingX - 55, startingY + 35))
+                        .strafeTo(new Vector2d(startingX - 15, startingY + 35))
+                        .splineTo(new Vector2d(startingX - 55, startingY + 35), Math.PI)
+                        .strafeTo(new Vector2d(startingX - 55, startingY + 45))
+                        .strafeTo(new Vector2d(startingX - 15, startingY + 45))
+                        .splineToLinearHeading(new Pose2d(startingX - 5.8, startingY + 28.5, Math.PI), 0)
+                        .splineToLinearHeading(new Pose2d(startingX - 26.25, startingY - 7, 0), Math.PI)
+                        .splineToLinearHeading(new Pose2d(startingX - 5.8, startingY + 28.5, Math.PI), 0)
+//                        .splineToLinearHeading(new Pose2d(startingX - 26.25, startingY - 12, 0), Math.PI)
+//                        .splineToLinearHeading(new Pose2d(startingX - 5.8, startingY + 28.5, Math.PI), 0)
+//                        .splineToLinearHeading(new Pose2d(startingX - 26.25, startingY - 12, 0), Math.PI)
                         .build());
-
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTOTHEDEEP_JUICE_DARK)
                 .setDarkMode(true)
