@@ -16,8 +16,8 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 public class FourSpecimen extends LinearOpMode {
     Robot robot;
 
-    int verticalSlidePosition = 0;
-    final double SPECIMEN_GRAB_POSITION = 0.2775;
+    public int verticalSlidePosition = 0;
+    final double SPECIMEN_GRAB_POSITION = 0.325;
     final double SPECIMEN_SCORE_POSITION = 0.65;
     final double OUTTAKE_CLAW_OPEN_POSITION = 0.3;
     final double OUTTAKE_CLAW_CLOSE_POSITION = 0.9;
@@ -82,22 +82,22 @@ public class FourSpecimen extends LinearOpMode {
                 .build();
 
         traj6 = drive.trajectoryBuilder(traj5cont.end())
-                .splineToLinearHeading(new Pose2d(-6, 28.5, 3.1626), 0)
+                .splineToLinearHeading(new Pose2d(-8, 28.5, Math.PI), 0)
                 .build();
         traj7 = drive.trajectoryBuilder(traj6.end())
-                .splineToLinearHeading(new Pose2d(-23, -5, 6.2576), Math.PI)
+                .splineToLinearHeading(new Pose2d(-28.3, -5, (2*Math.PI)-0.1), Math.PI)
                 .build();
         traj8 = drive.trajectoryBuilder(traj7.end())
-                .splineToLinearHeading(new Pose2d(-6, 28.5, 3.1626), 0)
+                .splineToLinearHeading(new Pose2d(-8, 28.5, Math.PI-0.1), 0)
                 .build();
         traj9 = drive.trajectoryBuilder(traj8.end())
-                .splineToLinearHeading(new Pose2d(-23, -7, 6.2576), Math.PI)
+                .splineToLinearHeading(new Pose2d(-28.3, -9, (2*Math.PI)-0.1), Math.PI)
                 .build();
         traj10 = drive.trajectoryBuilder(traj9.end())
-                .splineToLinearHeading(new Pose2d(-6, 28.5, 3.1626), 0)
+                .splineToLinearHeading(new Pose2d(-9, 28.5, Math.PI-0.1), 0)
                 .build();
         traj11 = drive.trajectoryBuilder(traj10.end())
-                .splineToLinearHeading(new Pose2d(-23, -9, 6.2576), Math.PI)
+                .splineToLinearHeading(new Pose2d(-28.3, -13, (2*Math.PI)-0.1), Math.PI)
                 .build();
 
 
@@ -114,9 +114,11 @@ public class FourSpecimen extends LinearOpMode {
         while(opModeIsActive()) {
             stateMachine();
             robot.verticalSlide.goTo(verticalSlidePosition, 1);
+            robot.horizontalSlide.retractFull();
             drive.update();
             Pose2d poseEstimate = drive.getPoseEstimate();
             PoseStorage.currentPose = poseEstimate;
+            telemetry.addData("Vertical Slide", verticalSlidePosition);
             telemetry.addData("Current State", curState.name());
             telemetry.addData("Current Time", timer.seconds());
             telemetry.addData("x", poseEstimate.getX());
@@ -200,9 +202,9 @@ public class FourSpecimen extends LinearOpMode {
                 if (timer.seconds() > 0 && timer.seconds() < 0.3) {
                     robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION + 0.1);
                 }
-                if (timer.seconds() > 0.3 && timer.seconds() < 0.5) {
-                    verticalSlidePosition = 1250;
-                    robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION - 0.2);
+                if (timer.seconds() > 0.3 && timer.seconds() < 0.4) {
+                    verticalSlidePosition = 800;
+                    robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION );
                 }
                 if (!drive.isBusy() && timer.seconds() > 0.5) {
                     timer.reset();
@@ -217,8 +219,7 @@ public class FourSpecimen extends LinearOpMode {
                 if(timer.seconds()>1.8 && timer.seconds()<2.65){
                     verticalSlidePosition = 0;
                 }
-                if(timer.seconds()>2.65) robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
-                if(!drive.isBusy() && timer.seconds()>2.7) {
+                if(!drive.isBusy() && timer.seconds()>2.8) {
                     robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
                     robot.outtakePivot.flipTo(SPECIMEN_GRAB_POSITION);
                     timer.reset();
@@ -227,14 +228,14 @@ public class FourSpecimen extends LinearOpMode {
                 }
                 break;
             case traj8:
-                if (timer.seconds() > 0 && timer.seconds() < 0.3) {
+                if (timer.seconds() > 2 && timer.seconds() < 2.3) {
                     robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION + 0.1);
                 }
-                if (timer.seconds() > 0.3 && timer.seconds() < 0.5) {
-                    verticalSlidePosition = 1250;
-                    robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION - 0.2);
+                if (timer.seconds() > 2.3 && timer.seconds() < 2.5) {
+                    verticalSlidePosition = 800;
+                    robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION);
                 }
-                if (!drive.isBusy() && timer.seconds() > 0.5) {
+                if (!drive.isBusy() && timer.seconds() > 2.5) {
                     timer.reset();
                     drive.followTrajectory(traj9);
                     curState = State.traj9;
@@ -247,24 +248,24 @@ public class FourSpecimen extends LinearOpMode {
                 if(timer.seconds()>1.8 && timer.seconds()<2.65){
                     verticalSlidePosition = 0;
                 }
-                if(timer.seconds()>2.65) robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
-                if(!drive.isBusy() && timer.seconds()>2.7) {
+                if(!drive.isBusy() && timer.seconds()>2.8) {
                     robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
                     robot.outtakePivot.flipTo(SPECIMEN_GRAB_POSITION);
                     timer.reset();
-                    drive.followTrajectoryAsync(traj9);
-                    curState = State.traj9;
+                    curState = State.idle;
+                    drive.followTrajectoryAsync(traj10);
+                    curState = State.traj10;
                 }
                 break;
             case traj10:
-                if (timer.seconds() > 0 && timer.seconds() < 0.3) {
+                if (timer.seconds() > 2 && timer.seconds() < 2.3) {
                     robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION + 0.1);
                 }
-                if (timer.seconds() > 0.3 && timer.seconds() < 0.5) {
-                    verticalSlidePosition = 1250;
-                    robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION - 0.2);
+                if (timer.seconds() > 2.3 && timer.seconds() < 2.5) {
+                    verticalSlidePosition = 800;
+                    robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION);
                 }
-                if (!drive.isBusy() && timer.seconds() > 0.5) {
+                if (!drive.isBusy() && timer.seconds() > 2.5) {
                     timer.reset();
                     drive.followTrajectory(traj11);
                     curState = State.traj11;
@@ -277,8 +278,11 @@ public class FourSpecimen extends LinearOpMode {
                 if(timer.seconds()>1.8 && timer.seconds()<2.65){
                     verticalSlidePosition = 0;
                 }
-                if(timer.seconds()>2.65) robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
-                if(!drive.isBusy() && timer.seconds()>2.7) {
+                if(timer.seconds()>2 && timer.seconds()<3) {
+                    robot.outtakePivot.flipBack();
+                }
+                if(!drive.isBusy() && timer.seconds()>3) {
+                    robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
                     robot.outtakePivot.flipFront();
                     timer.reset();
                     curState = State.idle;

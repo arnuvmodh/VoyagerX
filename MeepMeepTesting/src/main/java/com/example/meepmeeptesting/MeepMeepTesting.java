@@ -18,21 +18,26 @@ public class MeepMeepTesting {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(90, 90, 3.1121749877929688, 43.22031264858833, 15.28)
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(startingX, startingY, 0))
-                        .lineToSplineHeading(new Pose2d(startingX - 30, startingY - 2, 6.2221))
-                        .splineTo(new Vector2d(startingX - 20, startingY + 26), Math.PI)
-                        .strafeTo(new Vector2d(startingX - 55, startingY + 26))
-                        .strafeTo(new Vector2d(startingX - 55, startingY + 35))
-                        .strafeTo(new Vector2d(startingX - 15, startingY + 35))
-                        .splineTo(new Vector2d(startingX - 55, startingY + 35), Math.PI)
-                        .strafeTo(new Vector2d(startingX - 55, startingY + 45))
-                        .strafeTo(new Vector2d(startingX - 15, startingY + 45))
-                        .splineToLinearHeading(new Pose2d(startingX - 5.8, startingY + 28.5, Math.PI), 0)
-                        .splineToLinearHeading(new Pose2d(startingX - 26.25, startingY - 7, 0), Math.PI)
-                        .splineToLinearHeading(new Pose2d(startingX - 5.8, startingY + 28.5, Math.PI), 0)
-//                        .splineToLinearHeading(new Pose2d(startingX - 26.25, startingY - 12, 0), Math.PI)
-//                        .splineToLinearHeading(new Pose2d(startingX - 5.8, startingY + 28.5, Math.PI), 0)
-//                        .splineToLinearHeading(new Pose2d(startingX - 26.25, startingY - 12, 0), Math.PI)
-                        .build());
+                        // First Push (constant heading)
+                        .lineToSplineHeading(new Pose2d(startingX - 30, startingY - 2, 0))
+                        .splineTo(new Vector2d(startingX-20, startingY+26), Math.PI)
+                        .splineToConstantHeading(new Vector2d(startingX - 55, startingY + 26), Math.PI)
+                        .splineToConstantHeading(new Vector2d(startingX - 55, startingY + 35), Math.PI)
+                        .splineToConstantHeading(new Vector2d(startingX - 15, startingY + 35), 0)
+
+                        // Second Push (constant heading)
+                        .splineToConstantHeading(new Vector2d(startingX - 55, startingY + 35), Math.PI)
+                        .splineToConstantHeading(new Vector2d(startingX - 55, startingY + 45), Math.PI)
+                        .splineToConstantHeading(new Vector2d(startingX - 15, startingY + 45), 0)
+
+                        // Additional Movements
+                                .splineToLinearHeading(new Pose2d(startingX - 5.8, startingY + 28.5, Math.PI), 0)
+                                .splineToLinearHeading(new Pose2d(startingX - 26.25, startingY - 7, 0), Math.PI)
+                                .splineToLinearHeading(new Pose2d(startingX - 5.8, startingY + 28.5, Math.PI), 0)
+                                .splineToLinearHeading(new Pose2d(startingX - 26.25, startingY - 12, 0), Math.PI)
+                                .splineToLinearHeading(new Pose2d(startingX - 5.8, startingY + 28.5, Math.PI), 0)
+                                .splineToLinearHeading(new Pose2d(startingX - 26.25, startingY - 12, 0), Math.PI)
+                                .build());
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTOTHEDEEP_JUICE_DARK)
                 .setDarkMode(true)

@@ -3,10 +3,13 @@ package org.firstinspires.ftc.teamcode.drive.opmode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "Horizontal Slide Debugging", group = "Test")
+@TeleOp(name = "Outtake piv Debugging", group = "Test")
 public class horslidedebug extends LinearOpMode {
 
     private Robot robot;
+    private double outtakePosition = 1;
+    private boolean aDown =  false;
+    private boolean bDown = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -20,13 +23,15 @@ public class horslidedebug extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            if (gamepad1.a) {
-                robot.horizontalSlide.goTo(1);
-            } else if (gamepad1.b) {
-                robot.horizontalSlide.goTo(0);
+            if (gamepad1.a && !aDown) {
+                outtakePosition-=0.025;
+            } else if (gamepad1.b && !bDown) {
+                outtakePosition+=0.025;
             }
-            telemetry.addData("Left Slide Position", robot.horizontalSlide.getLeftPosition());
-            telemetry.addData("Right Slide Position", robot.horizontalSlide.getRightPosition());
+            aDown = gamepad1.a;
+            bDown = gamepad1.b;
+            robot.outtakePivot.flipTo(outtakePosition);
+            telemetry.addData("Outtake Position", outtakePosition);
             telemetry.update();
         }
     }
