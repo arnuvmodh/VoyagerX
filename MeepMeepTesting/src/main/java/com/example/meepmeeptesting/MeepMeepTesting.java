@@ -32,7 +32,7 @@ public class MeepMeepTesting {
 
                         // Additional Movements
                                 .splineToLinearHeading(new Pose2d(startingX - 5.8, startingY + 28.5, Math.PI), 0)
-                                .splineToLinearHeading(new Pose2d(startingX - 26.25, startingY - 7, 0), Math.PI)
+                                .splineToLinearHeading(new Pose2d(-28.3, -5, (2*Math.PI)-0.1), Math.PI)
                                 .splineToLinearHeading(new Pose2d(startingX - 5.8, startingY + 28.5, Math.PI), 0)
                                 .splineToLinearHeading(new Pose2d(startingX - 26.25, startingY - 12, 0), Math.PI)
                                 .splineToLinearHeading(new Pose2d(startingX - 5.8, startingY + 28.5, Math.PI), 0)

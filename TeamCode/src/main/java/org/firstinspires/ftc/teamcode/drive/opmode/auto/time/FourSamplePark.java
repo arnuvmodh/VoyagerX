@@ -76,7 +76,7 @@ public class FourSamplePark extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-10.5, 63.3, 0.0224))
                 .build();
         Trajectory traj9 = drive.trajectoryBuilder(traj8.end())
-                .lineToSplineHeading(new Pose2d(13.25, 63.3794, 6.2498))
+                .lineToSplineHeading(new Pose2d(15, 63.3794, 6.2498))
                 .build();
 
         waitForStart();

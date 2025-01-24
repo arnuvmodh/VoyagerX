@@ -19,7 +19,7 @@ public class FiveSampleSolo extends LinearOpMode {
     double intakeClawPivotPosition = 0.5;
 
     Pose2d getSampleFiveTrajectory() {
-        return new Pose2d(13, 63.3794+xPosition, 6.2498);
+        return new Pose2d(17.5, 60+xPosition, 6.2498);
     }
 
     double getIntakeSlidePosition() {
@@ -141,16 +141,16 @@ public class FiveSampleSolo extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-18.25, 6.2, 0.75))
                 .build();
         Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
-                .lineToSplineHeading(new Pose2d(-10.5, 63.3, 0.0224))
+                .lineToSplineHeading(new Pose2d(-10.5, 60, 0.0224))
                 .build();
         Trajectory traj9 = drive.trajectoryBuilder(traj8.end())
                 .lineToSplineHeading(getSampleFiveTrajectory())
                 .build();
         Trajectory traj10 = drive.trajectoryBuilder(traj9.end())
-                .lineToSplineHeading(new Pose2d(-10.5, 63.3, 0.0224))
+                .lineToSplineHeading(new Pose2d(-10.5, 60, 0.0224))
                 .build();
         Trajectory traj11 = drive.trajectoryBuilder(traj10.end())
-                .lineToSplineHeading(new Pose2d(-18.25, 6.5, 0.75))
+                .lineToSplineHeading(new Pose2d(-18.25, 6.2, 0.75))
                 .build();
 
         waitForStart();
@@ -378,7 +378,7 @@ public class FiveSampleSolo extends LinearOpMode {
                         oneTimeSwitch[19] = false;
                     }
                     scoreFinalBasket(timer);
-                    if (!drive.isBusy() && timer.seconds() > 3) {
+                    if (!drive.isBusy() && timer.seconds() > 3.1) {
                         raiseVertSlides = false;
                         curState = State.idle;
                         timer.reset();

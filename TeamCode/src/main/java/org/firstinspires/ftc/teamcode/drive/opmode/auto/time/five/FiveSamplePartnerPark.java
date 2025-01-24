@@ -79,13 +79,13 @@ public class FiveSamplePartnerPark extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-13.2755, 5, 0.013))
                 .build();
         Trajectory traj9 = drive.trajectoryBuilder(traj8.end())
-                .lineToSplineHeading(new Pose2d(-18.25, 6.5, 0.75))
+                .lineToSplineHeading(new Pose2d(-18.25, 6.2, 0.75))
                 .build();
         Trajectory traj10 = drive.trajectoryBuilder(traj9.end())
                 .lineToSplineHeading(new Pose2d(-10.5, 63.3, 0.0224))
                 .build();
         Trajectory traj11 = drive.trajectoryBuilder(traj10.end())
-                .lineToSplineHeading(new Pose2d(13.25, 63.3794, 6.2498))
+                .lineToSplineHeading(new Pose2d(15, 63.3794, 6.2498))
                 .build();
 
         waitForStart();
