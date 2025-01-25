@@ -45,6 +45,7 @@ public class FiveSampleSolo extends LinearOpMode {
         traj9,
         traj10,
         traj11,
+        traj12,
         idle
     }
 
@@ -151,6 +152,9 @@ public class FiveSampleSolo extends LinearOpMode {
                 .build();
         Trajectory traj11 = drive.trajectoryBuilder(traj10.end())
                 .lineToSplineHeading(new Pose2d(-18.25, 6.2, 0.75))
+                .build();
+        Trajectory traj12 = drive.trajectoryBuilder(traj11.end())
+                .lineToSplineHeading(new Pose2d(-14, 11.5, Math.PI/2))
                 .build();
 
         waitForStart();
@@ -378,8 +382,15 @@ public class FiveSampleSolo extends LinearOpMode {
                         oneTimeSwitch[19] = false;
                     }
                     scoreFinalBasket(timer);
-                    if (!drive.isBusy() && timer.seconds() > 3.1) {
+                    if (!drive.isBusy() && timer.seconds() > 3.2) {
                         raiseVertSlides = false;
+                        drive.followTrajectoryAsync(traj12);
+                        curState = State.traj12;
+                        timer.reset();
+                    }
+                    break;
+                case traj12:
+                    if (!drive.isBusy()) {
                         curState = State.idle;
                         timer.reset();
                     }

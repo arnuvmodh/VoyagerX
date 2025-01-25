@@ -94,7 +94,7 @@ public class FourSpecimen extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-28, -9, (2*Math.PI)-0.1), Math.PI-0.1)
                 .build();
         traj10 = drive.trajectoryBuilder(traj9.end())
-                .splineToLinearHeading(new Pose2d(-8.75, 28.5, Math.PI), 0)
+                .splineToLinearHeading(new Pose2d(-9, 28.5, Math.PI), 0)
                 .build();
         traj11 = drive.trajectoryBuilder(traj10.end())
                 .splineToLinearHeading(new Pose2d(-28, -13, (2*Math.PI)-0.1), Math.PI-0.1)

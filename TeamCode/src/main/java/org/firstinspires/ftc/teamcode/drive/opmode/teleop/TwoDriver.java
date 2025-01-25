@@ -194,7 +194,7 @@ public class TwoDriver extends LinearOpMode{
             outtakeSlidePosition = 0;
         }
         if(outtakeSlideSpecimen) {
-            outtakeSlidePosition = 1950;
+            outtakeSlidePosition = 2050;
         }
 
         if(transfer && !transferPressed) {
