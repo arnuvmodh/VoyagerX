@@ -30,7 +30,7 @@ public class Robot {
         drive = new SampleMecanumDrive(hardwareMap);
         intakeClaw = new IntakeClaw(hardwareMap, "intakeClawLeft", "intakeClawRight", 0, 1);
         outtakeClaw = new OuttakeClaw(hardwareMap, "outtakeClawLeft", "outtakeClawRight", 0, 0.44);
-        intakePivot = new IntakePivot(hardwareMap, "intakePivotLeft", "intakePivotRight", 0.195, 0.8);
+        intakePivot = new IntakePivot(hardwareMap, "intakePivotLeft", "intakePivotRight", 0.165, 0.8);
         outtakePivot = new OuttakePivot(hardwareMap, "outtakePivotLeft", "outtakePivotRight", 0, 1, -0.025);
         clawPivot = new Pivot(hardwareMap, "servoPivot", 0, 1);
         hangPivot = hardwareMap.get(Servo.class, "servoHang");
