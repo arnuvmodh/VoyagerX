@@ -16,6 +16,15 @@ public class Claw {
         _right.scaleRange(min, max);
     }
 
+    public Claw(HardwareMap hardwareMap, String left, double min, double max) {
+        _left = hardwareMap.get(Servo.class, left);
+        _right = hardwareMap.get(Servo.class, left);
+        _left.setDirection(Servo.Direction.FORWARD);
+        _right.setDirection(Servo.Direction.FORWARD);
+        _left.scaleRange(min, max);
+        _right.scaleRange(min, max);
+    }
+
     public void open() {
         _left.setPosition(0);
         _right.setPosition(0);

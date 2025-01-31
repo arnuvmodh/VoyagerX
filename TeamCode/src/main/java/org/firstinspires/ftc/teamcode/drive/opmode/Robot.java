@@ -28,16 +28,16 @@ public class Robot {
 
     public Robot(HardwareMap hardwareMap) {
         drive = new SampleMecanumDrive(hardwareMap);
-        intakeClaw = new IntakeClaw(hardwareMap, "intakeClawLeft", "intakeClawRight", 0, 1);
+        intakeClaw = new IntakeClaw(hardwareMap, "intakeClawLeft", 0.35, 1);
         outtakeClaw = new OuttakeClaw(hardwareMap, "outtakeClawLeft", "outtakeClawRight", 0, 0.44);
-        intakePivot = new IntakePivot(hardwareMap, "intakePivotLeft", "intakePivotRight", 0.195, 0.8);
+        intakePivot = new IntakePivot(hardwareMap, "intakePivotLeft", "intakePivotRight", 0, 1);
         outtakePivot = new OuttakePivot(hardwareMap, "outtakePivotLeft", "outtakePivotRight", 0, 1, -0.025);
         clawPivot = new Pivot(hardwareMap, "servoPivot", 0, 1);
         hangPivot = hardwareMap.get(Servo.class, "servoHang");
         hangPivot.setDirection(Servo.Direction.REVERSE);
 
         verticalSlide = new MotorSlide(hardwareMap, "leftVerticalSlide", "rightVerticalSlide", 50, 3050);
-        horizontalSlide = new ServoSlide(hardwareMap, "leftHorizontalSlide", "rightHorizontalSlide", 0, 0.45);
+        horizontalSlide = new ServoSlide(hardwareMap, "leftHorizontalSlide", "rightHorizontalSlide", 0, 0.4);
     }
 
     public double positionDifference(Pose2d currentPosition, Pose2d targetPosition) {

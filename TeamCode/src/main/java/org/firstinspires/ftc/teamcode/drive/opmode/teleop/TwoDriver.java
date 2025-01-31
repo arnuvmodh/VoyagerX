@@ -131,8 +131,8 @@ public class TwoDriver extends LinearOpMode{
         intakeClawPivotPressed = intakeClawPivotLeft || intakeClawPivotRight;
 
         if(intakeClawToggle && !intakeClawTogglePressed) {
-            if(intakeClawPosition != 0.575) {
-                intakeClawPosition = 0.575;
+            if(intakeClawPosition != 1) {
+                intakeClawPosition = 1;
             }
             else {
                 intakeClawPosition = 0.3;
@@ -168,6 +168,7 @@ public class TwoDriver extends LinearOpMode{
             }
         }
         hangButtonDown = hangButton;
+        
 
         if(outtakeSlideExtend) {
             robot.verticalSlide.extend(1);
