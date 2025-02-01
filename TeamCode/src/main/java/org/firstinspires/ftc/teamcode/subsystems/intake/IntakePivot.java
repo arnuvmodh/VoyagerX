@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.teamcode.drive.opmode.subsystems.intake;
+package org.firstinspires.ftc.teamcode.subsystems.intake;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.Pivot;
+import org.firstinspires.ftc.teamcode.subsystems.gobuilda.Pivot;
 
 public class IntakePivot extends Pivot {
     public static final double UNDER_BAR_POSITION = 0.85;

@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.teamcode.drive.opmode.subsystems.outtake;
+package org.firstinspires.ftc.teamcode.subsystems.outtake;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.Pivot;
+import org.firstinspires.ftc.teamcode.subsystems.gobuilda.Pivot;
 
 public class OuttakePivot extends Pivot {
     public static final double SPECIMEN_GRAB_POSITION = 0.2;

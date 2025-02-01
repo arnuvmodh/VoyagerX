@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.opmode.subsystems;
+package org.firstinspires.ftc.teamcode.subsystems.gobuilda;
 
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;

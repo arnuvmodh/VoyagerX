@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.teamcode.drive.opmode.subsystems.outtake;
+package org.firstinspires.ftc.teamcode.subsystems.outtake;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.Claw;
+import org.firstinspires.ftc.teamcode.subsystems.gobuilda.Claw;
 
 public class OuttakeClaw extends Claw {
     private static final double GRAB_POSITION = 0.9;

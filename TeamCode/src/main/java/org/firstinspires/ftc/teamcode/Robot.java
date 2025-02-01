@@ -1,20 +1,22 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.intake.IntakeClaw;
-import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.MotorSlide;
-import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.Pivot;
-import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.ServoSlide;
-import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.intake.IntakePivot;
-import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.outtake.OuttakeClaw;
-import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.outtake.OuttakePivot;
+import org.firstinspires.ftc.teamcode.subsystems.gobuilda.SpinTake;
+import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeClaw;
+import org.firstinspires.ftc.teamcode.subsystems.MotorSlide;
+import org.firstinspires.ftc.teamcode.subsystems.gobuilda.Pivot;
+import org.firstinspires.ftc.teamcode.subsystems.gobuilda.ServoSlide;
+import org.firstinspires.ftc.teamcode.subsystems.intake.IntakePivot;
+import org.firstinspires.ftc.teamcode.subsystems.outtake.OuttakeClaw;
+import org.firstinspires.ftc.teamcode.subsystems.outtake.OuttakePivot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 public class Robot {
-    public final IntakeClaw intakeClaw;
+//    public final IntakeClaw intakeClaw;
+    public final SpinTake spintake;
     public final OuttakeClaw outtakeClaw;
     public final IntakePivot intakePivot;
     public final OuttakePivot outtakePivot;
@@ -28,7 +30,8 @@ public class Robot {
 
     public Robot(HardwareMap hardwareMap) {
         drive = new SampleMecanumDrive(hardwareMap);
-        intakeClaw = new IntakeClaw(hardwareMap, "intakeClawLeft", 0.35, 1);
+//        intakeClaw = new IntakeClaw(hardwareMap, "intakeClawLeft", "intakeClawRight", 0, 1);
+        spintake = new SpinTake(hardwareMap, "intakeClawLeft", "intakeClawRight");
         outtakeClaw = new OuttakeClaw(hardwareMap, "outtakeClawLeft", "outtakeClawRight", 0, 0.44);
         intakePivot = new IntakePivot(hardwareMap, "intakePivotLeft", "intakePivotRight", 0, 1);
         outtakePivot = new OuttakePivot(hardwareMap, "outtakePivotLeft", "outtakePivotRight", 0, 1, -0.025);
@@ -47,6 +50,7 @@ public class Robot {
         );
         return distance;
     }
+
     public boolean isAt(Pose2d targetPosition, double tolerance) {
         Pose2d currentPosition = drive.getPoseEstimate();
         double positionDifference = positionDifference(currentPosition, targetPosition);
