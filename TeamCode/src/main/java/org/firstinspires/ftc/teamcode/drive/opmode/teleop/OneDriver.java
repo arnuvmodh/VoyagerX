@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.teleop;
 
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -17,7 +18,7 @@ public class OneDriver extends LinearOpMode{
     // Intake Control Variables
     private double intakeSlidePosition = 0;
     private double spintakePower = 0;
-    private double intakeArmPivotPosition = 0.025;
+    private double intakeArmPivotPosition = 0.275;
     private double intakeClawPivotPosition = 0.5;
 
     // Outtake Control Variables
@@ -28,9 +29,13 @@ public class OneDriver extends LinearOpMode{
     // Transfer Control Variables
     private ElapsedTime runtime = new ElapsedTime();
     private double transferCompletionTime = -1;
+    private double outtakeCompletionTime = -1;
+    private double outtakeArmCompletionTime = -1;
 
     private Robot robot;
     private SampleMecanumDrive drive;
+    private boolean locked = false;
+    private Pose2d setPos;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -85,7 +90,7 @@ public class OneDriver extends LinearOpMode{
         robot.verticalSlide.retractFull();
         robot.horizontalSlide.retractFull();
         robot.outtakePivot.flipFront();
-        robot.intakePivot.flipBack();
+        robot.intakePivot.flipTo(0);
         robot.outtakeClaw.release();
         robot.clawPivot.flipTo(0.5);
         robot.hangPivot.setPosition(0);
@@ -98,7 +103,7 @@ public class OneDriver extends LinearOpMode{
         if(gamepad1.right_stick_button) {
             outtakeSlidePosition = 0;
             intakeSlidePosition = 0;
-            intakeArmPivotPosition = 0.025;
+            intakeArmPivotPosition = 0.275;
             spintakePower = 0;
             intakeClawPivotPosition = 0.5;
             outtakeArmPivotPosition = 1;
@@ -109,7 +114,7 @@ public class OneDriver extends LinearOpMode{
     private boolean shareDown = false;
     private void intakeControls() {
         if(gamepad1.left_trigger>0.2) {
-            intakeArmPivotPosition = 1;
+            intakeArmPivotPosition = 0.76875;
             spintakePower = 1;
         }
 
@@ -133,7 +138,7 @@ public class OneDriver extends LinearOpMode{
 
         if(gamepad1.dpad_up) {
             intakeSlidePosition = 1;
-            intakeArmPivotPosition = 0.85;
+            intakeArmPivotPosition = 0.725;
             spintakePower = 0;
         }
         if(gamepad1.dpad_left && !leftDDown) {
@@ -154,18 +159,21 @@ public class OneDriver extends LinearOpMode{
     private boolean touchpadDown = false;
     private void outtakeControls() {
         if(gamepad1.touchpad && !touchpadDown) {
-            if(robot.hangPivot.getPosition() != 0.5) {
-                robot.hangPivot.setPosition(0.5);
+            if(locked) {
+                locked = false;
             }
             else {
-                robot.hangPivot.setPosition(0);
+                setPos = drive.getPoseEstimate();
+                locked = true;
             }
         }
         touchpadDown = gamepad1.touchpad;
 
+
         if(gamepad1.x && !xDown) {
             if(outtakeArmPivotPosition != 0.6) {
                 outtakeArmPivotPosition = 0.6;
+                outtakeArmCompletionTime = runtime.seconds()+0.25;
             }
             else {
                 outtakeArmPivotPosition = 1;
@@ -205,9 +213,27 @@ public class OneDriver extends LinearOpMode{
         if(gamepad1.right_trigger > 0.2) {
             outtakeSlidePosition = 1975;
         }
-        if(gamepad1.right_bumper) {
-            outtakeSlidePosition = 3050;
+
+        if(gamepad1.right_bumper && !rightBDown) {
+            if(outtakeClawPosition == 0.85) {
+                outtakeClawPosition = 0.3;
+            }
+            else {
+                outtakeClawPosition = 0.85;
+                transferCompletionTime = runtime.seconds() + 0.3;
+            }
         }
+        rightBDown = gamepad1.right_bumper;
+
+    }
+
+    public void lockTo(SampleMecanumDrive drive, Pose2d targetPos){
+        Pose2d currPos = drive.getPoseEstimate();
+        Pose2d difference = targetPos.minus(currPos);
+        Vector2d xy = difference.vec().rotated(-currPos.getHeading());
+
+        double heading = Angle.normDelta(targetPos.getHeading() - Angle.normDelta(currPos.getHeading()));
+        drive.setWeightedDrivePower(new Pose2d(xy.getX() * 0.2, xy.getY() * 0.35, heading * 0.5));
     }
 
     private void handleDrivetrain() {
@@ -218,13 +244,18 @@ public class OneDriver extends LinearOpMode{
                 -gamepad1.left_stick_x
         ).rotated(-poseEstimate.getHeading());
 
-        drive.setWeightedDrivePower(
-                new Pose2d(
-                        input.getX(),
-                        input.getY(),
-                        -gamepad1.right_stick_x
-                )
-        );
+        if(locked) {
+            lockTo(drive, setPos);
+        }
+        else {
+            drive.setWeightedDrivePower(
+                    new Pose2d(
+                            input.getX(),
+                            input.getY(),
+                            -gamepad1.right_stick_x
+                    )
+            );
+        }
     }
 
     private void handleTransfer() {
@@ -232,6 +263,11 @@ public class OneDriver extends LinearOpMode{
             transferCompletionTime = -1;
             intakeSlidePosition=0.3;
             spintakePower = -1;
+            outtakeCompletionTime = runtime.seconds() + 0.1;
+        }
+        if(outtakeCompletionTime !=-1 && runtime.seconds() >= outtakeCompletionTime) {
+            outtakeSlidePosition = 3050;
+            outtakeCompletionTime = -1;
         }
     }
 
@@ -243,6 +279,10 @@ public class OneDriver extends LinearOpMode{
     }
 
     private void handleOuttake() {
+        if(outtakeArmCompletionTime !=-1 && runtime.seconds() >= outtakeArmCompletionTime) {
+            outtakeClawPosition = 0.3;
+            outtakeArmCompletionTime = -1;
+        }
         if(outtakeSlidePosition != -1) {
             robot.verticalSlide.goTo(outtakeSlidePosition, 1);
         }

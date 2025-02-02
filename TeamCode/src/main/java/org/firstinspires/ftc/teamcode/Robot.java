@@ -15,7 +15,6 @@ import org.firstinspires.ftc.teamcode.subsystems.outtake.OuttakePivot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 public class Robot {
-//    public final IntakeClaw intakeClaw;
     public final SpinTake spintake;
     public final OuttakeClaw outtakeClaw;
     public final IntakePivot intakePivot;
@@ -30,7 +29,6 @@ public class Robot {
 
     public Robot(HardwareMap hardwareMap) {
         drive = new SampleMecanumDrive(hardwareMap);
-//        intakeClaw = new IntakeClaw(hardwareMap, "intakeClawLeft", "intakeClawRight", 0, 1);
         spintake = new SpinTake(hardwareMap, "intakeClawLeft", "intakeClawRight");
         outtakeClaw = new OuttakeClaw(hardwareMap, "outtakeClawLeft", "outtakeClawRight", 0, 0.44);
         intakePivot = new IntakePivot(hardwareMap, "intakePivotLeft", "intakePivotRight", 0, 1);

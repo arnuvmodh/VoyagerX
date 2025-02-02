@@ -71,7 +71,6 @@
 //        robot.outtakePivot.flipFront();
 //        robot.intakePivot.flipBack();
 //        robot.outtakeClaw.release();
-//        robot.intakeClaw.grab();
 //        robot.clawPivot.flipTo(0.5);
 //        robot.hangPivot.setPosition(0);
 //    }

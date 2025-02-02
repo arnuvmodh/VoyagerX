@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import java.util.Locale;
 
 @TeleOp
-public class RaceDetector extends LinearOpMode {
+public class ColorDetector extends LinearOpMode {
     ColorSensor sensorColor;
     DistanceSensor sensorDistance;
 
