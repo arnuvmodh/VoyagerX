@@ -3,18 +3,19 @@ package org.firstinspires.ftc.teamcode.subsystems.axon;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class Pivot {
+public class AxonPivot {
     private final Servo _left;
     private final Servo _right;
+    private double _offset = 0;
 
-    public Pivot(HardwareMap hardwareMap, String left, double min, double max) {
+    public AxonPivot(HardwareMap hardwareMap, String left, double min, double max) {
         _left = hardwareMap.get(Servo.class, left);
         _right = hardwareMap.get(Servo.class, left);;
         _left.setDirection(Servo.Direction.FORWARD);
         _left.scaleRange(min, max);
     }
 
-    public Pivot(HardwareMap hardwareMap, String left, String right, double min, double max) {
+    public AxonPivot(HardwareMap hardwareMap, String left, String right, double min, double max) {
         _left = hardwareMap.get(Servo.class, left);
         _right = hardwareMap.get(Servo.class, right);
         _left.setDirection(Servo.Direction.FORWARD);
@@ -24,12 +25,13 @@ public class Pivot {
     }
 
     // Offset added to left servo
-    public Pivot(HardwareMap hardwareMap, String left, String right, double min, double max, double offset) {
+    public AxonPivot(HardwareMap hardwareMap, String left, String right, double min, double max, double offset) {
         _left = hardwareMap.get(Servo.class, left);
         _right = hardwareMap.get(Servo.class, right);
+        _offset = offset;
         _left.setDirection(Servo.Direction.FORWARD);
         _right.setDirection(Servo.Direction.REVERSE);
-        _left.scaleRange(min-offset, max+offset);
+        _left.scaleRange(min, max);
         _right.scaleRange(min, max);
     }
 
@@ -44,7 +46,7 @@ public class Pivot {
     }
 
     public void flipTo(double position) {
-        _left.setPosition(position);
+        _left.setPosition(position+_offset);
         _right.setPosition(position);
     }
 

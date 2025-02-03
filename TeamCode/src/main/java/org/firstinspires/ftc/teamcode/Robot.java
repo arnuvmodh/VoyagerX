@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.subsystems.gobuilda.SpinTake;
-import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeClaw;
 import org.firstinspires.ftc.teamcode.subsystems.MotorSlide;
 import org.firstinspires.ftc.teamcode.subsystems.gobuilda.Pivot;
 import org.firstinspires.ftc.teamcode.subsystems.gobuilda.ServoSlide;
@@ -31,11 +30,11 @@ public class Robot {
         drive = new SampleMecanumDrive(hardwareMap);
         spintake = new SpinTake(hardwareMap, "intakeClawLeft", "intakeClawRight");
         outtakeClaw = new OuttakeClaw(hardwareMap, "outtakeClawLeft", "outtakeClawRight", 0, 0.44);
-        intakePivot = new IntakePivot(hardwareMap, "intakePivotLeft", "intakePivotRight", 0, 1);
+        intakePivot = new IntakePivot(hardwareMap, "intakePivotLeft", "intakePivotRight", 0, 1, 0.025);
         outtakePivot = new OuttakePivot(hardwareMap, "outtakePivotLeft", "outtakePivotRight", 0, 1, -0.025);
         clawPivot = new Pivot(hardwareMap, "servoPivot", 0, 1);
         hangPivot = hardwareMap.get(Servo.class, "servoHang");
-        hangPivot.setDirection(Servo.Direction.REVERSE);
+        hangPivot.setDirection(Servo.Direction.FORWARD);
 
         verticalSlide = new MotorSlide(hardwareMap, "leftVerticalSlide", "rightVerticalSlide", 50, 3050);
         horizontalSlide = new ServoSlide(hardwareMap, "leftHorizontalSlide", "rightHorizontalSlide", 0, 0.4);

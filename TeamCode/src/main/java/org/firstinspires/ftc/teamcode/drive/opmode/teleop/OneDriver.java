@@ -18,7 +18,7 @@ public class OneDriver extends LinearOpMode{
     // Intake Control Variables
     private double intakeSlidePosition = 0;
     private double spintakePower = 0;
-    private double intakeArmPivotPosition = 0.275;
+    private double intakeArmPivotPosition = 0.27;
     private double intakeClawPivotPosition = 0.5;
 
     // Outtake Control Variables
@@ -93,17 +93,19 @@ public class OneDriver extends LinearOpMode{
         robot.intakePivot.flipTo(0);
         robot.outtakeClaw.release();
         robot.clawPivot.flipTo(0.5);
-        robot.hangPivot.setPosition(0);
+        robot.hangPivot.setPosition(0.5);
     }
 
     private void drivetrainControls() {
         if(gamepad1.left_stick_button) {
-            drive.setPoseEstimate(new Pose2d());
+            intakeSlidePosition = 1;
+            intakeArmPivotPosition = 0.675;
+            spintakePower = 0;
         }
         if(gamepad1.right_stick_button) {
             outtakeSlidePosition = 0;
             intakeSlidePosition = 0;
-            intakeArmPivotPosition = 0.275;
+            intakeArmPivotPosition = 0.27;
             spintakePower = 0;
             intakeClawPivotPosition = 0.5;
             outtakeArmPivotPosition = 1;
@@ -114,7 +116,7 @@ public class OneDriver extends LinearOpMode{
     private boolean shareDown = false;
     private void intakeControls() {
         if(gamepad1.left_trigger>0.2) {
-            intakeArmPivotPosition = 0.76875;
+            intakeArmPivotPosition = 0.75;
             spintakePower = 1;
         }
 
@@ -127,19 +129,18 @@ public class OneDriver extends LinearOpMode{
         shareDown = gamepad1.share;
 
         if(gamepad1.left_bumper && !leftBDown) {
-            if(spintakePower == 0) {
-                spintakePower = 1;
+            if(outtakeArmPivotPosition != 0.6) {
+                outtakeArmPivotPosition = 0.6;
+                outtakeArmCompletionTime = runtime.seconds()+0.25;
             }
             else {
-                spintakePower = 0;
+                outtakeArmPivotPosition = 1;
             }
         }
         leftBDown = gamepad1.left_bumper;
 
         if(gamepad1.dpad_up) {
-            intakeSlidePosition = 1;
-            intakeArmPivotPosition = 0.725;
-            spintakePower = 0;
+            drive.setPoseEstimate(new Pose2d());
         }
         if(gamepad1.dpad_left && !leftDDown) {
             intakeClawPivotPosition=Math.min(intakeClawPivotPosition+0.1, 1);
@@ -157,6 +158,7 @@ public class OneDriver extends LinearOpMode{
     }
 
     private boolean touchpadDown = false;
+    private boolean rightTriggerDown = false;
     private void outtakeControls() {
         if(gamepad1.touchpad && !touchpadDown) {
             if(locked) {
@@ -171,24 +173,17 @@ public class OneDriver extends LinearOpMode{
 
 
         if(gamepad1.x && !xDown) {
-            if(outtakeArmPivotPosition != 0.6) {
-                outtakeArmPivotPosition = 0.6;
-                outtakeArmCompletionTime = runtime.seconds()+0.25;
+            if(spintakePower == 0) {
+                spintakePower = 1;
             }
             else {
-                outtakeArmPivotPosition = 1;
+                spintakePower = 0;
             }
         }
         xDown = gamepad1.x;
 
         if(gamepad1.y && !yDown) {
-            if(outtakeClawPosition == 0.85) {
-                outtakeClawPosition = 0.3;
-            }
-            else {
-                outtakeClawPosition = 0.85;
-                transferCompletionTime = runtime.seconds() + 0.3;
-            }
+            outtakeSlidePosition = 1975;
         }
         yDown = gamepad1.y;
 
@@ -210,9 +205,16 @@ public class OneDriver extends LinearOpMode{
             robot.verticalSlide.reset();
         }
         bDown = gamepad1.b;
-        if(gamepad1.right_trigger > 0.2) {
-            outtakeSlidePosition = 1975;
+
+        if(gamepad1.right_trigger > 0.2 && !rightTriggerDown) {
+            if(robot.hangPivot.getPosition()==0.5) {
+                robot.hangPivot.setPosition(0);
+            }
+            else {
+                robot.hangPivot.setPosition(0.5);
+            }
         }
+        rightTriggerDown = gamepad1.right_trigger > 0.2;
 
         if(gamepad1.right_bumper && !rightBDown) {
             if(outtakeClawPosition == 0.85) {
