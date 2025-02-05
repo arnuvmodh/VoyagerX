@@ -329,11 +329,11 @@ public class FourSamplePark extends LinearOpMode {
     }
 
     void intakeFlipOut() {
-        robot.intakePivot.flipTo(0.75);
+        robot.intakePivot.flipTo(0.7325);
     }
 
     void intakeFlipIn() {
-        robot.intakePivot.flipTo(0.27);
+        robot.intakePivot.flipTo(0.25);
     }
 
 }

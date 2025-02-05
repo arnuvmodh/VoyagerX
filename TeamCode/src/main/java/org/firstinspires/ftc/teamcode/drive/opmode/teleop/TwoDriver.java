@@ -18,7 +18,7 @@ public class TwoDriver extends LinearOpMode{
     // Intake Control Variables
     private double intakeSlidePosition = 0;
     private double spintakePower = 0;
-    private double intakeArmPivotPosition = 0.27;
+    private double intakeArmPivotPosition = 0.25;
     private double intakeClawPivotPosition = 0.5;
 
     // Outtake Control Variables
@@ -106,13 +106,13 @@ public class TwoDriver extends LinearOpMode{
         }
         if(gamepad1.left_stick_button) {
             intakeSlidePosition = 1;
-            intakeArmPivotPosition = 0.675;
+            intakeArmPivotPosition = 0.655;
             spintakePower = 0;
         }
         if(gamepad1.right_stick_button) {
             outtakeSlidePosition = 0;
             intakeSlidePosition = 0;
-            intakeArmPivotPosition = 0.27;
+            intakeArmPivotPosition = 0.25;
             spintakePower = 0;
             intakeClawPivotPosition = 0.5;
             outtakeArmPivotPosition = 1;
@@ -123,7 +123,7 @@ public class TwoDriver extends LinearOpMode{
     private boolean shareDown = false;
     private void intakeControls() {
         if(gamepad1.left_trigger>0.2) {
-            intakeArmPivotPosition = 0.75;
+            intakeArmPivotPosition = 0.7325;
             spintakePower = 1;
         }
 
