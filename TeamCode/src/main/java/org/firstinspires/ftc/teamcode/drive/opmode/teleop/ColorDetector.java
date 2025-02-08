@@ -63,6 +63,19 @@ public class ColorDetector extends LinearOpMode {
             telemetry.addData("Blue ", sensorColor.blue());
             telemetry.addData("Hue", hsvValues[0]);
 
+            if(hsvValues[0]>=210&&hsvValues[0]<=240) {
+                color = "Blue";
+            }
+            else if(hsvValues[0]>=10&&hsvValues[0]<=30) {
+                color = "Red";
+            }
+            else if(hsvValues[0]>=70&&hsvValues[0]<=90) {
+                color = "Yellow";
+            }
+            else {
+                color = "None";
+            }
+
             telemetry.addData("Detected Color", color);
 
             // change the background color to match the color detected by the RGB sensor.

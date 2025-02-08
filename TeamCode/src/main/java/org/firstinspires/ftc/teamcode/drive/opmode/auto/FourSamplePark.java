@@ -34,7 +34,7 @@ public class FourSamplePark extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         robot = new Robot(hardwareMap);
-        robot.intakePivot.flipTo(0.27);
+        robot.intakePivot.flipTo(0.25);
         robot.outtakePivot.flipFront();
         robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION);
         robot.clawPivot.flipTo(0.5);

@@ -299,6 +299,7 @@ public class OneDriver extends LinearOpMode{
         telemetry.addData("heading", poseEstimate.getHeading());
         telemetry.addData("Dpad Left", leftDDown);
         telemetry.addData("Dpad Right", rightDDown);
+        telemetry.addData("Color", robot.colorSensor.getColor());
         telemetry.update();
     }
 }

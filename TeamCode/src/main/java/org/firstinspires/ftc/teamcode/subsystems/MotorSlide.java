@@ -17,8 +17,8 @@ public class MotorSlide {
         _max = max;
         _left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        _left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        _right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        _left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         _right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         _left.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -81,13 +81,13 @@ public class MotorSlide {
     }
 
     public void extendFull() {
-        if (_left.getCurrentPosition() < _max-50) {
+        if (_left.getCurrentPosition() < _max) {
             _left.setPower(1);
         } else {
             _left.setPower(0);
         }
 
-        if (_right.getCurrentPosition() < _max-50) {
+        if (_right.getCurrentPosition() < _max) {
             _right.setPower(1);
         } else {
             _right.setPower(0);
@@ -95,13 +95,13 @@ public class MotorSlide {
     }
 
     public void retractFull() {
-        if (_left.getCurrentPosition() > _min+50) {
+        if (_left.getCurrentPosition() > _min) {
             _left.setPower(-1);
         } else {
             _left.setPower(0);
         }
 
-        if (_right.getCurrentPosition() > _min+50) {
+        if (_right.getCurrentPosition() > _min) {
             _right.setPower(-1);
         } else {
             _right.setPower(0);

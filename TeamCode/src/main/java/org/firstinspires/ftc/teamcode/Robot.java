@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.subsystems.SampleDetector;
 import org.firstinspires.ftc.teamcode.subsystems.gobuilda.SpinTake;
 import org.firstinspires.ftc.teamcode.subsystems.MotorSlide;
 import org.firstinspires.ftc.teamcode.subsystems.gobuilda.Pivot;
@@ -24,6 +25,8 @@ public class Robot {
     public final MotorSlide verticalSlide;
     public final ServoSlide horizontalSlide;
 
+    public final SampleDetector colorSensor;
+
     private final SampleMecanumDrive drive;
 
     public Robot(HardwareMap hardwareMap) {
@@ -38,6 +41,8 @@ public class Robot {
 
         verticalSlide = new MotorSlide(hardwareMap, "leftVerticalSlide", "rightVerticalSlide", 50, 3050);
         horizontalSlide = new ServoSlide(hardwareMap, "leftHorizontalSlide", "rightHorizontalSlide", 0, 0.4);
+
+        colorSensor = new SampleDetector(hardwareMap, "colorSensor");
     }
 
     public double positionDifference(Pose2d currentPosition, Pose2d targetPosition) {

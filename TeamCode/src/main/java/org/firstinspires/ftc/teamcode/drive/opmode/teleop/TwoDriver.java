@@ -32,6 +32,8 @@ public class TwoDriver extends LinearOpMode{
     private double outtakeCompletionTime = -1;
     private double outtakeArmCompletionTime = -1;
 
+    private String oppositeColor = "Blue";
+
     private Robot robot;
     private SampleMecanumDrive drive;
     private boolean locked = false;
@@ -111,7 +113,7 @@ public class TwoDriver extends LinearOpMode{
         }
         if(gamepad1.right_stick_button) {
             outtakeSlidePosition = 0;
-            intakeSlidePosition = 0;
+            intakeSlidePosition = 0.15;
             intakeArmPivotPosition = 0.25;
             spintakePower = 0;
             intakeClawPivotPosition = 0.5;
@@ -121,11 +123,18 @@ public class TwoDriver extends LinearOpMode{
     }
 
     private boolean shareDown = false;
+    private boolean g2dpadDDown = false;
     private void intakeControls() {
         if(gamepad1.left_trigger>0.2) {
             intakeArmPivotPosition = 0.7325;
             spintakePower = 1;
         }
+
+        if(gamepad2.dpad_down && !g2dpadDDown) {
+            if(oppositeColor.equals("Blue")) oppositeColor = "Red";
+            else oppositeColor = "Blue";
+        }
+        g2dpadDDown = gamepad2.dpad_down;
 
         if(gamepad1.share || gamepad2.share) {
             spintakePower = -1;
@@ -136,8 +145,8 @@ public class TwoDriver extends LinearOpMode{
         shareDown = gamepad1.share || gamepad2.share;
 
         if(gamepad1.left_bumper && !leftBDown) {
-            if(outtakeArmPivotPosition != 0.6) {
-                outtakeArmPivotPosition = 0.6;
+            if(outtakeArmPivotPosition != 0.5) {
+                outtakeArmPivotPosition = 0.5;
                 outtakeArmCompletionTime = runtime.seconds()+0.3;
             }
             else {
@@ -177,7 +186,6 @@ public class TwoDriver extends LinearOpMode{
             }
         }
         touchpadDown = gamepad1.touchpad;
-
 
         if(gamepad1.x && !xDown) {
             if(spintakePower == 0) {
@@ -281,6 +289,9 @@ public class TwoDriver extends LinearOpMode{
     }
 
     private void handleIntake() {
+        if(spintakePower==1&&robot.colorSensor.getColor().equals(oppositeColor)) {
+            spintakePower=-1;
+        }
         robot.horizontalSlide.goTo(intakeSlidePosition);
         robot.spintake.spinIn(spintakePower);
         robot.intakePivot.flipTo(intakeArmPivotPosition);
@@ -306,6 +317,7 @@ public class TwoDriver extends LinearOpMode{
         telemetry.addData("heading", poseEstimate.getHeading());
         telemetry.addData("Dpad Left", leftDDown);
         telemetry.addData("Dpad Right", rightDDown);
+        telemetry.addData("Color", robot.colorSensor.getColor());
         telemetry.update();
     }
 }
