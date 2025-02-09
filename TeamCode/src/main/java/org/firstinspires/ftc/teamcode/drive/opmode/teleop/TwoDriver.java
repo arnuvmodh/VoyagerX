@@ -147,7 +147,7 @@ public class TwoDriver extends LinearOpMode{
         if(gamepad1.left_bumper && !leftBDown) {
             if(outtakeArmPivotPosition != 0.5) {
                 outtakeArmPivotPosition = 0.5;
-                outtakeArmCompletionTime = runtime.seconds()+0.3;
+                outtakeArmCompletionTime = runtime.seconds()+0.15;
             }
             else {
                 outtakeArmPivotPosition = 1;
@@ -232,11 +232,11 @@ public class TwoDriver extends LinearOpMode{
         rightTriggerDown = (gamepad1.right_trigger > 0.2 || gamepad2.right_trigger>0.2);
 
         if(gamepad1.right_bumper && !rightBDown) {
-            if(outtakeClawPosition == 0.85) {
+            if(outtakeClawPosition == 0.9) {
                 outtakeClawPosition = 0.3;
             }
             else {
-                outtakeClawPosition = 0.85;
+                outtakeClawPosition = 0.9;
                 transferCompletionTime = runtime.seconds() + 0.3;
             }
         }
@@ -284,6 +284,7 @@ public class TwoDriver extends LinearOpMode{
         }
         if(outtakeCompletionTime !=-1 && runtime.seconds() >= outtakeCompletionTime) {
             outtakeSlidePosition = 3050;
+            outtakeArmPivotPosition = 0.7;
             outtakeCompletionTime = -1;
         }
     }

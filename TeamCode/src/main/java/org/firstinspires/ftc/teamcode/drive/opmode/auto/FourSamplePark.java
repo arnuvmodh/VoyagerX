@@ -34,7 +34,7 @@ public class FourSamplePark extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         robot = new Robot(hardwareMap);
-        robot.intakePivot.flipTo(0.25);
+        robot.intakePivot.flipTo(0.2);
         robot.outtakePivot.flipFront();
         robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION);
         robot.clawPivot.flipTo(0.5);
@@ -53,19 +53,19 @@ public class FourSamplePark extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-18.25, 6.2, 0.75))
                 .build();
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                .lineToSplineHeading(new Pose2d(-9.8, 13.6583, 1.5808))
+                .lineToSplineHeading(new Pose2d(-9, 12.6, 1.5808))
                 .build();
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
                 .lineToSplineHeading(new Pose2d(-18.25, 6.2, 0.75))
                 .build();
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
-                .lineToSplineHeading(new Pose2d(-19.5, 13.9176, 1.5766))
+                .lineToSplineHeading(new Pose2d(-19, 13.9176, 1.5766))
                 .build();
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
                 .lineToSplineHeading(new Pose2d(-18.25, 6.2, 0.75))
                 .build();
         Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
-                .lineToSplineHeading(new Pose2d(-22.5, 16.8352, 1.8039))
+                .lineToSplineHeading(new Pose2d(-22.5, 16.8352, 1.8539))
                 .build();
         Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
                 .lineToSplineHeading(new Pose2d(-18.25, 6.2, 0.75))
@@ -74,7 +74,7 @@ public class FourSamplePark extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-10.2, 63.3, 0.0224))
                 .build();
         Trajectory traj9 = drive.trajectoryBuilder(traj8.end())
-                .lineToSplineHeading(new Pose2d(15, 63.3794, 6.2498))
+                .lineToLinearHeading(new Pose2d(17, 64, 3.14159))
                 .build();
 
         waitForStart();
@@ -253,6 +253,8 @@ public class FourSamplePark extends LinearOpMode {
                     }
                     break;
                 case traj9:
+                    robot.outtakePivot.flipTo(0.6);
+                    robot.outtakeClaw.close();
                     if (!drive.isBusy() && timer.seconds() > 1) {
                         curState = State.idle;
                         timer.reset();

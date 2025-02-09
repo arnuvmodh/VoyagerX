@@ -34,6 +34,10 @@ public class PivotTest extends LinearOpMode{
                 robot.spintake.spinIn(1);
                 robot.intakePivot.flipTo(pivotPos);
             }
+            if(gamepad1.b) {
+                robot.spintake.spinOut(1);
+                robot.intakePivot.flipTo(pivotPos);
+            }
             telemetry.addData("Intake Pivot Position", pivotPos);
             telemetry.update();
         }

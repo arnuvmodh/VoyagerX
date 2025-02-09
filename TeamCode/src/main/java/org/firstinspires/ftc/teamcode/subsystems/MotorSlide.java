@@ -81,6 +81,9 @@ public class MotorSlide {
     }
 
     public void extendFull() {
+        _left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         if (_left.getCurrentPosition() < _max) {
             _left.setPower(1);
         } else {

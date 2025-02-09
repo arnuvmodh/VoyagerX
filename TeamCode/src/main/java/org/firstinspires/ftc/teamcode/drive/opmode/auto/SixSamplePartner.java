@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.tuning.PoseStorage;
 import org.firstinspires.ftc.teamcode.Robot;
 
 @Autonomous
-public class SixSampleSolo extends LinearOpMode {
+public class SixSamplePartner extends LinearOpMode {
     final double OUTTAKE_CLAW_OPEN_POSITION = 0.3;
     final double OUTTAKE_CLAW_CLOSE_POSITION = 0.9;
     enum State {
@@ -33,18 +33,6 @@ public class SixSampleSolo extends LinearOpMode {
     private SampleMecanumDrive drive;
     double horizontalSlidePosition = 0;
 
-    double fiveXPosition = 0;
-    double fiveIntakeSlidePosition = 0;
-    double fiveFailStrafe = 5;
-
-    Pose2d getSampleFiveTrajectory() {
-        return new Pose2d(17.5, 60+fiveXPosition, 6.2498);
-    }
-
-    double getFiveIntakeSlidePosition() {
-        return fiveIntakeSlidePosition;
-    }
-
     double sixXPosition = 0;
     double sixIntakeSlidePosition = 0;
     double sixFailStrafe = 5;
@@ -63,43 +51,20 @@ public class SixSampleSolo extends LinearOpMode {
         boolean exit = false;
         boolean upDown = false, downDown = false, leftDown = false, rightDown = false;
         boolean aDown = false, bDown = false, xDown = false, yDown = false;
-        int currentSample = 5;
         while(!exit && !isStopRequested()) {
-            if(currentSample == 5) {
-                if(gamepad1.dpad_up && !upDown) fiveIntakeSlidePosition+=(increment/10);
-                upDown = gamepad1.dpad_up;
-                if(gamepad1.dpad_down && !downDown) fiveIntakeSlidePosition-=(increment/10);
-                downDown = gamepad1.dpad_down;
-                if(gamepad1.dpad_left && !leftDown) fiveXPosition-=increment;
-                leftDown = gamepad1.dpad_left;
-                if(gamepad1.dpad_right && !rightDown) fiveXPosition+=increment;
-                rightDown = gamepad1.dpad_right;
+            if(gamepad1.dpad_up && !upDown) sixIntakeSlidePosition+=(increment/10);
+            upDown = gamepad1.dpad_up;
+            if(gamepad1.dpad_down && !downDown) sixIntakeSlidePosition-=(increment/10);
+            downDown = gamepad1.dpad_down;
+            if (gamepad1.dpad_left && !leftDown) sixXPosition -= increment;
+            leftDown = gamepad1.dpad_left;
+            if (gamepad1.dpad_right && !rightDown) sixXPosition += increment;
+            rightDown = gamepad1.dpad_right;
 
-                if(gamepad1.b && !bDown) {
-                    fiveFailStrafe = -1*fiveFailStrafe;
-                }
-                bDown = gamepad1.b;
+            if (gamepad1.b && !bDown) {
+                sixFailStrafe = -1 * sixFailStrafe;
             }
-            else if(currentSample == 6) {
-                if(gamepad1.dpad_up && !upDown) sixIntakeSlidePosition+=(increment/10);
-                upDown = gamepad1.dpad_up;
-                if(gamepad1.dpad_down && !downDown) sixIntakeSlidePosition-=(increment/10);
-                downDown = gamepad1.dpad_down;
-                if(gamepad1.dpad_left && !leftDown) sixXPosition-=increment;
-                leftDown = gamepad1.dpad_left;
-                if(gamepad1.dpad_right && !rightDown) sixXPosition+=increment;
-                rightDown = gamepad1.dpad_right;
-
-                if(gamepad1.b && !bDown) {
-                    sixFailStrafe = -1*sixFailStrafe;
-                }
-                bDown = gamepad1.b;
-            }
-
-            if(gamepad1.a && !aDown) {
-                currentSample+=1;
-            }
-            aDown = gamepad1.a;
+            bDown = gamepad1.b;
 
             if(gamepad1.x && !xDown) {
                 increment-=0.5;
@@ -110,30 +75,21 @@ public class SixSampleSolo extends LinearOpMode {
             }
             yDown = gamepad1.y;
 
-            if(currentSample==5) {
-                telemetry.addLine("Fifth Sample");
-                telemetry.addData("Increment", increment);
-                telemetry.addData("X Position", fiveXPosition);
-                telemetry.addData("Intake Slide Position", fiveIntakeSlidePosition);
-                telemetry.addData("Fail Strafe", fiveFailStrafe);
-                telemetry.update();
-            }
-            else if(currentSample==6) {
-                telemetry.addLine("Sixth Sample");
-                telemetry.addData("Increment", increment);
-                telemetry.addData("X Position", sixXPosition);
-                telemetry.addData("Intake Slide Position", sixIntakeSlidePosition);
-                telemetry.addData("Fail Strafe", sixFailStrafe);
-                telemetry.update();
-            }
+            telemetry.addLine("Sixth Sample");
+            telemetry.addData("Increment", increment);
+            telemetry.addData("X Position", sixXPosition);
+            telemetry.addData("Intake Slide Position", sixIntakeSlidePosition);
+            telemetry.addData("Fail Strafe", sixFailStrafe);
+            telemetry.update();
 
             exit = gamepad1.share;
         }
 
         telemetry.addLine("Finalized");
         telemetry.addData("Increment", increment);
-        telemetry.addData("X Position", fiveXPosition);
-        telemetry.addData("Intake Slide Position", fiveIntakeSlidePosition);
+        telemetry.addData("X Position", sixXPosition);
+        telemetry.addData("Intake Slide Position", sixIntakeSlidePosition);
+        telemetry.addData("Fail Strafe", sixFailStrafe);
         telemetry.update();
 
         robot = new Robot(hardwareMap);
@@ -175,10 +131,10 @@ public class SixSampleSolo extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-18.25, 6.2, 0.75))
                 .build();
         Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
-                .splineToLinearHeading(getSampleFiveTrajectory(),0)
+                .lineToSplineHeading(new Pose2d(-13.2755, 4, 0.013))
                 .build();
-        Trajectory traj9 = drive.trajectoryBuilder(traj8.end(), true)
-                .splineToLinearHeading(new Pose2d(-18.25, 6.2, 0.75), Math.toRadians(-90))
+        Trajectory traj9 = drive.trajectoryBuilder(traj8.end())
+                .lineToSplineHeading(new Pose2d(-18.25, 6.2, 0.75))
                 .build();
         Trajectory traj10 = drive.trajectoryBuilder(traj9.end())
                 .splineToLinearHeading(getSampleSixTrajectory(),0)
@@ -369,76 +325,47 @@ public class SixSampleSolo extends LinearOpMode {
                     scoreBasket(timer);
                     if (!drive.isBusy() && timer.seconds() > 1.8) {
                         raiseVertSlides = false;
+                        intakeFlipOut();
                         drive.followTrajectoryAsync(traj8);
                         curState = State.traj8;
                         timer.reset();
                     }
                     break;
                 case traj8:
-                    if(timer.seconds() > 2 && !fifthPositionReached) {
-                        timer.reset();
-                        fifthPositionReached = true;
+                    if (oneTimeSwitch[15] && timer.seconds() > 0.2) {
+                        raiseVertSlides = false;
+                        intakeFlipOut();
+                        horizontalSlidePosition = 0.5;
+                        oneTimeSwitch[15] = false;
                     }
-                    if(fifthPositionReached) {
-                        if(!fifthIntakeSuccess) {
-                            if(robot.colorSensor.getColor().equals("Blue")) {
-                                robot.spintake.spinOut(1);
-                                break;
-                            }
-                            if (timer.seconds() > 0 && timer.seconds() < 0.5) {
-                                horizontalSlidePosition = getFiveIntakeSlidePosition();
-                                intakeFlipSubmersible();
-                            }
-                            if(timer.seconds() > 0.5 && timer.seconds() < 1.5) {
-                                horizontalSlidePosition = 1;
-                                intakeGrab();
-                            }
-
-                            if((robot.colorSensor.getColor().equals("Yellow") || robot.colorSensor.getColor().equals("Red"))) {
-                                intakeFlipIn();
-                                fifthIntakeSuccess=true;
-                            }
-
-                            if(timer.seconds() > 1.5 && timer.seconds() < 2) {
-                                Pose2d currentPose = drive.getPoseEstimate();
-                                Pose2d adjustedPose = new Pose2d(currentPose.getX(), currentPose.getY() + fiveFailStrafe, currentPose.getHeading());
-                                drive.followTrajectoryAsync(drive.trajectoryBuilder(currentPose)
-                                        .lineToSplineHeading(adjustedPose)
-                                        .build());
-                                intakeFlipIn();
-                                horizontalSlidePosition=0;
-                                robot.clawPivot.flipTo(0.5);
-                            }
-                            if(timer.seconds() > 2 && timer.seconds() < 2.5) {
-                                timer.reset();
-                            }
-                        }
-                        else {
-                            if (!drive.isBusy() && timer.seconds() > 1.6) {
-                                intakeFlipIn();
-                                horizontalSlidePosition = 0;
-                                robot.clawPivot.flipTo(0.5);
-                                drive.followTrajectoryAsync(traj9);
-                                curState = State.traj9;
-                                timer.reset();
-                            }
-                        }
+                    if (timer.seconds() > 1 && timer.seconds() < 1.5) {
+                        horizontalSlidePosition = 1;
+                        intakeGrab();
+                    }
+                    if (oneTimeSwitch[16] && timer.seconds() > 1.5) {
+                        horizontalSlidePosition = 0;
+                        intakeFlipIn();
+                        oneTimeSwitch[16] = false;
+                    }
+                    if (timer.seconds() > 2.2) {
+                        outtakeGrab();
+                    }
+                    if (timer.seconds() > 2.3) {
+                        intakeLetGo();
+                    }
+                    if (!drive.isBusy() && timer.seconds() > 2.5) {
+                        drive.followTrajectoryAsync(traj9);
+                        curState = State.traj9;
+                        timer.reset();
                     }
                     break;
                 case traj9:
-                    if (timer.seconds() > 1 && timer.seconds() < 1.2) {
-                        outtakeGrab();
-                    }
-                    if (timer.seconds() > 1.2 && timer.seconds() < 1.4) {
-                        intakeLetGo();
-                    }
-                    if (oneTimeSwitch[17] && timer.seconds() > 1.4) {
+                    if (oneTimeSwitch[17]) {
                         raiseVertSlides = true;
-                        outtakeFlipUp();
                         oneTimeSwitch[17] = false;
                     }
-                    scoreSubmersibleBasket(timer);
-                    if (!drive.isBusy() && timer.seconds() > 3) {
+                    scoreBasket(timer);
+                    if (!drive.isBusy() && timer.seconds() > 2.2) {
                         raiseVertSlides = false;
                         drive.followTrajectoryAsync(traj10);
                         curState = State.traj10;
@@ -597,7 +524,7 @@ public class SixSampleSolo extends LinearOpMode {
     }
 
     void intakeFlipOut() {
-        robot.intakePivot.flipTo(0.73);
+        robot.intakePivot.flipTo(0.7325);
     }
 
     void intakeFlipSubmersible() {
