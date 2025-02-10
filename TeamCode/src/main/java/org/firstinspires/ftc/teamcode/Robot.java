@@ -9,12 +9,14 @@ import org.firstinspires.ftc.teamcode.subsystems.gobuilda.SpinTake;
 import org.firstinspires.ftc.teamcode.subsystems.MotorSlide;
 import org.firstinspires.ftc.teamcode.subsystems.gobuilda.Pivot;
 import org.firstinspires.ftc.teamcode.subsystems.gobuilda.ServoSlide;
+import org.firstinspires.ftc.teamcode.subsystems.intake.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakePivot;
 import org.firstinspires.ftc.teamcode.subsystems.outtake.OuttakeClaw;
 import org.firstinspires.ftc.teamcode.subsystems.outtake.OuttakePivot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 public class Robot {
+
     public final SpinTake spintake;
     public final OuttakeClaw outtakeClaw;
     public final IntakePivot intakePivot;
@@ -27,10 +29,12 @@ public class Robot {
 
     public final SampleDetector colorSensor;
 
+    public final Intake intake;
     private final SampleMecanumDrive drive;
 
     public Robot(HardwareMap hardwareMap) {
         drive = new SampleMecanumDrive(hardwareMap);
+        intake = new Intake();
         spintake = new SpinTake(hardwareMap, "intakeClawLeft", "intakeClawRight");
         outtakeClaw = new OuttakeClaw(hardwareMap, "outtakeClawLeft", "outtakeClawRight", 0, 0.44);
         intakePivot = new IntakePivot(hardwareMap, "intakePivotLeft", "intakePivotRight", 0, 1, 0.025);

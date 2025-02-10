@@ -29,8 +29,10 @@ public class TwoDriver extends LinearOpMode{
     // Transfer Control Variables
     private ElapsedTime runtime = new ElapsedTime();
     private double transferCompletionTime = -1;
-    private double outtakeCompletionTime = -1;
+    private double outtakeSampleCompletionTime = -1;
+    private double outtakeSpecimenCompletionTime = -1;
     private double outtakeArmCompletionTime = -1;
+    private boolean outtakeSpecimen = false;
 
     private String oppositeColor = "Blue";
 
@@ -203,21 +205,19 @@ public class TwoDriver extends LinearOpMode{
         yDown = gamepad1.y;
 
         if(gamepad1.a && !aDown) {
-            if(outtakeArmPivotPosition != 0.2){
-                outtakeArmPivotPosition = 0.2;
+            if(outtakeClawPosition == 0.9) {
+                outtakeClawPosition = 0.3;
             }
             else {
-                outtakeArmPivotPosition = 1;
+                outtakeClawPosition = 0.9;
             }
         }
         aDown = gamepad1.a;
 
         if(gamepad1.b) {
-            robot.verticalSlide.extend(1);
-            outtakeSlidePosition = -1;
-        }
-        else if (!gamepad1.b && bDown){
-            robot.verticalSlide.reset();
+            outtakeClawPosition = 0.9;
+            outtakeSpecimen = true;
+            transferCompletionTime = runtime.seconds() + 0.3;
         }
         bDown = gamepad1.b;
 
@@ -280,12 +280,24 @@ public class TwoDriver extends LinearOpMode{
             transferCompletionTime = -1;
             intakeSlidePosition=0.3;
             spintakePower = -1;
-            outtakeCompletionTime = runtime.seconds() + 0.1;
+            if(outtakeSpecimen) {
+                outtakeSpecimenCompletionTime = runtime.seconds() + 0.1;
+            }
+            else {
+                outtakeSampleCompletionTime = runtime.seconds() + 0.1;
+            }
         }
-        if(outtakeCompletionTime !=-1 && runtime.seconds() >= outtakeCompletionTime) {
+        if(outtakeSampleCompletionTime !=-1 && runtime.seconds() >= outtakeSampleCompletionTime) {
             outtakeSlidePosition = 3050;
             outtakeArmPivotPosition = 0.7;
-            outtakeCompletionTime = -1;
+            outtakeSampleCompletionTime = -1;
+        }
+
+        if(outtakeSpecimenCompletionTime !=-1 && runtime.seconds() >= outtakeSpecimenCompletionTime) {
+            outtakeSlidePosition = 1225;
+            outtakeArmPivotPosition = 0.2;
+            outtakeSpecimenCompletionTime = -1;
+            outtakeSpecimen = false;
         }
     }
 

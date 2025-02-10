@@ -8,6 +8,7 @@ public class OuttakePivot extends Pivot {
     public static final double SPECIMEN_GRAB_POSITION = 0.2;
     public static final double SPECIMEN_SCORE_POSITION = 0.65;
     public static final double SAMPLE_SCORE_POSITION = 0.45;
+    public static final double FLIP_UP_POSITION = 0.7;
     public OuttakePivot(HardwareMap hardwareMap, String left, double min, double max) {
         super(hardwareMap, left, min, max);
     }
@@ -28,5 +29,8 @@ public class OuttakePivot extends Pivot {
     }
     public void flipSampleScore() {
         flipTo(SAMPLE_SCORE_POSITION);
+    }
+    public void flipUp() {
+        flipTo(FLIP_UP_POSITION);
     }
 }

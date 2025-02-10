@@ -157,7 +157,7 @@ public class SixSampleSolo extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-18.25, 6.2, 0.75))
                 .build();
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                .lineToSplineHeading(new Pose2d(-9, 12.6, 1.5808))
+                .lineToSplineHeading(new Pose2d(-10.7527, 14.1049, 1.5431))
                 .build();
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
                 .lineToSplineHeading(new Pose2d(-18.25, 6.2, 0.75))
@@ -296,16 +296,16 @@ public class SixSampleSolo extends LinearOpMode {
                         horizontalSlidePosition = 0;
                         oneTimeSwitch[6] = false;
                     }
-                    if(timer.seconds()>1.5&&timer.seconds()<2.2) {
+                    if(timer.seconds()>1.6&&timer.seconds()<2.3) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 2.2 && timer.seconds() < 2.4) {
+                    if (timer.seconds() > 2.3 && timer.seconds() < 2.5) {
                         outtakeGrab();
                     }
-                    if (timer.seconds() > 2.4 && timer.seconds() < 2.6) {
+                    if (timer.seconds() > 2.5 && timer.seconds() < 2.7) {
                         intakeLetGo();
                     }
-                    if (!drive.isBusy() && timer.seconds() > 2.6) {
+                    if (!drive.isBusy() && timer.seconds() > 2.71) {
                         drive.followTrajectoryAsync(traj5);
                         curState = State.traj5;
                         timer.reset();
