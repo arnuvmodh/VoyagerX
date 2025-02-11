@@ -338,10 +338,6 @@ public class SixSamplePartner extends LinearOpMode {
                         horizontalSlidePosition = 0.5;
                         oneTimeSwitch[15] = false;
                     }
-                    if (timer.seconds() > 1 && timer.seconds() < 1.5) {
-                        horizontalSlidePosition = 1;
-                        intakeGrab();
-                    }
                     if (oneTimeSwitch[16] && timer.seconds() > 1.5) {
                         horizontalSlidePosition = 0;
                         intakeFlipIn();

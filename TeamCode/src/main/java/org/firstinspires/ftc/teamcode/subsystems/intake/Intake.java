@@ -4,7 +4,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Robot;
 
 public class Intake {
-    public boolean sampleFast(Robot robot, ElapsedTime timer, double startTime) {
+
+    public boolean sampleSlow(Robot robot, ElapsedTime timer, double startTime) {
         if(startTime==-1) return false;
 
         if (timer.seconds() >= startTime+0 && timer.seconds() <= startTime+1) {
@@ -25,5 +26,28 @@ public class Intake {
             robot.spintake.spinOut(1);
         }
         return timer.seconds() > startTime+2.2;
+    }
+
+    public boolean sampleFast(Robot robot, ElapsedTime timer, double startTime) {
+        if(startTime==-1) return false;
+
+        if (timer.seconds() >= startTime+0 && timer.seconds() <= startTime+0.5) {
+            robot.clawPivot.flipTo(0.5);
+            robot.horizontalSlide.goTo(1);
+            robot.spintake.spinIn(1);
+        }
+        if (timer.seconds() >= startTime+0.5 && timer.seconds() <= startTime+1.3) {
+            robot.outtakePivot.flipFront();
+            robot.intakePivot.flipIn();
+            robot.horizontalSlide.retractFull();
+        }
+        if (timer.seconds() >= startTime+1.4 && timer.seconds() <= startTime+1.5) {
+            robot.outtakeClaw.grab();
+        }
+        if (timer.seconds() >= startTime+1.5 && timer.seconds() <= startTime+1.7) {
+            robot.horizontalSlide.goTo(0.3);
+            robot.spintake.spinOut(1);
+        }
+        return timer.seconds() > startTime+1.7;
     }
 }
