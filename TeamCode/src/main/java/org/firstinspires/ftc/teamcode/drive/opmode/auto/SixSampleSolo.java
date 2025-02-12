@@ -386,14 +386,32 @@ public class SixSampleSolo extends LinearOpMode {
                                 break;
                             }
                             if (timer.seconds() > 0 && timer.seconds() < 0.5) {
+                                robot.hangPivot.setPosition(0);
                                 horizontalSlidePosition = getFiveIntakeSlidePosition();
+                            }
+
+                            if(timer.seconds() >= 0.25 && timer.seconds() < 0.5) {
+                                robot.hangPivot.setPosition(0.5);
+                            }
+
+                            if(timer.seconds() > 0.35 && timer.seconds() < 0.5) {
                                 intakeFlipSubmersible();
                             }
 
-                            if(timer.seconds() >= 0.25 && timer.seconds() <= 1) {
-                                robot.spintake.spinOut(1);
-                                double oscillation = 0.5 * Math.sin(8 * Math.PI * (timer.seconds() - 0.25)) + 0.5; // 4 hz
-                                robot.clawPivot.flipTo(oscillation);
+                            if(timer.seconds() > 0.5 && timer.seconds() < 0.6) {
+                                Pose2d currentPose = drive.getPoseEstimate();
+                                Pose2d adjustedPose = new Pose2d(currentPose.getX()-1, currentPose.getY(), currentPose.getHeading());
+                                drive.followTrajectoryAsync(drive.trajectoryBuilder(currentPose)
+                                        .lineToSplineHeading(adjustedPose)
+                                        .build());
+                            }
+
+                            if(timer.seconds() > 1 && timer.seconds() < 1.3) {
+                                Pose2d currentPose = drive.getPoseEstimate();
+                                Pose2d adjustedPose = new Pose2d(currentPose.getX()+1, currentPose.getY(), currentPose.getHeading());
+                                drive.followTrajectoryAsync(drive.trajectoryBuilder(currentPose)
+                                        .lineToSplineHeading(adjustedPose)
+                                        .build());
                             }
 
                             if (timer.seconds() > 1 && timer.seconds() < 2) {
@@ -407,7 +425,7 @@ public class SixSampleSolo extends LinearOpMode {
                                 fifthIntakeSuccess=true;
                             }
 
-                            if(timer.seconds() > 2 && timer.seconds() < 2.5) {
+                            if(timer.seconds() > 2.5 && timer.seconds() < 3) {
                                 Pose2d currentPose = drive.getPoseEstimate();
                                 Pose2d adjustedPose = new Pose2d(currentPose.getX(), currentPose.getY() + fiveFailStrafe, currentPose.getHeading());
                                 drive.followTrajectoryAsync(drive.trajectoryBuilder(currentPose)
@@ -417,7 +435,7 @@ public class SixSampleSolo extends LinearOpMode {
                                 horizontalSlidePosition=0;
                                 robot.clawPivot.flipTo(0.5);
                             }
-                            if(timer.seconds() > 2.5 && timer.seconds() < 3) {
+                            if(timer.seconds() > 3 && timer.seconds() < 3.5) {
                                 timer.reset();
                             }
                         }
@@ -465,14 +483,32 @@ public class SixSampleSolo extends LinearOpMode {
                                 break;
                             }
                             if (timer.seconds() > 0 && timer.seconds() < 0.5) {
-                                horizontalSlidePosition = getSixIntakeSlidePosition();
+                                robot.hangPivot.setPosition(0);
+                                horizontalSlidePosition = getFiveIntakeSlidePosition();
+                            }
+
+                            if(timer.seconds() >= 0.25 && timer.seconds() < 0.5) {
+                                robot.hangPivot.setPosition(0.5);
+                            }
+
+                            if(timer.seconds() > 0.35 && timer.seconds() < 0.5) {
                                 intakeFlipSubmersible();
                             }
 
-                            if(timer.seconds() >= 0.25 && timer.seconds() <= 1) {
-                                robot.spintake.spinOut(1);
-                                double oscillation = 0.5 * Math.sin(8 * Math.PI * (timer.seconds() - 0.25)) + 0.5; // 4 hz
-                                robot.clawPivot.flipTo(oscillation);
+                            if(timer.seconds() > 0.5 && timer.seconds() < 0.6) {
+                                Pose2d currentPose = drive.getPoseEstimate();
+                                Pose2d adjustedPose = new Pose2d(currentPose.getX()-1, currentPose.getY(), currentPose.getHeading());
+                                drive.followTrajectoryAsync(drive.trajectoryBuilder(currentPose)
+                                        .lineToSplineHeading(adjustedPose)
+                                        .build());
+                            }
+
+                            if(timer.seconds() > 1 && timer.seconds() < 1.3) {
+                                Pose2d currentPose = drive.getPoseEstimate();
+                                Pose2d adjustedPose = new Pose2d(currentPose.getX()+1, currentPose.getY(), currentPose.getHeading());
+                                drive.followTrajectoryAsync(drive.trajectoryBuilder(currentPose)
+                                        .lineToSplineHeading(adjustedPose)
+                                        .build());
                             }
 
                             if (timer.seconds() > 1 && timer.seconds() < 2) {
@@ -485,7 +521,7 @@ public class SixSampleSolo extends LinearOpMode {
                                 intakeFlipIn();
                                 sixthIntakeSuccess=true;
                             }
-                            if(timer.seconds() > 2 && timer.seconds() < 2.5) {
+                            if(timer.seconds() > 2.5 && timer.seconds() < 3) {
                                 Pose2d currentPose = drive.getPoseEstimate();
                                 Pose2d adjustedPose = new Pose2d(currentPose.getX(), currentPose.getY() + sixFailStrafe, currentPose.getHeading());
                                 drive.followTrajectoryAsync(drive.trajectoryBuilder(currentPose)
@@ -495,7 +531,7 @@ public class SixSampleSolo extends LinearOpMode {
                                 horizontalSlidePosition=0;
                                 robot.clawPivot.flipTo(0.5);
                             }
-                            if(timer.seconds() > 2.5 && timer.seconds() < 3) {
+                            if(timer.seconds() > 3 && timer.seconds() < 3.5) {
                                 timer.reset();
                             }
                         }
@@ -547,11 +583,8 @@ public class SixSampleSolo extends LinearOpMode {
 
             PoseStorage.currentPose = poseEstimate;
 
-            telemetry.addData("raiseVertSlides", raiseVertSlides);
-            telemetry.addData("lowerVertSlides", lowerVertSlides);
             telemetry.addData("Current Time", timer.seconds());
-            telemetry.addData("rightVertical", robot.verticalSlide.getLeftPosition());
-            telemetry.addData("leftVertical", robot.verticalSlide.getRightPosition());
+            telemetry.addData("Detected Hue", robot.colorSensor.getHue());
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
@@ -618,7 +651,7 @@ public class SixSampleSolo extends LinearOpMode {
     }
 
     void intakeFlipSubmersible() {
-        robot.intakePivot.flipTo(0.73);
+        robot.intakePivot.flipTo(0.7325);
     }
 
     void intakeFlipIn() {
