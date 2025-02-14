@@ -38,7 +38,7 @@ public class FourSamplePark extends LinearOpMode {
         robot.outtakePivot.flipFront();
         robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION);
         robot.clawPivot.flipTo(0.5);
-
+        robot.hangPivot.setPosition(0.5);
 
         ElapsedTime timer = new ElapsedTime();
 
