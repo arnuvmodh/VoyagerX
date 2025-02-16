@@ -95,20 +95,23 @@ public class TwoDriver extends LinearOpMode{
         robot.verticalSlide.retractFull();
         robot.horizontalSlide.retractFull();
         robot.outtakePivot.flipFront();
-        robot.intakePivot.flipTo(0);
+        robot.intakePivot.flipTo(0.25);
         robot.outtakeClaw.release();
         robot.clawPivot.flipTo(0.5);
         robot.hangPivot.setPosition(0.5);
     }
 
     private void drivetrainControls() {
+        if(gamepad2.right_stick_button) {
+
+        }
         if(gamepad2.a) {
             speed = ((double)1/3);
         }
         else {
             speed = 1;
         }
-        if(gamepad1.left_stick_button) {
+        if(gamepad1.left_stick_button || gamepad2.right_bumper) {
             intakeSlidePosition = 1;
             intakeArmPivotPosition = 0.655;
             spintakePower = 0;
@@ -127,7 +130,11 @@ public class TwoDriver extends LinearOpMode{
     private boolean shareDown = false;
     private boolean g2dpadDDown = false;
     private void intakeControls() {
-        if(gamepad1.left_trigger>0.2) {
+        if(gamepad2.touchpad) {
+            intakeArmPivotPosition = 0.25;
+        }
+
+        if(gamepad1.left_trigger>0.2 || gamepad2.right_bumper) {
             intakeArmPivotPosition = 0.7325;
             spintakePower = 1;
         }
@@ -138,13 +145,13 @@ public class TwoDriver extends LinearOpMode{
         }
         g2dpadDDown = gamepad2.dpad_down;
 
-        if(gamepad1.share || gamepad2.share) {
+        if(gamepad1.share || (gamepad2.left_trigger>0.2)) {
             spintakePower = -1;
         }
         else if(shareDown && spintakePower!=1) {
             spintakePower = 0;
         }
-        shareDown = gamepad1.share || gamepad2.share;
+        shareDown = gamepad1.share || (gamepad2.left_trigger>0.2);
 
         if(gamepad1.left_bumper && !leftBDown) {
             if(outtakeArmPivotPosition != 0.5) {
@@ -157,7 +164,7 @@ public class TwoDriver extends LinearOpMode{
         }
         leftBDown = gamepad1.left_bumper;
 
-        if(gamepad2.dpad_up) {
+        if(gamepad2.right_stick_button) {
             drive.setPoseEstimate(new Pose2d());
         }
         if(gamepad1.dpad_left && !leftDDown) {
@@ -178,6 +185,19 @@ public class TwoDriver extends LinearOpMode{
     private boolean touchpadDown = false;
     private boolean rightTriggerDown = false;
     private void outtakeControls() {
+        if(gamepad2.share) {
+            outtakeArmPivotPosition = 0.3;
+        }
+        if(gamepad2.dpad_up) {
+            outtakeSlidePosition = 1070;
+        }
+        if(gamepad2.dpad_down) {
+            outtakeSlidePosition = 0;
+        }
+        if(gamepad2.x) {
+            outtakeArmPivotPosition = 0.7;
+        }
+
         if(gamepad1.touchpad && !touchpadDown) {
             if(locked) {
                 locked = false;
@@ -204,7 +224,7 @@ public class TwoDriver extends LinearOpMode{
         }
         yDown = gamepad1.y;
 
-        if(gamepad1.a && !aDown) {
+        if((gamepad1.a||gamepad2.y) && !aDown) {
             if(outtakeClawPosition == 0.9) {
                 outtakeClawPosition = 0.3;
             }
@@ -212,7 +232,7 @@ public class TwoDriver extends LinearOpMode{
                 outtakeClawPosition = 0.9;
             }
         }
-        aDown = gamepad1.a;
+        aDown = (gamepad1.a||gamepad2.y);
 
         if(gamepad1.b) {
             outtakeClawPosition = 0.9;
@@ -302,9 +322,9 @@ public class TwoDriver extends LinearOpMode{
     }
 
     private void handleIntake() {
-        if(spintakePower==1&&robot.colorSensor.getColor().equals(oppositeColor)) {
-            spintakePower=-1;
-        }
+//        if(spintakePower==1&&robot.colorSensor.getColor().equals(oppositeColor)) {
+//            spintakePower=-1;
+//        }
         robot.horizontalSlide.goTo(intakeSlidePosition);
         robot.spintake.spinIn(spintakePower);
         robot.intakePivot.flipTo(intakeArmPivotPosition);

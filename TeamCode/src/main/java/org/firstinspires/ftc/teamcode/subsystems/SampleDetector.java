@@ -34,13 +34,13 @@ public class SampleDetector {
                     (int) (sensorColor.blue() * SCALE_FACTOR),
                     hsvValues);
 
-            if(hsvValues[0]>=222&&hsvValues[0]<=228) {
+            if(hsvValues[0]>=220&&hsvValues[0]<=230) {
                 color = "Blue";
             }
-            else if(hsvValues[0]>=18&&hsvValues[0]<=23) {
+            else if(hsvValues[0]>=15&&hsvValues[0]<=25) {
                 color = "Red";
             }
-            else if(hsvValues[0]>=83&&hsvValues[0]<=87) {
+            else if(hsvValues[0]>=80&&hsvValues[0]<=91) {
                 color = "Yellow";
             }
             else {

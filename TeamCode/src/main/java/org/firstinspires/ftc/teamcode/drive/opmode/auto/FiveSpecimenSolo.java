@@ -22,7 +22,7 @@ public class FiveSpecimenSolo extends LinearOpMode {
     final double SPECIMEN_SCORE_POSITION = 0.3;
     final double OUTTAKE_CLAW_OPEN_POSITION = 0.3;
     final double OUTTAKE_CLAW_CLOSE_POSITION = 0.9;
-    final int OUTTAKE_SLIDE_POSITION = 1090;
+    final int OUTTAKE_SLIDE_POSITION = 1070;
 
     private SampleMecanumDrive drive;
     public Trajectory presetSpecimenScore, firstSampleIntake, firstSampleOuttake, secondSampleIntake, secondSampleOuttake, thirdSampleIntake, thirdSampleIntakePush, thirdSampleOuttake, firstSpecimenIntake, firstSpecimenOuttake, firstSpecimenOuttakeClip, secondSpecimenIntake, secondSpecimenOuttake, secondSpecimenOuttakeClip, thirdSpecimenIntake, thirdSpecimenOuttake, thirdSpecimenOuttakeClip, fourthSpecimenIntake, fourthSpecimenOuttake, fourthSpecimenOuttakeClip;
@@ -56,7 +56,7 @@ public class FiveSpecimenSolo extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         robot = new Robot(hardwareMap);
-        robot.intakePivot.flipBack();
+        robot.intakePivot.flipTo(0.2);
         robot.outtakePivot.flipFront();
         robot.horizontalSlide.retractFull();
         robot.outtakeClaw.openTo(OUTTAKE_CLAW_CLOSE_POSITION);
@@ -66,31 +66,31 @@ public class FiveSpecimenSolo extends LinearOpMode {
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(new Pose2d(0,0, 0));
         presetSpecimenScore = drive.trajectoryBuilder(new Pose2d(0, 0, 0))
-                .lineToLinearHeading(new Pose2d(-29.9025, -15.7387, 0.1551))
+                .lineToLinearHeading(new Pose2d(-30.9025, -13.7387, 0.1551))
                 .build();
         firstSampleIntake = drive.trajectoryBuilder(presetSpecimenScore.end())
                 .splineTo(new Vector2d(-29.1995, 17.0929), 2.2429)
                 .build();
         firstSampleOuttake = drive.trajectoryBuilder(firstSampleIntake.end())
-                .lineToLinearHeading(new Pose2d(-16.0643, 18.0141, 1.0072))
+                .lineToLinearHeading(new Pose2d(-16.0643, 18.0141, 1.2072))
                 .build();
         secondSampleIntake = drive.trajectoryBuilder(firstSampleOuttake.end())
-                .lineToLinearHeading(new Pose2d(-28.5, 29, 2.1688))
+                .lineToLinearHeading(new Pose2d(-26.5, 29.25, 2.3988))
                 .build();
         secondSampleOuttake = drive.trajectoryBuilder(secondSampleIntake.end())
                 .lineToLinearHeading(new Pose2d(-16.5414, 26.9298, 0.9341))
                 .build();
         thirdSampleIntake = drive.trajectoryBuilder(secondSampleOuttake.end())
-                .lineToLinearHeading(new Pose2d(-27.1305, 36.2107, 2.1585))
+                .lineToLinearHeading(new Pose2d(-31.1305, 36.2107, 2.2585))
                 .build();
         thirdSampleIntakePush = drive.trajectoryBuilder(thirdSampleIntake.end())
-                .lineToLinearHeading(new Pose2d(-27.1305, 38.2107, 2.1585))
+                .lineToLinearHeading(new Pose2d(-31.1305, 38.2107, 2.2585))
                 .build();
         thirdSampleOuttake = drive.trajectoryBuilder(thirdSampleIntakePush.end())
                 .lineToLinearHeading(new Pose2d(-15.861, 36.1574, 0.8096))
                 .build();
         firstSpecimenIntake = drive.trajectoryBuilder(thirdSampleOuttake.end())
-                .lineToLinearHeading(new Pose2d(-20.3501, 34.4781, 0.0447))
+                .lineToLinearHeading(new Pose2d(-24.3501, 36.4781, 0.1547))
                 .build();
         firstSpecimenOuttake = drive.trajectoryBuilder(firstSpecimenIntake.end())
                 .lineToLinearHeading(new Pose2d(-15.9118, -12.7387, 0.1551))
@@ -99,7 +99,7 @@ public class FiveSpecimenSolo extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-27.9118, -12.7387, 0.1551))
                 .build();
         secondSpecimenIntake = drive.trajectoryBuilder(firstSpecimenOuttakeClip.end())
-                .lineToLinearHeading(new Pose2d(-20.3501, 34.4781, 0.0447))
+                .lineToLinearHeading(new Pose2d(-23.3501, 34.4781, 0.0547))
                 .build();
         secondSpecimenOuttake = drive.trajectoryBuilder(secondSpecimenIntake.end())
                 .lineToLinearHeading(new Pose2d(-15.9118, -8.7387, 0.1551))
@@ -108,7 +108,7 @@ public class FiveSpecimenSolo extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-27.9118, -8.7387, 0.1551))
                 .build();
         thirdSpecimenIntake = drive.trajectoryBuilder(secondSpecimenOuttakeClip.end())
-                .lineToLinearHeading(new Pose2d(-20.3501, 34.4781, 0.0447))
+                .lineToLinearHeading(new Pose2d(-23.3501, 34.4781, 0.0547))
                 .build();
         thirdSpecimenOuttake = drive.trajectoryBuilder(thirdSpecimenIntake.end())
                 .lineToLinearHeading(new Pose2d(-15.9118, -5.7387, 0.1551))
@@ -117,7 +117,7 @@ public class FiveSpecimenSolo extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-27.9118, -5.7387, 0.1551))
                 .build();
         fourthSpecimenIntake = drive.trajectoryBuilder(secondSpecimenOuttakeClip.end())
-                .lineToLinearHeading(new Pose2d(-20.3501, 34.4781, 0.0447))
+                .lineToLinearHeading(new Pose2d(-23.3501, 34.4781, 0.0547))
                 .build();
         fourthSpecimenOuttake = drive.trajectoryBuilder(thirdSpecimenIntake.end())
                 .lineToLinearHeading(new Pose2d(-15.9118, -2.7387, 0.1551))
@@ -160,20 +160,23 @@ public class FiveSpecimenSolo extends LinearOpMode {
                     verticalSlidePosition = OUTTAKE_SLIDE_POSITION;
                     robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION);
                 }
-                if(!drive.isBusy() && timer.seconds()>0.5) {
+                if(timer.seconds()>0.5) {
                     timer.reset();
                     drive.followTrajectoryAsync(presetSpecimenScore);
                     curState = State.presetSpecimenScore;
                 }
                 break;
             case presetSpecimenScore:
-                if(timer.seconds()>1.8 && timer.seconds()<2){
+                if(timer.seconds()>1.4 && timer.seconds()<1.5){
                     robot.outtakeClaw.openTo(OUTTAKE_CLAW_OPEN_POSITION);
                     verticalSlidePosition = 0;
                 }
-                if(timer.seconds()>2) {
+                if(timer.seconds()>1.5) {
                     robot.outtakePivot.flipFront();
                     timer.reset();
+                    firstSampleIntake = drive.trajectoryBuilder(drive.getPoseEstimate())
+                            .splineTo(new Vector2d(-29.1995, 17.0929), 2.2429)
+                            .build();
                     drive.followTrajectoryAsync(firstSampleIntake);
                     curState = State.firstSampleIntake;
                 }
@@ -186,7 +189,7 @@ public class FiveSpecimenSolo extends LinearOpMode {
                     robot.clawPivot.flipTo(0.1);
                 }
                 if(timer.seconds() > 1.5 && timer.seconds() < 1.7) {
-                    robot.intakePivot.flipTo(0.73);
+                    robot.intakePivot.flipTo(0.74);
                 }
                 if(!drive.isBusy() && timer.seconds() > 1.7) {
                     timer.reset();
@@ -198,7 +201,7 @@ public class FiveSpecimenSolo extends LinearOpMode {
                 if(timer.seconds() > 1 && timer.seconds() < 1.2) {
                     robot.clawPivot.flipTo(0.5);
                 }
-                if(timer.seconds() > 1.2 && timer.seconds() < 1.5) {
+                if(timer.seconds() > 1 && timer.seconds() < 1.5) {
                     robot.spintake.spinOut(1);
                 }
                 if(!drive.isBusy() && timer.seconds()>1.5) {
@@ -214,10 +217,10 @@ public class FiveSpecimenSolo extends LinearOpMode {
                     robot.clawPivot.flipTo(0.1);
                     robot.horizontalSlide.extendFull();
                 }
-                if(timer.seconds() > 1.2 && timer.seconds() < 1.3) {
-                    robot.intakePivot.flipTo(0.73);
+                if(timer.seconds() > 1.3 && timer.seconds() < 1.4) {
+                    robot.intakePivot.flipTo(0.74);
                 }
-                if(!drive.isBusy() && timer.seconds() > 1.3) {
+                if(!drive.isBusy() && timer.seconds() > 1.4) {
                     timer.reset();
                     robot.horizontalSlide.retractFull();
                     drive.followTrajectoryAsync(secondSampleOuttake);
@@ -235,7 +238,7 @@ public class FiveSpecimenSolo extends LinearOpMode {
                     robot.spintake.spinOut(1);
                 }
                 if(!drive.isBusy() && timer.seconds()>1.5) {
-                    robot.intakePivot.flipTo(0.245);
+                    robot.intakePivot.flipTo(0.265);
                     timer.reset();
                     drive.followTrajectoryAsync(thirdSampleIntake);
                     curState = State.thirdSampleIntake;
@@ -247,8 +250,8 @@ public class FiveSpecimenSolo extends LinearOpMode {
                     robot.clawPivot.flipTo(0.1);
                     robot.horizontalSlide.extendFull();
                 }
-                if(timer.seconds() > 1 && timer.seconds() < 1.5) {
-                    robot.intakePivot.flipTo(0.73);
+                if(timer.seconds() > 1.1 && timer.seconds() < 1.5) {
+                    robot.intakePivot.flipTo(0.74);
                 }
                 if(!drive.isBusy() && timer.seconds()>1.5) {
                     timer.reset();
@@ -275,6 +278,9 @@ public class FiveSpecimenSolo extends LinearOpMode {
                 }
                 if(!drive.isBusy() && timer.seconds() > 1.5) {
                     timer.reset();
+                    firstSpecimenIntake = drive.trajectoryBuilder(drive.getPoseEstimate())
+                            .lineToLinearHeading(new Pose2d(-24.3501, 36.4781, 0.1547))
+                            .build();
                     drive.followTrajectoryAsync(firstSpecimenIntake);
                     curState = State.firstSpecimenIntake;
                 }
@@ -286,7 +292,7 @@ public class FiveSpecimenSolo extends LinearOpMode {
                     robot.intakePivot.flipTo(0.73);
                 }
                 if(timer.seconds() > 1 && timer.seconds() < 1.5){
-                    robot.horizontalSlide.goTo(0.6);
+                    robot.horizontalSlide.goTo(0.7);
                 }
                 if(!drive.isBusy() && timer.seconds() > 1.5) {
                     timer.reset();
@@ -295,24 +301,24 @@ public class FiveSpecimenSolo extends LinearOpMode {
                 }
                 break;
             case firstSpecimenOuttake:
-                if(timer.seconds() > 0 && timer.seconds() < 0.8) {
-                    robot.intakePivot.flipTo(0.245);
+                if(timer.seconds() > 0 && timer.seconds() < 0.5) {
+                    robot.intakePivot.flipTo(0.265);
                     robot.horizontalSlide.retractFull();
                     robot.outtakePivot.flipFront();
                 }
-                if(timer.seconds() > 0.9 && timer.seconds() < 1) {
+                if(timer.seconds() > 0.6 && timer.seconds() < 0.7) {
                     robot.outtakeClaw.grab();
                 }
-                if(timer.seconds() > 1 && timer.seconds() < 1.2) {
+                if(timer.seconds() > 0.7 && timer.seconds() < 0.9) {
                     robot.horizontalSlide.goTo(0.5);
                     robot.spintake.spinOut(1);
-                    robot.intakePivot.flipTo(0.245);
+                    robot.intakePivot.flipTo(0.265);
                 }
-                if(timer.seconds()>1.2 && timer.seconds()<1.7){
+                if(timer.seconds()>0.9 && timer.seconds()<1.4){
                     verticalSlidePosition = OUTTAKE_SLIDE_POSITION;
                     robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION);
                 }
-                if(!drive.isBusy() && timer.seconds() > 1.7) {
+                if(timer.seconds() > 1.4) {
                     timer.reset();
                     robot.horizontalSlide.retractFull();
                     drive.followTrajectoryAsync(firstSpecimenOuttakeClip);
@@ -327,6 +333,9 @@ public class FiveSpecimenSolo extends LinearOpMode {
                 if(timer.seconds()>0.6) {
                     timer.reset();
                     robot.outtakePivot.flipFront();
+                    secondSpecimenIntake = drive.trajectoryBuilder(drive.getPoseEstimate())
+                            .lineToLinearHeading(new Pose2d(-24.3501, 36.4781, 0.1547))
+                            .build();
                     drive.followTrajectoryAsync(secondSpecimenIntake);
                     curState = State.secondSpecimenIntake;
                 }
@@ -337,34 +346,34 @@ public class FiveSpecimenSolo extends LinearOpMode {
                     robot.spintake.spinIn(1);
                     robot.intakePivot.flipTo(0.73);
                 }
-                if(timer.seconds() > 1.2 && timer.seconds() < 1.5){
-                    robot.horizontalSlide.goTo(0.5);
+                if(timer.seconds() > 1.8 && timer.seconds() < 2){
+                    robot.horizontalSlide.goTo(0.7);
                 }
-                if(!drive.isBusy() && timer.seconds() > 1.5) {
+                if(!drive.isBusy() && timer.seconds() > 2) {
                     timer.reset();
                     drive.followTrajectoryAsync(secondSpecimenOuttake);
                     curState = State.secondSpecimenOuttake;
                 }
                 break;
             case secondSpecimenOuttake:
-                if(timer.seconds() > 0 && timer.seconds() < 0.8) {
-                    robot.intakePivot.flipTo(0.245);
+                if(timer.seconds() > 0 && timer.seconds() < 0.7) {
+                    robot.intakePivot.flipTo(0.265);
                     robot.horizontalSlide.retractFull();
                     robot.outtakePivot.flipFront();
                 }
-                if(timer.seconds() > 0.9 && timer.seconds() < 1) {
+                if(timer.seconds() > 0.8 && timer.seconds() < 0.9) {
                     robot.outtakeClaw.grab();
                 }
-                if(timer.seconds() > 1 && timer.seconds() < 1.2) {
+                if(timer.seconds() > 0.9 && timer.seconds() < 1.1) {
                     robot.horizontalSlide.goTo(0.5);
                     robot.spintake.spinOut(1);
-                    robot.intakePivot.flipTo(0.245);
+                    robot.intakePivot.flipTo(0.265);
                 }
-                if(timer.seconds()>1.2 && timer.seconds()<1.7){
+                if(timer.seconds()>1.1 && timer.seconds() < 1.6){
                     verticalSlidePosition = OUTTAKE_SLIDE_POSITION;
                     robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION);
                 }
-                if(!drive.isBusy() && timer.seconds() > 1.7) {
+                if(timer.seconds() > 1.6) {
                     timer.reset();
                     robot.horizontalSlide.retractFull();
                     drive.followTrajectoryAsync(secondSpecimenOuttakeClip);
@@ -379,6 +388,9 @@ public class FiveSpecimenSolo extends LinearOpMode {
                 if(timer.seconds()>0.6) {
                     timer.reset();
                     robot.outtakePivot.flipFront();
+                    thirdSpecimenIntake = drive.trajectoryBuilder(drive.getPoseEstimate())
+                            .lineToLinearHeading(new Pose2d(-24.3501, 36.4781, 0.1547))
+                            .build();
                     drive.followTrajectoryAsync(thirdSpecimenIntake);
                     curState = State.thirdSpecimenIntake;
                 }
@@ -389,34 +401,34 @@ public class FiveSpecimenSolo extends LinearOpMode {
                     robot.spintake.spinIn(1);
                     robot.intakePivot.flipTo(0.73);
                 }
-                if(timer.seconds() > 1.2 && timer.seconds() < 1.5){
-                    robot.horizontalSlide.goTo(0.5);
+                if(timer.seconds() > 1.8 && timer.seconds() < 2){
+                    robot.horizontalSlide.goTo(0.7);
                 }
-                if(!drive.isBusy() && timer.seconds() > 1.5) {
+                if(!drive.isBusy() && timer.seconds() > 2) {
                     timer.reset();
                     drive.followTrajectoryAsync(thirdSpecimenOuttake);
                     curState = State.thirdSpecimenOuttake;
                 }
                 break;
             case thirdSpecimenOuttake:
-                if(timer.seconds() > 0 && timer.seconds() < 0.8) {
-                    robot.intakePivot.flipTo(0.245);
+                if(timer.seconds() > 0 && timer.seconds() < 0.7) {
+                    robot.intakePivot.flipTo(0.265);
                     robot.horizontalSlide.retractFull();
                     robot.outtakePivot.flipFront();
                 }
-                if(timer.seconds() > 0.9 && timer.seconds() < 1) {
+                if(timer.seconds() > 0.8 && timer.seconds() < 0.9) {
                     robot.outtakeClaw.grab();
                 }
-                if(timer.seconds() > 1 && timer.seconds() < 1.2) {
+                if(timer.seconds() > 0.9 && timer.seconds() < 1.1) {
                     robot.horizontalSlide.goTo(0.5);
                     robot.spintake.spinOut(1);
-                    robot.intakePivot.flipTo(0.245);
+                    robot.intakePivot.flipTo(0.265);
                 }
-                if(timer.seconds()>1.2 && timer.seconds()<1.7){
+                if(timer.seconds()>1.1 && timer.seconds()<1.6){
                     verticalSlidePosition = OUTTAKE_SLIDE_POSITION;
                     robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION);
                 }
-                if(!drive.isBusy() && timer.seconds() > 1.7) {
+                if(timer.seconds() > 1.6) {
                     timer.reset();
                     robot.horizontalSlide.retractFull();
                     drive.followTrajectoryAsync(thirdSpecimenOuttakeClip);
@@ -431,6 +443,9 @@ public class FiveSpecimenSolo extends LinearOpMode {
                 if(timer.seconds()>0.6) {
                     timer.reset();
                     robot.outtakePivot.flipFront();
+                    fourthSpecimenIntake = drive.trajectoryBuilder(drive.getPoseEstimate())
+                            .lineToLinearHeading(new Pose2d(-24.3501, 36.4781, 0.1547))
+                            .build();
                     drive.followTrajectoryAsync(fourthSpecimenIntake);
                     curState = State.fourthSpecimenIntake;
                 }
@@ -441,34 +456,34 @@ public class FiveSpecimenSolo extends LinearOpMode {
                     robot.spintake.spinIn(1);
                     robot.intakePivot.flipTo(0.73);
                 }
-                if(timer.seconds() > 1.2 && timer.seconds() < 1.5){
-                    robot.horizontalSlide.goTo(0.5);
+                if(timer.seconds() > 1.8 && timer.seconds() < 2){
+                    robot.horizontalSlide.goTo(0.7);
                 }
-                if(!drive.isBusy() && timer.seconds() > 1.5) {
+                if(!drive.isBusy() && timer.seconds() > 2) {
                     timer.reset();
                     drive.followTrajectoryAsync(fourthSpecimenOuttake);
                     curState = State.fourthSpecimenOuttake;
                 }
                 break;
             case fourthSpecimenOuttake:
-                if(timer.seconds() > 0 && timer.seconds() < 0.8) {
-                    robot.intakePivot.flipTo(0.245);
+                if(timer.seconds() > 0 && timer.seconds() < 0.7) {
+                    robot.intakePivot.flipTo(0.265);
                     robot.horizontalSlide.retractFull();
                     robot.outtakePivot.flipFront();
                 }
-                if(timer.seconds() > 0.9 && timer.seconds() < 1) {
+                if(timer.seconds() > 0.8 && timer.seconds() < 0.9) {
                     robot.outtakeClaw.grab();
                 }
-                if(timer.seconds() > 1 && timer.seconds() < 1.2) {
+                if(timer.seconds() > 0.9 && timer.seconds() < 1.1) {
                     robot.horizontalSlide.goTo(0.5);
                     robot.spintake.spinOut(1);
-                    robot.intakePivot.flipTo(0.245);
+                    robot.intakePivot.flipTo(0.265);
                 }
-                if(timer.seconds()>1.2 && timer.seconds()<1.7){
+                if(timer.seconds()>1.1 && timer.seconds()<1.6){
                     verticalSlidePosition = OUTTAKE_SLIDE_POSITION;
                     robot.outtakePivot.flipTo(SPECIMEN_SCORE_POSITION);
                 }
-                if(!drive.isBusy() && timer.seconds() > 1.7) {
+                if(timer.seconds() > 1.6) {
                     timer.reset();
                     robot.horizontalSlide.retractFull();
                     drive.followTrajectoryAsync(fourthSpecimenOuttakeClip);
