@@ -336,7 +336,10 @@ public class TwoDriver extends LinearOpMode{
             outtakeClawPosition = 0.3;
             outtakeArmCompletionTime = -1;
         }
-        if(outtakeSlidePosition != -1) {
+        if(outtakeSlidePosition == 3050) {
+            robot.verticalSlide.extendFull();
+        }
+        else if(outtakeSlidePosition != -1) {
             robot.verticalSlide.goTo(outtakeSlidePosition, 1);
         }
         robot.outtakeClaw.openTo(outtakeClawPosition);
