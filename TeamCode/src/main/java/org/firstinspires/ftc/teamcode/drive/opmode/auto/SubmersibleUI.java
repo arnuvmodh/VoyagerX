@@ -73,5 +73,9 @@ public class SubmersibleUI {
         return _failStrafe;
     }
 
+    void reverseFailStrafe() {
+        _failStrafe = -1*_failStrafe;
+    }
+
 
 }

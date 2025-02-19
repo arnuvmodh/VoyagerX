@@ -28,23 +28,23 @@ public class SampleDetector {
         relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
     }
 
-    public String getColor() {
+    public String getColorAsString() {
             Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
                     (int) (sensorColor.green() * SCALE_FACTOR),
                     (int) (sensorColor.blue() * SCALE_FACTOR),
                     hsvValues);
 
-            if(hsvValues[0]>=220&&hsvValues[0]<=230) {
-                color = "Blue";
+            if(hsvValues[0]>=223&&hsvValues[0]<=229) {
+                color = "blue";
             }
-            else if(hsvValues[0]>=15&&hsvValues[0]<=25) {
-                color = "Red";
+            else if(hsvValues[0]>=19&&hsvValues[0]<=25) {
+                color = "red";
             }
-            else if(hsvValues[0]>=80&&hsvValues[0]<=91) {
-                color = "Yellow";
+            else if(hsvValues[0]>=82&&hsvValues[0]<=89) {
+                color = "yellow";
             }
             else {
-                color = "None";
+                color = "none";
             }
             return color;
     }

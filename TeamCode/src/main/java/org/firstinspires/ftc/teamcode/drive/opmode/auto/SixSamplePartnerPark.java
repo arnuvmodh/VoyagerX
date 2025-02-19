@@ -6,13 +6,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.tuning.PoseStorage;
 import org.firstinspires.ftc.teamcode.Robot;
 
 @Autonomous
-public class SixSamplePartner extends LinearOpMode {
+public class SixSamplePartnerPark extends LinearOpMode {
 
     enum State {
         presetOuttake,
@@ -26,6 +25,7 @@ public class SixSamplePartner extends LinearOpMode {
         fourthSampleOuttake,
         firstSubmersibleIntake,
         firstSubmersibleOuttake,
+        park,
         idle
     }
 
@@ -38,6 +38,31 @@ public class SixSamplePartner extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         SubmersibleUI firstSubmersibleSample = new SubmersibleUI(0);
+
+        String allianceColor = "none";
+        String oppositeAllianceColor = "none";
+        while(!isStopRequested()) {
+            telemetry.addLine("X - Blue");
+            telemetry.addLine("O - Red");
+            telemetry.update();
+            if(gamepad1.a) {
+                allianceColor = "blue";
+                oppositeAllianceColor = "red";
+                break;
+            }
+            if(gamepad1.b) {
+                allianceColor = "red";
+                oppositeAllianceColor = "blue";
+                break;
+            }
+        }
+        while(!isStopRequested()) {
+            telemetry.addData("Alliance Color", allianceColor);
+            telemetry.addData("Opposite Alliance Color", oppositeAllianceColor);
+            telemetry.addLine("Press Share to Continue");
+            telemetry.update();
+            if(gamepad1.share) break;
+        }
         while(!isStopRequested()) {
             if(firstSubmersibleSample.userInput(gamepad1, telemetry)) break;
         }
@@ -82,7 +107,7 @@ public class SixSamplePartner extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-18.25, 6.2, 0.75))
                 .build();
         Trajectory thirdSampleIntake = drive.trajectoryBuilder(secondSampleOuttake.end())
-                .lineToSplineHeading(new Pose2d(-19, 13.9176, 1.5766))
+                .lineToSplineHeading(new Pose2d(-19.5, 13.9176, 1.5766))
                 .build();
         Trajectory thirdSampleOuttake = drive.trajectoryBuilder(thirdSampleIntake.end())
                 .lineToSplineHeading(new Pose2d(-18.25, 6.2, 0.75))
@@ -98,6 +123,9 @@ public class SixSamplePartner extends LinearOpMode {
                 .build();
         Trajectory firstSubmersibleOuttake = drive.trajectoryBuilder(firstSubmersibleIntake.end(), true)
                 .splineToLinearHeading(new Pose2d(-18.25, 6.2, 0.75), Math.toRadians(-90))
+                .build();
+        Trajectory park = drive.trajectoryBuilder(firstSubmersibleOuttake.end())
+                .splineToLinearHeading(new Pose2d(17, 64, 3.14159), 0)
                 .build();
 
         waitForStart();
@@ -236,11 +264,6 @@ public class SixSamplePartner extends LinearOpMode {
                     }
 
                     if (timer.seconds() > 1 && timer.seconds() < 1.5) {
-                        Pose2d currentPose = drive.getPoseEstimate();
-                        Pose2d adjustedPose = new Pose2d(currentPose.getX(), currentPose.getY()+0.01, currentPose.getHeading());
-                        drive.followTrajectoryAsync(drive.trajectoryBuilder(currentPose)
-                                .lineToSplineHeading(adjustedPose, SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(30))
-                                .build());
                         horizontalSlidePosition=1;
                         intakeGrab();
                     }
@@ -291,17 +314,17 @@ public class SixSamplePartner extends LinearOpMode {
                         oneTimeSwitch[9] = false;
                     }
 
-                    if(timer.seconds() > 1 && timer.seconds()<1.5) {
+                    if(timer.seconds() > 1 && timer.seconds()<1.7) {
                         horizontalSlidePosition = 1;
                         intakeGrab();
                     }
 
-                    if (oneTimeSwitch[13] && timer.seconds() > 1.5) {
+                    if (oneTimeSwitch[13] && timer.seconds() > 1.7) {
                         oneTimeSwitch[13] = false;
                         horizontalSlidePosition = 0;
                         robot.clawPivot.flipTo(0.5);
                     }
-                    if(timer.seconds()>1.5&&timer.seconds()<2.2) {
+                    if(timer.seconds()>1.7&&timer.seconds()<2.2) {
                         intakeFlipIn();
                     }
                     if (timer.seconds() > 2.2 && timer.seconds() < 2.4) {
@@ -340,7 +363,7 @@ public class SixSamplePartner extends LinearOpMode {
                     }
                     if(fifthPositionReached) {
                         if(!fifthIntakeSuccess) {
-                            if(robot.colorSensor.getColor().equals("Blue")) {
+                            if(robot.colorSensor.getColorAsString().equals(oppositeAllianceColor)) {
                                 robot.spintake.spinOut(1);
                                 break;
                             }
@@ -379,13 +402,16 @@ public class SixSamplePartner extends LinearOpMode {
                                 intakeGrab();
                             }
 
-                            if((robot.colorSensor.getColor().equals("Yellow") || robot.colorSensor.getColor().equals("Red"))) {
+                            if((robot.colorSensor.getColorAsString().equals("yellow") || robot.colorSensor.getColorAsString().equals(allianceColor))) {
                                 intakeFlipIn();
                                 fifthIntakeSuccess=true;
                             }
 
                             if(timer.seconds() > 2.5 && timer.seconds() < 3) {
                                 Pose2d currentPose = drive.getPoseEstimate();
+                                if(currentPose.getY() + firstSubmersibleSample.getFailStrafe() > 74 ||
+                                        currentPose.getY() + firstSubmersibleSample.getFailStrafe() < 52
+                                ) firstSubmersibleSample.reverseFailStrafe();
                                 Pose2d adjustedPose = new Pose2d(currentPose.getX(), currentPose.getY() + firstSubmersibleSample.getFailStrafe(), currentPose.getHeading());
                                 drive.followTrajectoryAsync(drive.trajectoryBuilder(currentPose)
                                         .lineToSplineHeading(adjustedPose)
@@ -428,10 +454,22 @@ public class SixSamplePartner extends LinearOpMode {
                     scoreSubmersibleBasket(timer);
                     if (!drive.isBusy() && timer.seconds() > 2.7) {
                         raiseVertSlides = false;
+                        drive.followTrajectoryAsync(park);
+                        curState = State.park;
+                        timer.reset();
+                    }
+                    break;
+                case park:
+                    if(timer.seconds() > 0 && timer.seconds() < 5) {
+                        robot.outtakePivot.flipTo(0.6);
+                        robot.outtakeClaw.close();
+                    }
+                    if (!drive.isBusy() && timer.seconds() > 5) {
                         curState = State.idle;
                         timer.reset();
                     }
                     break;
+
             }
 
             robot.horizontalSlide.goTo(horizontalSlidePosition);

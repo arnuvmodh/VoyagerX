@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.drive.opmode.teleop;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -28,6 +29,7 @@ public class TwoDriver extends LinearOpMode{
 
     // Transfer Control Variables
     private ElapsedTime runtime = new ElapsedTime();
+    private double intakeRetractionTime = -1;
     private double transferCompletionTime = -1;
     private double outtakeSampleCompletionTime = -1;
     private double outtakeSpecimenCompletionTime = -1;
@@ -63,7 +65,7 @@ public class TwoDriver extends LinearOpMode{
         }
     }
 
-    private boolean aDown = false, bDown = false, xDown = false, yDown = false;
+    private boolean aDown = false, bDown = false;
     private boolean leftBDown = false, rightBDown = false;
     private boolean upDDown = false, downDDown = false, leftDDown = false, rightDDown = false;
 
@@ -209,21 +211,6 @@ public class TwoDriver extends LinearOpMode{
         }
         touchpadDown = gamepad1.touchpad;
 
-        if(gamepad1.x && !xDown) {
-            if(spintakePower == 0) {
-                spintakePower = 1;
-            }
-            else {
-                spintakePower = 0;
-            }
-        }
-        xDown = gamepad1.x;
-
-        if(gamepad1.y && !yDown) {
-            outtakeSlidePosition = 1975;
-        }
-        yDown = gamepad1.y;
-
         if((gamepad1.a||gamepad2.y) && !aDown) {
             if(outtakeClawPosition == 0.9) {
                 outtakeClawPosition = 0.3;
@@ -273,6 +260,8 @@ public class TwoDriver extends LinearOpMode{
         drive.setWeightedDrivePower(new Pose2d(xy.getX() * 0.2, xy.getY() * 0.35, heading * 0.5));
     }
 
+    private boolean xDown = false, yDown = false;
+    private Pose2d highBasketPose;
     private void handleDrivetrain() {
         Pose2d poseEstimate = drive.getPoseEstimate();
 
@@ -281,21 +270,50 @@ public class TwoDriver extends LinearOpMode{
                 -gamepad1.left_stick_x
         ).rotated(-poseEstimate.getHeading());
 
-        if(locked) {
-            lockTo(drive, setPos);
+        if(gamepad1.y && !yDown) {
+            highBasketPose = drive.getPoseEstimate();
         }
-        else {
-            drive.setWeightedDrivePower(
-                    new Pose2d(
-                            input.getX()*speed,
-                            input.getY()*speed,
-                            -gamepad1.right_stick_x*speed
-                    )
-            );
+        yDown = gamepad1.y;
+
+        if(gamepad1.x && !xDown) {
+            Trajectory highBucketOuttake = drive.trajectoryBuilder(poseEstimate, true)
+                    .splineToLinearHeading(highBasketPose, Math.toRadians(-180))
+                    .build();
+            drive.followTrajectoryAsync(highBucketOuttake);
+
+            outtakeSlidePosition = 0;
+            intakeSlidePosition = 0.15;
+            intakeArmPivotPosition = 0.25;
+            spintakePower = 0;
+            intakeClawPivotPosition = 0.5;
+            outtakeArmPivotPosition = 1;
+            outtakeClawPosition = 0.3;
+            intakeRetractionTime = runtime.seconds() + 0.7;
         }
+        if(!gamepad1.x) {
+            if(locked) {
+                lockTo(drive, setPos);
+            }
+            else {
+                drive.setWeightedDrivePower(
+                        new Pose2d(
+                                input.getX()*speed,
+                                input.getY()*speed,
+                                -gamepad1.right_stick_x*speed
+                        )
+                );
+            }
+        }
+        xDown = gamepad1.x;
     }
 
     private void handleTransfer() {
+        if(intakeRetractionTime!=-1 && runtime.seconds() >= intakeRetractionTime) {
+            outtakeClawPosition = 0.9;
+            intakeRetractionTime = -1;
+            transferCompletionTime = runtime.seconds() + 0.3;
+        }
+
         if(transferCompletionTime!=-1 && runtime.seconds() >= transferCompletionTime) {
             transferCompletionTime = -1;
             intakeSlidePosition=0.3;
@@ -353,7 +371,7 @@ public class TwoDriver extends LinearOpMode{
         telemetry.addData("heading", poseEstimate.getHeading());
         telemetry.addData("Dpad Left", leftDDown);
         telemetry.addData("Dpad Right", rightDDown);
-        telemetry.addData("Color", robot.colorSensor.getColor());
+        telemetry.addData("Color", robot.colorSensor.getColorAsString());
         telemetry.update();
     }
 }

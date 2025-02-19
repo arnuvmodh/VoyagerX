@@ -39,6 +39,31 @@ public class SixSampleSolo extends LinearOpMode {
 
         SubmersibleUI firstSubmersibleSample = new SubmersibleUI(0);
         SubmersibleUI secondSubmersibleSample = new SubmersibleUI(1);
+
+        String allianceColor = "none";
+        String oppositeAllianceColor = "none";
+        while(!isStopRequested()) {
+            telemetry.addLine("X - Blue");
+            telemetry.addLine("O - Red");
+            telemetry.update();
+            if(gamepad1.a) {
+                allianceColor = "blue";
+                oppositeAllianceColor = "red";
+                break;
+            }
+            if(gamepad1.b) {
+                allianceColor = "red";
+                oppositeAllianceColor = "blue";
+                break;
+            }
+        }
+        while(!isStopRequested()) {
+            telemetry.addData("Alliance Color", allianceColor);
+            telemetry.addData("Opposite Alliance Color", oppositeAllianceColor);
+            telemetry.addLine("Press Share to Continue");
+            telemetry.update();
+            if(gamepad1.share) break;
+        }
         while(!isStopRequested()) {
             if(firstSubmersibleSample.userInput(gamepad1, telemetry)) break;
         }
@@ -85,7 +110,7 @@ public class SixSampleSolo extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-18.25, 6.2, 0.75))
                 .build();
         Trajectory secondSampleIntake = drive.trajectoryBuilder(firstSampleOuttake.end())
-                .lineToSplineHeading(new Pose2d(-19, 13.9176, 1.5766))
+                .lineToSplineHeading(new Pose2d(-19.5, 13.9176, 1.5766))
                 .build();
         Trajectory secondSampleOuttake = drive.trajectoryBuilder(secondSampleIntake.end())
                 .lineToSplineHeading(new Pose2d(-18.25, 6.2, 0.75))
@@ -100,13 +125,13 @@ public class SixSampleSolo extends LinearOpMode {
                 .splineToLinearHeading(firstSubmersibleSample.getTrajectory(),0)
                 .build();
         Trajectory firstSubmersibleOuttake = drive.trajectoryBuilder(firstSubmersibleIntake.end(), true)
-                .splineToLinearHeading(new Pose2d(-18.25, 6.2, 0.75), Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(-18.25, 6.2, 0.75), Math.toRadians(-180))
                 .build();
         Trajectory secondSubmersibleIntake = drive.trajectoryBuilder(firstSubmersibleOuttake.end())
                 .splineToLinearHeading(secondSubmersibleSample.getTrajectory(),0)
                 .build();
         Trajectory secondSubmersibleOuttake = drive.trajectoryBuilder(secondSubmersibleIntake.end(), true)
-                .splineToLinearHeading(new Pose2d(-18.25, 6.2, 0.75), Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(-18.25, 6.2, 0.75), Math.toRadians(-180))
                 .build();
 
         waitForStart();
@@ -121,6 +146,7 @@ public class SixSampleSolo extends LinearOpMode {
         boolean fifthPositionReached = false;
         boolean sixthIntakeSuccess = false;
         boolean sixthPositionReached = false;
+
         boolean[] oneTimeSwitch = new boolean[100];
         for (int i = 0; i < 100; i++) {
             oneTimeSwitch[i] = true;
@@ -206,11 +232,6 @@ public class SixSampleSolo extends LinearOpMode {
                     }
 
                     if (timer.seconds() > 1 && timer.seconds() < 1.5) {
-                        Pose2d currentPose = drive.getPoseEstimate();
-                        Pose2d adjustedPose = new Pose2d(currentPose.getX(), currentPose.getY()+0.0001, currentPose.getHeading());
-                        drive.followTrajectoryAsync(drive.trajectoryBuilder(currentPose)
-                                .lineToSplineHeading(adjustedPose, SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                                .build());
                         horizontalSlidePosition=1;
                         intakeGrab();
                     }
@@ -261,22 +282,17 @@ public class SixSampleSolo extends LinearOpMode {
                         oneTimeSwitch[9] = false;
                     }
 
-                    if(timer.seconds() > 1 && timer.seconds()<1.5) {
-                        Pose2d currentPose = drive.getPoseEstimate();
-                        Pose2d adjustedPose = new Pose2d(currentPose.getX(), currentPose.getY()+0.0001, currentPose.getHeading());
-                        drive.followTrajectoryAsync(drive.trajectoryBuilder(currentPose)
-                                .lineToSplineHeading(adjustedPose, SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                                .build());
+                    if(timer.seconds() > 1 && timer.seconds()<1.7) {
                         horizontalSlidePosition = 1;
                         intakeGrab();
                     }
 
-                    if (oneTimeSwitch[13] && timer.seconds() > 1.5) {
+                    if (oneTimeSwitch[13] && timer.seconds() > 1.7) {
                         oneTimeSwitch[13] = false;
                         horizontalSlidePosition = 0;
                         robot.clawPivot.flipTo(0.5);
                     }
-                    if(timer.seconds()>1.5&&timer.seconds()<2.2) {
+                    if(timer.seconds()>1.7&&timer.seconds()<2.2) {
                         intakeFlipIn();
                     }
                     if (timer.seconds() > 2.2 && timer.seconds() < 2.4) {
@@ -315,7 +331,7 @@ public class SixSampleSolo extends LinearOpMode {
                     }
                     if(fifthPositionReached) {
                         if(!fifthIntakeSuccess) {
-                            if(robot.colorSensor.getColor().equals("Blue")) {
+                            if(robot.colorSensor.getColorAsString().equals(oppositeAllianceColor)) {
                                 robot.spintake.spinOut(1);
                                 break;
                             }
@@ -354,13 +370,16 @@ public class SixSampleSolo extends LinearOpMode {
                                 intakeGrab();
                             }
 
-                            if((robot.colorSensor.getColor().equals("Yellow") || robot.colorSensor.getColor().equals("Red"))) {
+                            if((robot.colorSensor.getColorAsString().equals("yellow") || robot.colorSensor.getColorAsString().equals(allianceColor))) {
                                 intakeFlipIn();
                                 fifthIntakeSuccess=true;
                             }
 
                             if(timer.seconds() > 2.5 && timer.seconds() < 3) {
                                 Pose2d currentPose = drive.getPoseEstimate();
+                                if(currentPose.getY() + secondSubmersibleSample.getFailStrafe() > 74 ||
+                                        currentPose.getY() + secondSubmersibleSample.getFailStrafe() < 52
+                                ) secondSubmersibleSample.reverseFailStrafe();
                                 Pose2d adjustedPose = new Pose2d(currentPose.getX(), currentPose.getY() + firstSubmersibleSample.getFailStrafe(), currentPose.getHeading());
                                 drive.followTrajectoryAsync(drive.trajectoryBuilder(currentPose)
                                         .lineToSplineHeading(adjustedPose)
@@ -378,8 +397,8 @@ public class SixSampleSolo extends LinearOpMode {
                                 intakeFlipIn();
                                 horizontalSlidePosition = 0;
                                 robot.clawPivot.flipTo(0.5);
-                                firstSubmersibleOuttake = drive.trajectoryBuilder(drive.getPoseEstimate(), true)
-                                        .splineToLinearHeading(new Pose2d(-18.25, 6.2, 0.75), Math.toRadians(-90))
+                                firstSubmersibleOuttake = drive.trajectoryBuilder(firstSubmersibleIntake.end(), true)
+                                        .splineToLinearHeading(new Pose2d(-18.25, 6.2, 0.75), Math.toRadians(-180))
                                         .build();
                                 drive.followTrajectoryAsync(firstSubmersibleOuttake);
                                 curState = State.firstSubmersibleOuttake;
@@ -415,7 +434,7 @@ public class SixSampleSolo extends LinearOpMode {
                     }
                     if(sixthPositionReached) {
                         if(!sixthIntakeSuccess) {
-                            if(robot.colorSensor.getColor().equals("Blue")) {
+                            if(robot.colorSensor.getColorAsString().equals(oppositeAllianceColor)) {
                                 robot.spintake.spinOut(1);
                                 break;
                             }
@@ -454,12 +473,15 @@ public class SixSampleSolo extends LinearOpMode {
                                 intakeGrab();
                             }
 
-                            if((robot.colorSensor.getColor().equals("Yellow") || robot.colorSensor.getColor().equals("Red"))) {
+                            if((robot.colorSensor.getColorAsString().equals("yellow") || robot.colorSensor.getColorAsString().equals(allianceColor))) {
                                 intakeFlipIn();
                                 sixthIntakeSuccess=true;
                             }
                             if(timer.seconds() > 2.5 && timer.seconds() < 3) {
                                 Pose2d currentPose = drive.getPoseEstimate();
+                                if(currentPose.getY() + secondSubmersibleSample.getFailStrafe() > 74 ||
+                                        currentPose.getY() + secondSubmersibleSample.getFailStrafe() < 52
+                                ) secondSubmersibleSample.reverseFailStrafe();
                                 Pose2d adjustedPose = new Pose2d(currentPose.getX(), currentPose.getY() + secondSubmersibleSample.getFailStrafe(), currentPose.getHeading());
                                 drive.followTrajectoryAsync(drive.trajectoryBuilder(currentPose)
                                         .lineToSplineHeading(adjustedPose)
@@ -477,8 +499,8 @@ public class SixSampleSolo extends LinearOpMode {
                                 intakeFlipIn();
                                 horizontalSlidePosition = 0;
                                 robot.clawPivot.flipTo(0.5);
-                                secondSubmersibleOuttake = drive.trajectoryBuilder(drive.getPoseEstimate(), true)
-                                        .splineToLinearHeading(new Pose2d(-18.25, 6.2, 0.75), Math.toRadians(-90))
+                                secondSubmersibleOuttake = drive.trajectoryBuilder(secondSubmersibleIntake.end(), true)
+                                        .splineToLinearHeading(new Pose2d(-18.25, 6.2, 0.75), Math.toRadians(-180))
                                         .build();
                                 drive.followTrajectoryAsync(secondSubmersibleOuttake);
                                 curState = State.secondSubmersibleOuttake;
