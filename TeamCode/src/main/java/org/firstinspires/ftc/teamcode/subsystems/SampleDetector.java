@@ -40,7 +40,7 @@ public class SampleDetector {
             else if(hsvValues[0]>=19&&hsvValues[0]<=25) {
                 color = "red";
             }
-            else if(hsvValues[0]>=82&&hsvValues[0]<=89) {
+            else if(hsvValues[0]>=82&&hsvValues[0]<=90) {
                 color = "yellow";
             }
             else {

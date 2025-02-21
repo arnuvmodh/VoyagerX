@@ -6,13 +6,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.tuning.PoseStorage;
 import org.firstinspires.ftc.teamcode.Robot;
 
 @Autonomous
-public class SixSampleSolo extends LinearOpMode {
+public class SixSampleSoloPark extends LinearOpMode {
 
     enum State {
         presetOuttake,
@@ -26,6 +25,7 @@ public class SixSampleSolo extends LinearOpMode {
         firstSubmersibleOuttake,
         secondSubmersibleIntake,
         secondSubmersibleOuttake,
+        park,
         idle
     }
 
@@ -133,6 +133,9 @@ public class SixSampleSolo extends LinearOpMode {
         Trajectory secondSubmersibleOuttake = drive.trajectoryBuilder(secondSubmersibleIntake.end(), true)
                 .splineToLinearHeading(new Pose2d(-18.25, 6.2, 0.75), Math.toRadians(-180))
                 .build();
+        Trajectory park = drive.trajectoryBuilder(secondSubmersibleOuttake.end())
+                .splineToLinearHeading(new Pose2d(16, 64, 3.14159), 0)
+                .build();
 
         waitForStart();
         if (isStopRequested()) return;
@@ -159,8 +162,6 @@ public class SixSampleSolo extends LinearOpMode {
                 oneTimeSwitch[99] = false;
             }
             switch (curState) {
-                case idle:
-                    break;
                 case presetOuttake:
                     if(timer.seconds() > 0 && timer.seconds() < 1.2) {
                         outtakeFlipUp();
@@ -292,13 +293,13 @@ public class SixSampleSolo extends LinearOpMode {
                         horizontalSlidePosition = 0;
                         robot.clawPivot.flipTo(0.5);
                     }
-                    if(timer.seconds()>1.7&&timer.seconds()<2.2) {
+                    if(timer.seconds()>1.7&&timer.seconds()<2.3) {
                         intakeFlipIn();
                     }
-                    if (timer.seconds() > 2.2 && timer.seconds() < 2.4) {
+                    if (timer.seconds() > 2.3 && timer.seconds() < 2.5) {
                         outtakeGrab();
                     }
-                    if (timer.seconds() > 2.4 && timer.seconds() < 2.6) {
+                    if (timer.seconds() > 2.5 && timer.seconds() < 2.6) {
                         intakeLetGo();
                     }
                     if (!drive.isBusy() && timer.seconds() > 2.6) {
@@ -348,20 +349,20 @@ public class SixSampleSolo extends LinearOpMode {
                                 intakeFlipSubmersible();
                             }
 
-                            if(timer.seconds() > 0.5 && timer.seconds() < 0.6) {
+                            if(timer.seconds() > 0.5 && timer.seconds() < 1 && oneTimeSwitch[98]) {
                                 Pose2d currentPose = drive.getPoseEstimate();
-                                Pose2d adjustedPose = new Pose2d(currentPose.getX()-1, currentPose.getY(), currentPose.getHeading());
                                 drive.followTrajectoryAsync(drive.trajectoryBuilder(currentPose)
-                                        .lineToSplineHeading(adjustedPose)
+                                        .lineToSplineHeading(firstSubmersibleSample.getPostSweepTrajectory())
                                         .build());
+                                oneTimeSwitch[98] = false;
                             }
 
-                            if(timer.seconds() > 1 && timer.seconds() < 1.3) {
+                            if(timer.seconds() > 1 && timer.seconds() < 2 && oneTimeSwitch[97]) {
                                 Pose2d currentPose = drive.getPoseEstimate();
-                                Pose2d adjustedPose = new Pose2d(currentPose.getX()+1, currentPose.getY(), currentPose.getHeading());
                                 drive.followTrajectoryAsync(drive.trajectoryBuilder(currentPose)
-                                        .lineToSplineHeading(adjustedPose)
+                                        .lineToSplineHeading(firstSubmersibleSample.getTrajectory())
                                         .build());
+                                oneTimeSwitch[97] = false;
                             }
 
                             if (timer.seconds() > 1 && timer.seconds() < 2) {
@@ -372,28 +373,35 @@ public class SixSampleSolo extends LinearOpMode {
 
                             if((robot.colorSensor.getColorAsString().equals("yellow") || robot.colorSensor.getColorAsString().equals(allianceColor))) {
                                 intakeFlipIn();
+                                horizontalSlidePosition = 0;
                                 fifthIntakeSuccess=true;
                             }
 
                             if(timer.seconds() > 2.5 && timer.seconds() < 3) {
-                                Pose2d currentPose = drive.getPoseEstimate();
-                                if(currentPose.getY() + secondSubmersibleSample.getFailStrafe() > 74 ||
-                                        currentPose.getY() + secondSubmersibleSample.getFailStrafe() < 52
-                                ) secondSubmersibleSample.reverseFailStrafe();
-                                Pose2d adjustedPose = new Pose2d(currentPose.getX(), currentPose.getY() + firstSubmersibleSample.getFailStrafe(), currentPose.getHeading());
-                                drive.followTrajectoryAsync(drive.trajectoryBuilder(currentPose)
-                                        .lineToSplineHeading(adjustedPose)
-                                        .build());
+                                if(oneTimeSwitch[96]) {
+                                    Pose2d currentPose = drive.getPoseEstimate();
+                                    if(currentPose.getY() + firstSubmersibleSample.getFailStrafe() > 74 ||
+                                            currentPose.getY() + firstSubmersibleSample.getFailStrafe() < 52
+                                    ) firstSubmersibleSample.reverseFailStrafe();
+                                    firstSubmersibleSample.offsetX();
+                                    drive.followTrajectoryAsync(drive.trajectoryBuilder(currentPose)
+                                            .lineToSplineHeading(firstSubmersibleSample.getTrajectory())
+                                            .build());
+                                    oneTimeSwitch[96] = false;
+                                }
                                 intakeFlipIn();
                                 horizontalSlidePosition=0;
                                 robot.clawPivot.flipTo(0.5);
                             }
                             if(timer.seconds() > 3 && timer.seconds() < 3.5) {
+                                oneTimeSwitch[98] = true;
+                                oneTimeSwitch[97] = true;
+                                oneTimeSwitch[96] = true;
                                 timer.reset();
                             }
                         }
                         else {
-                            if (!drive.isBusy() && timer.seconds() > 1.6) {
+                            if (!drive.isBusy() && timer.seconds() > 0.3) {
                                 intakeFlipIn();
                                 horizontalSlidePosition = 0;
                                 robot.clawPivot.flipTo(0.5);
@@ -451,20 +459,20 @@ public class SixSampleSolo extends LinearOpMode {
                                 intakeFlipSubmersible();
                             }
 
-                            if(timer.seconds() > 0.5 && timer.seconds() < 0.6) {
+                            if(timer.seconds() > 0.5 && timer.seconds() < 1 && oneTimeSwitch[95]) {
                                 Pose2d currentPose = drive.getPoseEstimate();
-                                Pose2d adjustedPose = new Pose2d(currentPose.getX()-1, currentPose.getY(), currentPose.getHeading());
                                 drive.followTrajectoryAsync(drive.trajectoryBuilder(currentPose)
-                                        .lineToSplineHeading(adjustedPose)
+                                        .lineToSplineHeading(secondSubmersibleSample.getPostSweepTrajectory())
                                         .build());
+                                oneTimeSwitch[95] = false;
                             }
 
-                            if(timer.seconds() > 1 && timer.seconds() < 1.3) {
+                            if(timer.seconds() > 1 && timer.seconds() < 1.3 && oneTimeSwitch[94]) {
                                 Pose2d currentPose = drive.getPoseEstimate();
-                                Pose2d adjustedPose = new Pose2d(currentPose.getX()+1, currentPose.getY(), currentPose.getHeading());
                                 drive.followTrajectoryAsync(drive.trajectoryBuilder(currentPose)
-                                        .lineToSplineHeading(adjustedPose)
+                                        .lineToSplineHeading(secondSubmersibleSample.getTrajectory())
                                         .build());
+                                oneTimeSwitch[94] = false;
                             }
 
                             if (timer.seconds() > 1 && timer.seconds() < 2) {
@@ -475,27 +483,34 @@ public class SixSampleSolo extends LinearOpMode {
 
                             if((robot.colorSensor.getColorAsString().equals("yellow") || robot.colorSensor.getColorAsString().equals(allianceColor))) {
                                 intakeFlipIn();
+                                horizontalSlidePosition = 0;
                                 sixthIntakeSuccess=true;
                             }
                             if(timer.seconds() > 2.5 && timer.seconds() < 3) {
                                 Pose2d currentPose = drive.getPoseEstimate();
-                                if(currentPose.getY() + secondSubmersibleSample.getFailStrafe() > 74 ||
-                                        currentPose.getY() + secondSubmersibleSample.getFailStrafe() < 52
-                                ) secondSubmersibleSample.reverseFailStrafe();
-                                Pose2d adjustedPose = new Pose2d(currentPose.getX(), currentPose.getY() + secondSubmersibleSample.getFailStrafe(), currentPose.getHeading());
-                                drive.followTrajectoryAsync(drive.trajectoryBuilder(currentPose)
-                                        .lineToSplineHeading(adjustedPose)
-                                        .build());
+                                if(oneTimeSwitch[93]) {
+                                    if(currentPose.getY() + secondSubmersibleSample.getFailStrafe() > 74 ||
+                                            currentPose.getY() + secondSubmersibleSample.getFailStrafe() < 52
+                                    ) secondSubmersibleSample.reverseFailStrafe();
+                                    secondSubmersibleSample.offsetX();
+                                    drive.followTrajectoryAsync(drive.trajectoryBuilder(currentPose)
+                                            .lineToSplineHeading(secondSubmersibleSample.getTrajectory())
+                                            .build());
+                                    oneTimeSwitch[93] = false;
+                                }
                                 intakeFlipIn();
                                 horizontalSlidePosition=0;
                                 robot.clawPivot.flipTo(0.5);
                             }
                             if(timer.seconds() > 3 && timer.seconds() < 3.5) {
+                                oneTimeSwitch[95] = true;
+                                oneTimeSwitch[94] = true;
+                                oneTimeSwitch[93] = true;
                                 timer.reset();
                             }
                         }
                         else {
-                            if (!drive.isBusy() && timer.seconds() > 1.6) {
+                            if (!drive.isBusy() && timer.seconds() > 0.3) {
                                 intakeFlipIn();
                                 horizontalSlidePosition = 0;
                                 robot.clawPivot.flipTo(0.5);
@@ -523,9 +538,20 @@ public class SixSampleSolo extends LinearOpMode {
                     }
                     scoreSubmersibleBasket(timer);
                     if (!drive.isBusy() && timer.seconds() > 2.7) {
+                        raiseVertSlides = false;
+                        drive.followTrajectoryAsync(park);
+                        curState = State.park;
+                        timer.reset();
+                    }
+                    break;
+                case park:
+                    if(timer.seconds() > 0 && timer.seconds() < 5) {
+                        robot.outtakePivot.flipTo(0.6);
+                        robot.outtakeClaw.close();
+                    }
+                    if (!drive.isBusy() && timer.seconds() > 5) {
                         curState = State.idle;
                         timer.reset();
-                        raiseVertSlides = false;
                     }
                     break;
             }

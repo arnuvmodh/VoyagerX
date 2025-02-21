@@ -99,7 +99,7 @@ public class FiveSpecimenSolo extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-29.9118, -12.7387, 0.1551))
                 .build();
         secondSpecimenIntake = drive.trajectoryBuilder(firstSpecimenOuttakeClip.end())
-                .lineToLinearHeading(new Pose2d(-15.9803, 11.7503, 1.3007))
+                .lineToLinearHeading(new Pose2d(-15.0803, 11.0503, 1.3007))
                 .build();
         secondSpecimenOuttake = drive.trajectoryBuilder(secondSpecimenIntake.end())
                 .lineToLinearHeading(new Pose2d(-15.9118, -8.7387, 0.1551))
@@ -108,7 +108,7 @@ public class FiveSpecimenSolo extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-29.9118, -8.7387, 0.1551))
                 .build();
         thirdSpecimenIntake = drive.trajectoryBuilder(secondSpecimenOuttakeClip.end())
-                .lineToLinearHeading(new Pose2d(-23.3501, 34.4781, 0.0547))
+                .lineToLinearHeading(new Pose2d(-15.0803, 11.0503, 1.3007))
                 .build();
         thirdSpecimenOuttake = drive.trajectoryBuilder(thirdSpecimenIntake.end())
                 .lineToLinearHeading(new Pose2d(-15.9118, -5.7387, 0.1551))
@@ -117,7 +117,7 @@ public class FiveSpecimenSolo extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-30.9118, -5.7387, 0.1551))
                 .build();
         fourthSpecimenIntake = drive.trajectoryBuilder(secondSpecimenOuttakeClip.end())
-                .lineToLinearHeading(new Pose2d(-23.3501, 34.4781, 0.0547))
+                .lineToLinearHeading(new Pose2d(-15.0803, 11.0503, 1.3007))
                 .build();
         fourthSpecimenOuttake = drive.trajectoryBuilder(thirdSpecimenIntake.end())
                 .lineToLinearHeading(new Pose2d(-15.9118, -2.7387, 0.1551))
@@ -285,7 +285,7 @@ public class FiveSpecimenSolo extends LinearOpMode {
                 if(!drive.isBusy() && timer.seconds() > 1.5) {
                     timer.reset();
                     firstSpecimenIntake = drive.trajectoryBuilder(drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-14.9803, 11.7503, 1.3007))
+                            .lineToLinearHeading(new Pose2d(-15.0803, 11.0503, 1.3007))
                             .build();
                     drive.followTrajectoryAsync(firstSpecimenIntake);
                     curState = State.firstSpecimenIntake;
@@ -341,7 +341,7 @@ public class FiveSpecimenSolo extends LinearOpMode {
                     timer.reset();
                     robot.outtakePivot.flipFront();
                     secondSpecimenIntake = drive.trajectoryBuilder(drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-15.9803, 11.7503, 1.3007))
+                            .lineToLinearHeading(new Pose2d(-15.0803, 11.0503, 1.3007))
                             .build();
                     drive.followTrajectoryAsync(secondSpecimenIntake);
                     curState = State.secondSpecimenIntake;
@@ -397,7 +397,7 @@ public class FiveSpecimenSolo extends LinearOpMode {
                     timer.reset();
                     robot.outtakePivot.flipFront();
                     thirdSpecimenIntake = drive.trajectoryBuilder(drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-15.9803, 11.7503, 1.3707))
+                            .lineToLinearHeading(new Pose2d(-15.0803, 11.0503, 1.3007))
                             .build();
                     drive.followTrajectoryAsync(thirdSpecimenIntake);
                     curState = State.thirdSpecimenIntake;
@@ -453,7 +453,7 @@ public class FiveSpecimenSolo extends LinearOpMode {
                     timer.reset();
                     robot.outtakePivot.flipFront();
                     fourthSpecimenIntake = drive.trajectoryBuilder(drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-15.9803, 11.7503, 1.3707))
+                            .lineToLinearHeading(new Pose2d(-15.0803, 11.0503, 1.3007))
                             .build();
                     drive.followTrajectoryAsync(fourthSpecimenIntake);
                     curState = State.fourthSpecimenIntake;

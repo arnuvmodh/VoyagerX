@@ -372,6 +372,7 @@ public class TwoDriver extends LinearOpMode{
         telemetry.addData("Dpad Left", leftDDown);
         telemetry.addData("Dpad Right", rightDDown);
         telemetry.addData("Color", robot.colorSensor.getColorAsString());
+        telemetry.addData("Hue", robot.colorSensor.getHue());
         telemetry.update();
     }
 }

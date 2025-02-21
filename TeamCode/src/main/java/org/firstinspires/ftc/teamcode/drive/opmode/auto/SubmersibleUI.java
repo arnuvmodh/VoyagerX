@@ -10,8 +10,8 @@ public class SubmersibleUI {
     private final int _id;
     private double _x = 0;
     private double _y = 0;
-    private double _failStrafe = 1;
-    private double increment = 3;
+    private double _failStrafe = 5;
+    private double increment = 1;
 
     public SubmersibleUI(int id) {
         _id = id;
@@ -19,6 +19,7 @@ public class SubmersibleUI {
 
     private boolean upDown = false, downDown = false, leftDown = false, rightDown = false;
     private boolean aDown = false, bDown = false, xDown = false, yDown = false;
+    private boolean leftBDown = false, rightBDown = false;
     boolean userInput(Gamepad gamepad, Telemetry telemetry) {
         telemetry.addData("Submersible Sample ID", _id);
         telemetry.addData("Increment", increment);
@@ -26,9 +27,10 @@ public class SubmersibleUI {
         telemetry.addData("Intake Slide Position", _y);
         telemetry.addData("Fail Strafe", _failStrafe);
         telemetry.addLine("X - Confirm");
-        telemetry.addLine("O - Fail Strafe");
         telemetry.addLine("□ - Decrease Increment");
         telemetry.addLine("△ - Increase Increment");
+        telemetry.addLine("Right Bumper - Increase Fail Strafe");
+        telemetry.addLine("Left Bumper - Decrease Fail Strafe");
         telemetry.update();
 
         if(gamepad.dpad_up && !upDown) _y+=(increment/10);
@@ -40,10 +42,19 @@ public class SubmersibleUI {
         if(gamepad.dpad_right && !rightDown) _x+=increment;
         rightDown = gamepad.dpad_right;
 
-        if(gamepad.b && !bDown) {
-            _failStrafe = -1*_failStrafe;
+//        if(gamepad.b && !bDown) {
+//            _failStrafe = -1*_failStrafe;
+//        }
+//        bDown = gamepad.b;
+        if(gamepad.left_bumper && leftBDown) {
+            _failStrafe -= increment;
         }
-        bDown = gamepad.b;
+        leftBDown = gamepad.left_bumper;
+
+        if(gamepad.right_bumper && rightBDown) {
+            _failStrafe += increment;
+        }
+        rightBDown = gamepad.right_bumper;
 
         if(gamepad.x && !xDown) {
             increment-=0.5;
@@ -65,6 +76,10 @@ public class SubmersibleUI {
         return new Pose2d(17.5, 60+_x, 6.2498);
     }
 
+    Pose2d getPostSweepTrajectory() {
+        return new Pose2d(16.75, 60+_x, 6.2498);
+    }
+
     double getIntakeSlidePosition() {
         return _y;
     }
@@ -75,6 +90,10 @@ public class SubmersibleUI {
 
     void reverseFailStrafe() {
         _failStrafe = -1*_failStrafe;
+    }
+
+    void offsetX() {
+        _x+=_failStrafe;
     }
 
 
