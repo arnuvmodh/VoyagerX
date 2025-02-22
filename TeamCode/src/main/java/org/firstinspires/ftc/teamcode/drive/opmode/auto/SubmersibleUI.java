@@ -46,12 +46,12 @@ public class SubmersibleUI {
 //            _failStrafe = -1*_failStrafe;
 //        }
 //        bDown = gamepad.b;
-        if(gamepad.left_bumper && leftBDown) {
+        if(gamepad.left_bumper && !leftBDown) {
             _failStrafe -= increment;
         }
         leftBDown = gamepad.left_bumper;
 
-        if(gamepad.right_bumper && rightBDown) {
+        if(gamepad.right_bumper && !rightBDown) {
             _failStrafe += increment;
         }
         rightBDown = gamepad.right_bumper;

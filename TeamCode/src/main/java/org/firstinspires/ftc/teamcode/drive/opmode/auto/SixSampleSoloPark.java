@@ -81,6 +81,8 @@ public class SixSampleSoloPark extends LinearOpMode {
             if(gamepad1.share) break;
         }
 
+        telemetry.addData("Alliance Color", allianceColor);
+        telemetry.addData("Opposite Alliance Color", oppositeAllianceColor);
         telemetry.addLine("Selection Finalized");
         telemetry.update();
 

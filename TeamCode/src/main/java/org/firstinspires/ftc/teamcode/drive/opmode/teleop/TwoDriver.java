@@ -169,15 +169,15 @@ public class TwoDriver extends LinearOpMode{
         if(gamepad2.right_stick_button) {
             drive.setPoseEstimate(new Pose2d());
         }
-        if(gamepad1.dpad_left && !leftDDown) {
+        if((gamepad1.dpad_left || gamepad2.dpad_left) && !leftDDown) {
             intakeClawPivotPosition=Math.min(intakeClawPivotPosition+0.1, 1);
         }
-        leftDDown = gamepad1.dpad_left;
+        leftDDown = (gamepad1.dpad_left || gamepad2.dpad_left);
 
-        if(gamepad1.dpad_right && !rightDDown) {
+        if((gamepad1.dpad_right || gamepad2.dpad_right) && !rightDDown) {
             intakeClawPivotPosition=Math.max(intakeClawPivotPosition-0.1, 0);
         }
-        rightDDown = gamepad1.dpad_right;
+        rightDDown = (gamepad1.dpad_right || gamepad2.dpad_right);
 
         if(gamepad1.dpad_down) {
             intakeClawPivotPosition=0.5;
@@ -332,8 +332,8 @@ public class TwoDriver extends LinearOpMode{
         }
 
         if(outtakeSpecimenCompletionTime !=-1 && runtime.seconds() >= outtakeSpecimenCompletionTime) {
-            outtakeSlidePosition = 1225;
-            outtakeArmPivotPosition = 0.2;
+            outtakeSlidePosition = 1070;
+            outtakeArmPivotPosition = 0.3;
             outtakeSpecimenCompletionTime = -1;
             outtakeSpecimen = false;
         }

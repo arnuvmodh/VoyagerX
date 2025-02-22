@@ -69,13 +69,13 @@ public class FiveSpecimenSolo extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-30.9025, -13.7387, 0.1551))
                 .build();
         firstSampleIntake = drive.trajectoryBuilder(presetSpecimenScore.end())
-                .splineTo(new Vector2d(-29.1995, 17.0929), 2.2429)
+                .splineTo(new Vector2d(-29.9995, 17.0929), 2.2429)
                 .build();
         firstSampleOuttake = drive.trajectoryBuilder(firstSampleIntake.end())
                 .lineToLinearHeading(new Pose2d(-16.0643, 18.0141, 1.2072))
                 .build();
         secondSampleIntake = drive.trajectoryBuilder(firstSampleOuttake.end())
-                .lineToLinearHeading(new Pose2d(-26.75, 29.25, 2.4988))
+                .lineToLinearHeading(new Pose2d(-27.25, 29.75, 2.4988))
                 .build();
         secondSampleOuttake = drive.trajectoryBuilder(secondSampleIntake.end())
                 .lineToLinearHeading(new Pose2d(-16.5414, 26.9298, 0.9341))
@@ -90,7 +90,7 @@ public class FiveSpecimenSolo extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-15.861, 36.1574, 0.8096))
                 .build();
         firstSpecimenIntake = drive.trajectoryBuilder(thirdSampleOuttake.end())
-                .lineToLinearHeading(new Pose2d(-15.9803, 11.7503, 1.3007))
+                .lineToLinearHeading(new Pose2d(-15.9803, 11.7503, 1.2907))
                 .build();
         firstSpecimenOuttake = drive.trajectoryBuilder(firstSpecimenIntake.end())
                 .lineToLinearHeading(new Pose2d(-15.9118, -12.7387, 0.1551))
@@ -175,7 +175,7 @@ public class FiveSpecimenSolo extends LinearOpMode {
                     robot.outtakePivot.flipFront();
                     timer.reset();
                     firstSampleIntake = drive.trajectoryBuilder(drive.getPoseEstimate())
-                            .splineTo(new Vector2d(-29.1995, 17.0929), 2.2429)
+                            .splineTo(new Vector2d(-29.9995, 17.0929), 2.2429)
                             .build();
                     drive.followTrajectoryAsync(firstSampleIntake);
                     curState = State.firstSampleIntake;
@@ -208,7 +208,7 @@ public class FiveSpecimenSolo extends LinearOpMode {
                     robot.intakePivot.flipTo(0.6);
                     timer.reset();
                     secondSampleIntake = drive.trajectoryBuilder(drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-26.5, 29.25, 2.4088))
+                            .lineToLinearHeading(new Pose2d(-27.25, 29.75, 2.4988))
                             .build();
                     drive.followTrajectoryAsync(secondSampleIntake);
                     curState = State.secondSampleIntake;
@@ -283,9 +283,10 @@ public class FiveSpecimenSolo extends LinearOpMode {
                     robot.spintake.spinOut(1);
                 }
                 if(!drive.isBusy() && timer.seconds() > 1.5) {
+                    robot.horizontalSlide.goTo(0.5);
                     timer.reset();
                     firstSpecimenIntake = drive.trajectoryBuilder(drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-15.0803, 11.0503, 1.3007))
+                            .lineToLinearHeading(new Pose2d(-15.0803, 11.0503, 1.2907))
                             .build();
                     drive.followTrajectoryAsync(firstSpecimenIntake);
                     curState = State.firstSpecimenIntake;
@@ -293,7 +294,7 @@ public class FiveSpecimenSolo extends LinearOpMode {
                 break;
             case firstSpecimenIntake:
                 if(timer.seconds() > 0.8 && timer.seconds() < 1.3) {
-                    robot.horizontalSlide.goTo(0.6);
+                    robot.horizontalSlide.goTo(0.5);
                     robot.clawPivot.flipTo(0.5);
                     robot.spintake.spinIn(1);
                     robot.intakePivot.flipTo(0.73);
