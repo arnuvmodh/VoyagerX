@@ -52,13 +52,13 @@ public class TwoDriver extends LinearOpMode{
         if (isStopRequested()) return;
         while (opModeIsActive()) {
             drivetrainControls();
-            intakeControls();
-            outtakeControls();
+            //intakeControls();
+            //outtakeControls();
 
             handleDrivetrain();
-            handleTransfer();
-            handleIntake();
-            handleOuttake();
+            //handleTransfer();
+            //handleIntake();
+            //handleOuttake();
 
             drive.update();
             updateTelemetry();
@@ -94,13 +94,13 @@ public class TwoDriver extends LinearOpMode{
     }
 
     private void initializePositions() {
-        robot.verticalSlide.retractFull();
-        robot.horizontalSlide.retractFull();
-        robot.outtakePivot.flipFront();
-        robot.intakePivot.flipTo(0.25);
-        robot.outtakeClaw.release();
-        robot.clawPivot.flipTo(0.5);
-        robot.hangPivot.setPosition(0.5);
+//        robot.verticalSlide.retractFull();
+//        robot.horizontalSlide.retractFull();
+//        robot.outtakePivot.flipFront();
+//        robot.intakePivot.flipTo(0.25);
+//        robot.outtakeClaw.release();
+//        robot.clawPivot.flipTo(0.5);
+//        robot.hangPivot.setPosition(0.5);
     }
 
     private void drivetrainControls() {
@@ -131,125 +131,125 @@ public class TwoDriver extends LinearOpMode{
 
     private boolean shareDown = false;
     private boolean g2dpadDDown = false;
-    private void intakeControls() {
-        if(gamepad2.touchpad) {
-            intakeArmPivotPosition = 0.25;
-        }
-
-        if(gamepad1.left_trigger>0.2 || gamepad2.right_bumper) {
-            intakeArmPivotPosition = 0.7325;
-            spintakePower = 1;
-        }
-
-        if(gamepad2.dpad_down && !g2dpadDDown) {
-            if(oppositeColor.equals("Blue")) oppositeColor = "Red";
-            else oppositeColor = "Blue";
-        }
-        g2dpadDDown = gamepad2.dpad_down;
-
-        if(gamepad1.share || (gamepad2.left_trigger>0.2)) {
-            spintakePower = -1;
-        }
-        else if(shareDown && spintakePower!=1) {
-            spintakePower = 0;
-        }
-        shareDown = gamepad1.share || (gamepad2.left_trigger>0.2);
-
-        if(gamepad1.left_bumper && !leftBDown) {
-            if(outtakeArmPivotPosition != 0.5) {
-                outtakeArmPivotPosition = 0.5;
-                outtakeArmCompletionTime = runtime.seconds()+0.15;
-            }
-            else {
-                outtakeArmPivotPosition = 1;
-            }
-        }
-        leftBDown = gamepad1.left_bumper;
-
-        if(gamepad2.right_stick_button) {
-            drive.setPoseEstimate(new Pose2d());
-        }
-        if((gamepad1.dpad_left || gamepad2.dpad_left) && !leftDDown) {
-            intakeClawPivotPosition=Math.min(intakeClawPivotPosition+0.1, 1);
-        }
-        leftDDown = (gamepad1.dpad_left || gamepad2.dpad_left);
-
-        if((gamepad1.dpad_right || gamepad2.dpad_right) && !rightDDown) {
-            intakeClawPivotPosition=Math.max(intakeClawPivotPosition-0.1, 0);
-        }
-        rightDDown = (gamepad1.dpad_right || gamepad2.dpad_right);
-
-        if(gamepad1.dpad_down) {
-            intakeClawPivotPosition=0.5;
-        }
-    }
+//    private void intakeControls() {
+//        if(gamepad2.touchpad) {
+//            intakeArmPivotPosition = 0.25;
+//        }
+//
+//        if(gamepad1.left_trigger>0.2 || gamepad2.right_bumper) {
+//            intakeArmPivotPosition = 0.7325;
+//            spintakePower = 1;
+//        }
+//
+//        if(gamepad2.dpad_down && !g2dpadDDown) {
+//            if(oppositeColor.equals("Blue")) oppositeColor = "Red";
+//            else oppositeColor = "Blue";
+//        }
+//        g2dpadDDown = gamepad2.dpad_down;
+//
+//        if(gamepad1.share || (gamepad2.left_trigger>0.2)) {
+//            spintakePower = -1;
+//        }
+//        else if(shareDown && spintakePower!=1) {
+//            spintakePower = 0;
+//        }
+//        shareDown = gamepad1.share || (gamepad2.left_trigger>0.2);
+//
+//        if(gamepad1.left_bumper && !leftBDown) {
+//            if(outtakeArmPivotPosition != 0.5) {
+//                outtakeArmPivotPosition = 0.5;
+//                outtakeArmCompletionTime = runtime.seconds()+0.15;
+//            }
+//            else {
+//                outtakeArmPivotPosition = 1;
+//            }
+//        }
+//        leftBDown = gamepad1.left_bumper;
+//
+//        if(gamepad2.right_stick_button) {
+//            drive.setPoseEstimate(new Pose2d());
+//        }
+//        if((gamepad1.dpad_left || gamepad2.dpad_left) && !leftDDown) {
+//            intakeClawPivotPosition=Math.min(intakeClawPivotPosition+0.1, 1);
+//        }
+//        leftDDown = (gamepad1.dpad_left || gamepad2.dpad_left);
+//
+//        if((gamepad1.dpad_right || gamepad2.dpad_right) && !rightDDown) {
+//            intakeClawPivotPosition=Math.max(intakeClawPivotPosition-0.1, 0);
+//        }
+//        rightDDown = (gamepad1.dpad_right || gamepad2.dpad_right);
+//
+//        if(gamepad1.dpad_down) {
+//            intakeClawPivotPosition=0.5;
+//        }
+//    }
 
     private boolean touchpadDown = false;
     private boolean rightTriggerDown = false;
-    private void outtakeControls() {
-        if(gamepad2.share) {
-            outtakeArmPivotPosition = 0.3;
-        }
-        if(gamepad2.dpad_up) {
-            outtakeSlidePosition = 1070;
-        }
-        if(gamepad2.dpad_down) {
-            outtakeSlidePosition = 0;
-        }
-        if(gamepad2.x) {
-            outtakeArmPivotPosition = 0.7;
-        }
-
-        if(gamepad1.touchpad && !touchpadDown) {
-            if(locked) {
-                locked = false;
-            }
-            else {
-                setPos = drive.getPoseEstimate();
-                locked = true;
-            }
-        }
-        touchpadDown = gamepad1.touchpad;
-
-        if((gamepad1.a||gamepad2.y) && !aDown) {
-            if(outtakeClawPosition == 0.9) {
-                outtakeClawPosition = 0.3;
-            }
-            else {
-                outtakeClawPosition = 0.9;
-            }
-        }
-        aDown = (gamepad1.a||gamepad2.y);
-
-        if(gamepad1.b) {
-            outtakeClawPosition = 0.9;
-            outtakeSpecimen = true;
-            transferCompletionTime = runtime.seconds() + 0.3;
-        }
-        bDown = gamepad1.b;
-
-        if((gamepad1.right_trigger > 0.2 || gamepad2.right_trigger>0.2) && !rightTriggerDown) {
-            if(robot.hangPivot.getPosition()==0.5) {
-                robot.hangPivot.setPosition(0);
-            }
-            else {
-                robot.hangPivot.setPosition(0.5);
-            }
-        }
-        rightTriggerDown = (gamepad1.right_trigger > 0.2 || gamepad2.right_trigger>0.2);
-
-        if(gamepad1.right_bumper && !rightBDown) {
-            if(outtakeClawPosition == 0.9) {
-                outtakeClawPosition = 0.3;
-            }
-            else {
-                outtakeClawPosition = 0.9;
-                transferCompletionTime = runtime.seconds() + 0.3;
-            }
-        }
-        rightBDown = gamepad1.right_bumper;
-
-    }
+//    private void outtakeControls() {
+//        if(gamepad2.share) {
+//            outtakeArmPivotPosition = 0.3;
+//        }
+//        if(gamepad2.dpad_up) {
+//            outtakeSlidePosition = 1070;
+//        }
+//        if(gamepad2.dpad_down) {
+//            outtakeSlidePosition = 0;
+//        }
+//        if(gamepad2.x) {
+//            outtakeArmPivotPosition = 0.7;
+//        }
+//
+//        if(gamepad1.touchpad && !touchpadDown) {
+//            if(locked) {
+//                locked = false;
+//            }
+//            else {
+//                setPos = drive.getPoseEstimate();
+//                locked = true;
+//            }
+//        }
+//        touchpadDown = gamepad1.touchpad;
+//
+//        if((gamepad1.a||gamepad2.y) && !aDown) {
+//            if(outtakeClawPosition == 0.9) {
+//                outtakeClawPosition = 0.3;
+//            }
+//            else {
+//                outtakeClawPosition = 0.9;
+//            }
+//        }
+//        aDown = (gamepad1.a||gamepad2.y);
+//
+//        if(gamepad1.b) {
+//            outtakeClawPosition = 0.9;
+//            outtakeSpecimen = true;
+//            transferCompletionTime = runtime.seconds() + 0.3;
+//        }
+//        bDown = gamepad1.b;
+//
+//        if((gamepad1.right_trigger > 0.2 || gamepad2.right_trigger>0.2) && !rightTriggerDown) {
+//            if(robot.hangPivot.getPosition()==0.5) {
+//                robot.hangPivot.setPosition(0);
+//            }
+//            else {
+//                robot.hangPivot.setPosition(0.5);
+//            }
+//        }
+//        rightTriggerDown = (gamepad1.right_trigger > 0.2 || gamepad2.right_trigger>0.2);
+//
+//        if(gamepad1.right_bumper && !rightBDown) {
+//            if(outtakeClawPosition == 0.9) {
+//                outtakeClawPosition = 0.3;
+//            }
+//            else {
+//                outtakeClawPosition = 0.9;
+//                transferCompletionTime = runtime.seconds() + 0.3;
+//            }
+//        }
+//        rightBDown = gamepad1.right_bumper;
+//
+//    }
 
     public void lockTo(SampleMecanumDrive drive, Pose2d targetPos){
         Pose2d currPos = drive.getPoseEstimate();
@@ -307,62 +307,62 @@ public class TwoDriver extends LinearOpMode{
         xDown = gamepad1.x;
     }
 
-    private void handleTransfer() {
-        if(intakeRetractionTime!=-1 && runtime.seconds() >= intakeRetractionTime) {
-            outtakeClawPosition = 0.9;
-            intakeRetractionTime = -1;
-            transferCompletionTime = runtime.seconds() + 0.3;
-        }
-
-        if(transferCompletionTime!=-1 && runtime.seconds() >= transferCompletionTime) {
-            transferCompletionTime = -1;
-            intakeSlidePosition=0.3;
-            spintakePower = -1;
-            if(outtakeSpecimen) {
-                outtakeSpecimenCompletionTime = runtime.seconds() + 0.1;
-            }
-            else {
-                outtakeSampleCompletionTime = runtime.seconds() + 0.1;
-            }
-        }
-        if(outtakeSampleCompletionTime !=-1 && runtime.seconds() >= outtakeSampleCompletionTime) {
-            outtakeSlidePosition = 3050;
-            outtakeArmPivotPosition = 0.7;
-            outtakeSampleCompletionTime = -1;
-        }
-
-        if(outtakeSpecimenCompletionTime !=-1 && runtime.seconds() >= outtakeSpecimenCompletionTime) {
-            outtakeSlidePosition = 1070;
-            outtakeArmPivotPosition = 0.3;
-            outtakeSpecimenCompletionTime = -1;
-            outtakeSpecimen = false;
-        }
-    }
-
-    private void handleIntake() {
-//        if(spintakePower==1&&robot.colorSensor.getColor().equals(oppositeColor)) {
-//            spintakePower=-1;
+//    private void handleTransfer() {
+//        if(intakeRetractionTime!=-1 && runtime.seconds() >= intakeRetractionTime) {
+//            outtakeClawPosition = 0.9;
+//            intakeRetractionTime = -1;
+//            transferCompletionTime = runtime.seconds() + 0.3;
 //        }
-        robot.horizontalSlide.goTo(intakeSlidePosition);
-        robot.spintake.spinIn(spintakePower);
-        robot.intakePivot.flipTo(intakeArmPivotPosition);
-        robot.clawPivot.flipTo(intakeClawPivotPosition);
-    }
+//
+//        if(transferCompletionTime!=-1 && runtime.seconds() >= transferCompletionTime) {
+//            transferCompletionTime = -1;
+//            intakeSlidePosition=0.3;
+//            spintakePower = -1;
+//            if(outtakeSpecimen) {
+//                outtakeSpecimenCompletionTime = runtime.seconds() + 0.1;
+//            }
+//            else {
+//                outtakeSampleCompletionTime = runtime.seconds() + 0.1;
+//            }
+//        }
+//        if(outtakeSampleCompletionTime !=-1 && runtime.seconds() >= outtakeSampleCompletionTime) {
+//            outtakeSlidePosition = 3050;
+//            outtakeArmPivotPosition = 0.7;
+//            outtakeSampleCompletionTime = -1;
+//        }
+//
+//        if(outtakeSpecimenCompletionTime !=-1 && runtime.seconds() >= outtakeSpecimenCompletionTime) {
+//            outtakeSlidePosition = 1070;
+//            outtakeArmPivotPosition = 0.3;
+//            outtakeSpecimenCompletionTime = -1;
+//            outtakeSpecimen = false;
+//        }
+//    }
 
-    private void handleOuttake() {
-        if(outtakeArmCompletionTime !=-1 && runtime.seconds() >= outtakeArmCompletionTime) {
-            outtakeClawPosition = 0.3;
-            outtakeArmCompletionTime = -1;
-        }
-        if(outtakeSlidePosition == 3050) {
-            robot.verticalSlide.extendFull();
-        }
-        else if(outtakeSlidePosition != -1) {
-            robot.verticalSlide.goTo(outtakeSlidePosition, 1);
-        }
-        robot.outtakeClaw.openTo(outtakeClawPosition);
-        robot.outtakePivot.flipTo(outtakeArmPivotPosition);
-    }
+//    private void handleIntake() {
+////        if(spintakePower==1&&robot.colorSensor.getColor().equals(oppositeColor)) {
+////            spintakePower=-1;
+////        }
+//        robot.horizontalSlide.goTo(intakeSlidePosition);
+//        robot.spintake.spinIn(spintakePower);
+//        robot.intakePivot.flipTo(intakeArmPivotPosition);
+//        robot.clawPivot.flipTo(intakeClawPivotPosition);
+//    }
+
+//    private void handleOuttake() {
+//        if(outtakeArmCompletionTime !=-1 && runtime.seconds() >= outtakeArmCompletionTime) {
+//            outtakeClawPosition = 0.3;
+//            outtakeArmCompletionTime = -1;
+//        }
+//        if(outtakeSlidePosition == 3050) {
+//            robot.verticalSlide.extendFull();
+//        }
+//        else if(outtakeSlidePosition != -1) {
+//            robot.verticalSlide.goTo(outtakeSlidePosition, 1);
+//        }
+//        robot.outtakeClaw.openTo(outtakeClawPosition);
+//        robot.outtakePivot.flipTo(outtakeArmPivotPosition);
+//    }
 
     private void updateTelemetry() {
         Pose2d poseEstimate = drive.getPoseEstimate();
@@ -371,8 +371,8 @@ public class TwoDriver extends LinearOpMode{
         telemetry.addData("heading", poseEstimate.getHeading());
         telemetry.addData("Dpad Left", leftDDown);
         telemetry.addData("Dpad Right", rightDDown);
-        telemetry.addData("Color", robot.colorSensor.getColorAsString());
-        telemetry.addData("Hue", robot.colorSensor.getHue());
+        //telemetry.addData("Color", robot.colorSensor.getColorAsString());
+        //telemetry.addData("Hue", robot.colorSensor.getHue());
         telemetry.update();
     }
 }

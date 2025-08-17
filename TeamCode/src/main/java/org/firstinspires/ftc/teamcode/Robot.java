@@ -17,36 +17,23 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 public class Robot {
 
-    public final SpinTake spintake;
-    public final OuttakeClaw outtakeClaw;
-    public final IntakePivot intakePivot;
-    public final OuttakePivot outtakePivot;
-    public final Pivot clawPivot;
-    public final Servo hangPivot;
-
-    public final MotorSlide verticalSlide;
-    public final ServoSlide horizontalSlide;
-
-    public final SampleDetector colorSensor;
-
-    public final Intake intake;
     private final SampleMecanumDrive drive;
 
     public Robot(HardwareMap hardwareMap) {
         drive = new SampleMecanumDrive(hardwareMap);
-        intake = new Intake();
-        spintake = new SpinTake(hardwareMap, "intakeClawLeft", "intakeClawRight");
-        outtakeClaw = new OuttakeClaw(hardwareMap, "outtakeClawLeft", "outtakeClawRight", 0, 0.44);
-        intakePivot = new IntakePivot(hardwareMap, "intakePivotLeft", "intakePivotRight", 0, 1, 0.025);
-        outtakePivot = new OuttakePivot(hardwareMap, "outtakePivotLeft", "outtakePivotRight", 0, 1, -0.025);
-        clawPivot = new Pivot(hardwareMap, "servoPivot", 0, 1);
-        hangPivot = hardwareMap.get(Servo.class, "servoHang");
-        hangPivot.setDirection(Servo.Direction.FORWARD);
+        //intake = new Intake();
+        //spintake = new SpinTake(hardwareMap, "intakeClawLeft", "intakeClawRight");
+        //outtakeClaw = new OuttakeClaw(hardwareMap, "outtakeClawLeft", "outtakeClawRight", 0, 0.44);
+        //intakePivot = new IntakePivot(hardwareMap, "intakePivotLeft", "intakePivotRight", 0, 1, 0.025);
+        //outtakePivot = new OuttakePivot(hardwareMap, "outtakePivotLeft", "outtakePivotRight", 0, 1, -0.025);
+        //clawPivot = new Pivot(hardwareMap, "servoPivot", 0, 1);
+        //hangPivot = hardwareMap.get(Servo.class, "servoHang");
+        //hangPivot.setDirection(Servo.Direction.FORWARD);
 
-        verticalSlide = new MotorSlide(hardwareMap, "leftVerticalSlide", "rightVerticalSlide", 50, 3050);
-        horizontalSlide = new ServoSlide(hardwareMap, "leftHorizontalSlide", "rightHorizontalSlide", 0, 0.4);
+        //verticalSlide = new MotorSlide(hardwareMap, "leftVerticalSlide", "rightVerticalSlide", 50, 3050);
+        //horizontalSlide = new ServoSlide(hardwareMap, "leftHorizontalSlide", "rightHorizontalSlide", 0, 0.4);
 
-        colorSensor = new SampleDetector(hardwareMap, "colorSensor");
+        //colorSensor = new SampleDetector(hardwareMap, "colorSensor");
     }
 
     public double positionDifference(Pose2d currentPosition, Pose2d targetPosition) {
